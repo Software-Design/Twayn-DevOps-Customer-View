@@ -1,0 +1,31 @@
+{% extends './base.html' %}
+{% load i18n %}
+
+{% block content %}
+
+<h1>{{ project.name }}</h1>
+  {{ project.description }}
+  <br>
+  <div class="row">
+    <div class="col-3">
+      <div class="card-img-top" style="height: 200px; width: 90%; background-image: url('{{ project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
+    </div>
+    <div class="col-9">
+              <strong>{% trans "Milestones" %}</strong><br>
+              {% for milestone in milestones %} 
+                {% if milestone.state == 'active' %}
+                  <strong>&raquo; {{ milestone.title }}</strong><br>{{ milestone.start_date }} bis {{ milestone.due_date }}<br>
+                {% endif %}
+              {% endfor %} <br />
+              <strong>{% trans "Issues" %}</strong><br>
+              {% for issue in issues %} 
+                {{ issue.title }}<br>
+              {% endfor %} <br />
+              <strong>{% trans "Documentation" %}</strong><br>
+              {% for wiki in wikis %} 
+                {{ wiki.title }}
+              {% endfor %} <br />
+      </div>
+  </div>
+  
+{% endblock %}

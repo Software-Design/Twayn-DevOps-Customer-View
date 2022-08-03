@@ -1,0 +1,11 @@
+# When using this projekct in production set DEBUG to false or simple delete this line in your production environment
+DEBUG = True
+
+# Add the hosts name you want to server your project from
+ALLOWED_HOSTS = []
+
+# change to your local instance if not using the GitLab SaaS instance
+GITLAB_URL = "https://gitlab.com"
+
+# define your custom theme path
+TEMPLATE = 'base'

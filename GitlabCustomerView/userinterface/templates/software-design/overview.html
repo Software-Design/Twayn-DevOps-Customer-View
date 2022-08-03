@@ -1,0 +1,20 @@
+{% extends '../base/overview.html' %}
+{% load i18n %}
+
+{% block card %}
+  {% for p in projects %}
+      <div class="white-box">
+          <img class="card-img-top" src="{{ p.project.avatar_url }}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{ p.project.name }}</h5>
+            <p class="card-text">{{ p.project.description }}
+              <strong>{% trans "Milestones" %}</strong><br>
+              {% for milestone in p.milestones %} 
+              &raquo; {{ milestone.title }} - {{ milestone.start_date }} bis {{ milestone.due_date }}<br> 
+              {% endfor %} <br />
+            </p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+  {% endfor %}      
+{% endblock %}
