@@ -10,6 +10,7 @@ urlpatterns = [
     path('project/<slug:slug>/<int:id>/documentation/', views.wiki, name='wiki'),
     path('project/<slug:slug>/<int:id>/documentation/<path:page>', views.wikipage, name='wikipage'),
     path('project/<slug:slug>/<int:id>/issues/', views.issues, name='issues'),
+    path('project/<slug:slug>/<int:id>/issues/<int:issue>', views.issue, name='issue'),
     path('project/<slug:slug>/<int:id>/milestones/', views.milestones, name='milestones'),
     path('admin/', admin.site.urls),
 ]

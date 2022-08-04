@@ -5,7 +5,7 @@ from django.template import loader
 from django.core.cache import cache
 
 from .models import Customer, Project
-from .tools.gitlabCache import loadProject,loadWikiPage
+from .tools.gitlabCache import loadIssue, loadProject,loadWikiPage
 
 import gitlab
 
@@ -45,7 +45,7 @@ def project(request, slug, id):
 
 def issues(request, slug, id):
 
-    template = loader.get_template(settings.TEMPLATE+'/project.html')
+    template = loader.get_template(settings.TEMPLATE+'/issues.html')
 
     project = Project.objects.get(gitlabProjectId=id)
     glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
@@ -53,9 +53,21 @@ def issues(request, slug, id):
     return HttpResponse(template.render(glProject, request))
 
 
+def issue(request, slug, id, issue):
+
+    template = loader.get_template(settings.TEMPLATE+'/issue.html')
+
+    project = Project.objects.get(gitlabProjectId=id)
+    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
+    glProject['issue'] = loadIssue(project.gitlabProjectId, project.gitlabAccessToken, issue)
+    glProject['notes'] = glProject['issue'].notes.list(system=False)
+    
+    return HttpResponse(template.render(glProject, request))
+
+
 def milestones(request, slug, id):
 
-    template = loader.get_template(settings.TEMPLATE+'/project.html')
+    template = loader.get_template(settings.TEMPLATE+'/milestones.html')
 
     project = Project.objects.get(gitlabProjectId=id)
     glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)

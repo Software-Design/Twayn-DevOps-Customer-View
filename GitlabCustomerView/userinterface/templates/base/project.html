@@ -67,17 +67,15 @@
     </div>
     <div class="col-9">
       <br>
-              <strong>{% trans "Last updated issues" %}</strong><br>
+      <svg id="gantt"></svg><br>
+      </div>
+      <div class="col-12">
+        <strong>{% trans "Last updated issues" %}</strong><br>
               <ul class="list-group">
               {% include './partials/issues.html' with issues=issues %}
-                </ul> <br />
+                </ul> <br /><br>
       </div>
       <div class="col-12">
-        <svg id="gantt"></svg><br>
-      </div>
-      <div class="col-12">
-
-        <br><br>
         <div class="row">
           <div class="col-md-4">
             <h4>{% trans 'Expired Milestones' %}</h4>
