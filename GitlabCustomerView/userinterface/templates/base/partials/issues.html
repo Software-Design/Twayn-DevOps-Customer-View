@@ -1,0 +1,12 @@
+{% load i18n %}
+{% load parse_date %}
+{% for issue in issues %} 
+<a href="/project/{{ project.path }}/{{ project.id }}/issues/{{ issue.iid }}" class="text-decoration-none">
+    <li class="list-group-item">
+    <span class="badge bg-primary rounded-pill float-end">{{ issue.user_notes_count }}</span>
+    <strong>{{ issue.title  }}</strong><br>
+    <div class="text-muted float-end"><i class="far fa-clock"></i> {% trans 'Last update:' %} {{ issue.updated_at|parse_iso|date:settings.DATETIME_FORMAT }}</div>
+    <div class="text-muted">#{{ issue.iid }} - {{ issue.state }}</div>
+    </li>
+</a> 
+{% endfor %}

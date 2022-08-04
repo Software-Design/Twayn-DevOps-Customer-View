@@ -1,5 +1,6 @@
 {% extends './base.html' %}
 {% load i18n %}
+{% load parse_date %}
 
 {% block content %}
 
@@ -15,10 +16,10 @@
             <h5 class="card-title">{{ p.project.name }}</h5>
             <p class="card-text">{{ p.project.description }}
               <br><br>
-              <strong>{% trans "Milestones" %}</strong><br>
+              <strong>{% trans "Current Milestone(s)" %}:</strong><br>
               {% for milestone in p.milestones %} 
-                {% if milestone.state == 'active' %}
-                  <strong>&raquo; {{ milestone.title }}</strong><br>{{ milestone.start_date }} bis {{ milestone.due_date }}<br>
+                {% if milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
+                  &raquo; {{ milestone.title }}<br>
                 {% endif %}
               {% endfor %} <br />
             </p>

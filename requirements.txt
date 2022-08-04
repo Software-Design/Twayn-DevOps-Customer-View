@@ -1,12 +1,9 @@
-altgraph @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot8/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-124/altgraph-0.17.2-py2.py3-none-any.whl
 asgiref==3.5.2
 distlib==0.3.4
 Django==4.1
 filelock==3.7.1
-future @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot8/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-124/future-0.18.2-py3-none-any.whl
-macholib @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot8/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-124/macholib-1.15.2-py2.py3-none-any.whl
 platformdirs==2.5.2
-six @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot8/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-124/six-1.15.0-py2.py3-none-any.whl
 sqlparse==0.4.2
 virtualenv==20.14.1
 python-gitlab
+markdown

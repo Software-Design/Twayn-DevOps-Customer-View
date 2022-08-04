@@ -1,30 +1,113 @@
 {% extends './base.html' %}
 {% load i18n %}
+{% load static %}
+{% load parse_date %}
+{% load date_diff %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'vendor/frappe-gantt/frappe-gantt.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/frappe-gantt/frappe-gantt.min.js' %}"></script>
+<script>
+  var tasks = [
+  {% for milestone in milestones %} 
+    {% if milestone.start_date and milestone.due_date and milestone.expired == False %}
+    {
+      id: '{{ milestone.id }}',
+      name: '{{ milestone.title }}',
+      start: '{{ milestone.start_date }}',
+      end: '{{ milestone.due_date }}',
+      progress: 0,
+      dependencies: 'Task 2, Task 3',
+    },
+    {% endif %}
+  {% endfor %}
+  ]
+  var gantt = new Gantt(document.querySelector('#gantt'), tasks, {
+      header_height: 50,
+      column_width: 30,
+      step: 24,
+      view_modes: ['{% trans 'Quarter Day' %}', '{% trans 'Half Day' %}', '{% trans 'Day' %}', '{% trans 'Week' %}', '{% trans 'Month' %}'],
+      bar_height: 40,
+      bar_corner_radius: 0,
+      arrow_curve: 5,
+      padding: 18,
+      {% with project.created_at|parse_iso|dayssince as dayssince %}
+        {% if dayssince < 180 or milestones|length == 1 %}
+          view_mode: 'Week',
+        {% elif dayssince < 365 %}
+          view_mode: 'Month',
+        {% else %}
+          view_mode: 'Year',
+        {% endif %}
+      {% endwith %}
+      date_format: 'YYYY-MM-DD',
+  });
+</script>
+{% endblock %}
 
 {% block content %}
 
+<div class="btn-group float-end" role="group" aria-label="Basic outlined example">
+  <button type="button" class="btn btn-outline-primary"><i class="fa fa-book"></i> Download Documentation</button>
+  <button type="button" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create Ticket</button>
+</div>
+
 <h1>{{ project.name }}</h1>
-  {{ project.description }}
-  <br>
+{{ project.description }}
+  <br><br>
   <div class="row">
     <div class="col-3">
       <div class="card-img-top" style="height: 200px; width: 90%; background-image: url('{{ project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
+      <br><br>
+      Project #{{ project.id }}
     </div>
     <div class="col-9">
-              <strong>{% trans "Milestones" %}</strong><br>
-              {% for milestone in milestones %} 
-                {% if milestone.state == 'active' %}
-                  <strong>&raquo; {{ milestone.title }}</strong><br>{{ milestone.start_date }} bis {{ milestone.due_date }}<br>
-                {% endif %}
-              {% endfor %} <br />
-              <strong>{% trans "Issues" %}</strong><br>
-              {% for issue in issues %} 
-                {{ issue.title }}<br>
-              {% endfor %} <br />
-              <strong>{% trans "Documentation" %}</strong><br>
-              {% for wiki in wikis %} 
-                {{ wiki.title }}
-              {% endfor %} <br />
+      <br>
+              <strong>{% trans "Last updated issues" %}</strong><br>
+              <ul class="list-group">
+              {% include './partials/issues.html' with issues=issues %}
+                </ul> <br />
+      </div>
+      <div class="col-12">
+        <svg id="gantt"></svg><br>
+      </div>
+      <div class="col-12">
+
+        <br><br>
+        <div class="row">
+          <div class="col-md-4">
+            <h4>{% trans 'Expired Milestones' %}</h4>
+            {% for milestone in milestones %} 
+              {% if milestone.state == 'active' and milestone.due_date and milestone.due_date|parse_date < now %}
+                {% include './partials/milestones.html' %}
+              {% endif %}
+            {% endfor %}
+            <br />
+          </div>
+          <div class="col-md-4">
+            <h4>{% trans 'Current Milestones' %}</h4>
+            {% for milestone in milestones %} 
+              {% if milestone.state == 'active' and not milestone.start_date or milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
+                {% include './partials/milestones.html' %}
+                <br>
+              {% endif %}
+            {% endfor %}
+            <br />
+          </div>
+          <div class="col-md-4">
+            <h4>{% trans 'Upcomming Milestones' %}</h4>
+            {% for milestone in milestones %} 
+              {% if milestone.state == 'active' and milestone.start_date and milestone.start_date|parse_date >= now %}
+                {% include './partials/milestones.html' %}
+              {% endif %}
+            {% endfor %}
+            <br />
+          </div>
+        </div>
       </div>
   </div>
   
