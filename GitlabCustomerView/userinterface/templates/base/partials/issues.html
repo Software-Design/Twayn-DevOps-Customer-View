@@ -5,7 +5,7 @@
         <a href="/project/{{ project.path }}/{{ project.id }}/issues/{{ issue.iid }}" class="text-decoration-none">
             <li class="list-group-item">
             <div class="float-end"><i class="far fa-clock"></i> {{ issue.time_stats.human_total_time_spent }} {% trans 'spent' %}</div>
-            <strong>{{ issue.title  }}</strong> <span class="badge bg-primary rounded-pill">{{ issue.user_notes_count }}</span><br>
+            <strong><span class="badge bg-primary rounded-pill">{{ issue.user_notes_count }}</span> {{ issue.title  }}</strong><br>
             <div class="text-muted float-end"><i class="far fa-clock"></i> {% trans 'Last update:' %} {{ issue.updated_at|parse_iso|date:settings.DATETIME_FORMAT }}</div>
             <div class="text-muted">#{{ issue.iid }} - {{ issue.state }}</div>
             </li>

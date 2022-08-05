@@ -6,5 +6,4 @@ register = Library()
 
 @register.filter()
 def markdown(value):
-    
     return re.sub("(^<p>|</p>$)", "",md.markdown(value))

@@ -1,9 +1,10 @@
-{% extends './base.html' %}
+{% extends base %}
 {% load i18n %}
 {% load static %}
 {% load parse_date %}
 {% load date_diff %}
 {% load markdown %}
+{% load prettify %}
 
 {% block content %}
 
@@ -23,7 +24,7 @@
         <tr><td>{% trans 'Last Updated' %}</td><td>{{ issue.updated_at|parse_iso|date:settings.DATETIME_FORMAT }}</td></tr>
         <tr><td>{% trans 'Due Date' %}</td><td>{{ issue.due_date|parse_iso|date:settings.DATETIME_FORMAT }}</td></tr>
         <tr><td>{% trans 'Milestone' %}</td><td>{{ issue.milestone.title }}</td></tr>
-        <tr><td>{% trans 'Labels' %}</td><td>{% for label in issue.labels %}<span class="badge bg-primary">{{ label }}</span>{% endfor %}</td></tr>
+        <tr><td>{% trans 'Labels' %}</td><td>{% for label in issue.labels %}<span class="badge bg-primary">{{ label }}</span> {% endfor %}</td></tr>
         <tr><td>{% trans 'Author' %}</td><td><img src="{{ issue.author.avatar_url }}" width="50"> {{ issue.author.name }}</td></tr>
         <tr><td>{% trans 'Assigned to' %}</td><td>{% for assignee in issue.assignees%}<img src="{{ assignee.avatar_url }}" width="50"> {{ assignee.name }}{% endfor %}</td></tr>
         <tr><td>{% trans 'Type' %}</td><td>{{ issue.issue_type }}</td></tr>
@@ -32,14 +33,18 @@
     <div class="col-7 offset-1">
       <br>
       <br><br>
-      {% autoescape off %}{{ issue.description|markdown }}{% endautoescape %}
+      {% autoescape off %}{{ issue.description|markdown|replaceUsernames }}{% endautoescape %}
       </div>
       <div class="col-12">
+        <br><br>
+        <h3>{% trans 'Progress' %}</h3>
+        <div class="text-muted">
+
             {% for note in  notes %}
-              
-              {{ note.author.name }} {% autoescape off %}{{ note.body|markdown }}{% endautoescape %} on {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }}
-              <hr>
+              <img src="{{ note.author.avatar_url }}" width="25"> {{ note.author.name }} {% autoescape off %}{{ note.body|markdown|replaceUsernames }}{% endautoescape %} on {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }}
+              <br>
             {% endfor %}
+        </div>
       </div>
   </div>
   

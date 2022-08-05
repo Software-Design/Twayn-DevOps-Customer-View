@@ -14,6 +14,17 @@ Follow the [Django Setup Guide](https://docs.djangoproject.com/en/4.1/intro/tuto
 4. [Create a project access token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) and add it to the project. If your are on trial plan or on any tier below "Premium" you may have to use the personal access token instead. If you use a project access token assign it the role "reporter" and allow access to "api". No other permissions are needed.
 5. Save and login by entering your email address
 
+## Custom designs
+Please do not add custom themes / designs in this repository! 
+
+Create your own repo and add your own ´base.html´ (you might want to copy and change or [extend](https://docs.djangoproject.com/en/4.0/ref/templates/language/) ´../base/base.html´).
+Load your custom theme as a submodule with `git submodules add {url} /GitLabCustomerView/userinterface/template/{theme-name}`.
+Go to local.py and change the name of the active theme to the {theme-name}.
+
+Whenever you want to overwrite a template or any block inside a template create a file with the same name inside your theme. [Extend](https://docs.djangoproject.com/en/4.0/ref/templates/language/) the original file from the base template and overwirte the blocks you want to change inside it.
+
+Whenever a file or block is not present in your individual them the default from the base theme is used.
+
 ## Contribution
 
 Feel free to send merge requests when you find bugs or want to add features to this project.

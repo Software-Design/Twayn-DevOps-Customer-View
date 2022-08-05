@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends base %}
 {% load i18n %}
 {% load static %}
 {% load parse_date %}
@@ -6,7 +6,7 @@
 
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'vendor/frappe-gantt/frappe-gantt.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/frappe-gantt/frappe-gantt.css' %}">
 {% endblock %}
 
 {% block extra_js %}
