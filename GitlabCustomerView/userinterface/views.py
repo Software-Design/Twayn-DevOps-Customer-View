@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.core.cache import cache
 
 from .models import Customer, Project
-from .tools.gitlabCache import loadIssue, loadProject,loadWikiPage
+from .tools.gitlabCache import loadIssues, loadProject,loadWikiPage
 from .tools.templateHelper import template
 
 import gitlab
@@ -34,6 +34,7 @@ def project(request, slug, id):
 def issues(request, slug, id):
     project = Project.objects.get(gitlabProjectId=id)
     glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
+    glProject['issues'] = loadIssues(project.gitlabProjectId, project.gitlabAccessToken,None)
     
     return HttpResponse(template('issues').render(glProject, request))
 
@@ -41,7 +42,7 @@ def issues(request, slug, id):
 def issue(request, slug, id, issue):
     project = Project.objects.get(gitlabProjectId=id)
     glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
-    glProject['issue'] = loadIssue(project.gitlabProjectId, project.gitlabAccessToken, issue)
+    glProject['issue'] = loadIssues(project.gitlabProjectId, project.gitlabAccessToken, issue)
     glProject['notes'] = glProject['issue'].notes.list(system=False)
     
     return HttpResponse(template('issue').render(glProject, request))
