@@ -1,4 +1,5 @@
 {% extends '../base/base.html' %}
+{% load i18n %}
 
 {% block base_css %}
 <link rel="stylesheet" href="https://software-design.de/static/vendor/bootstrap-5.1.3/css/bootstrap.min.css">
@@ -12,6 +13,130 @@
 <script defer src="https://software-design.de/static/vendor/fontawesome-pro-5.15.4/js/brands.min.js"></script>
 <script defer src="https://software-design.de/static/vendor/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
 <script defer src="https://software-design.de/static/vendor/lightbox-2.11.3/js/lightbox-plus-jquery.min.js"></script>
+{% endblock %}
+
+{% block navigation %}
+    <nav class="navbar navbar-expand-lg bg-ligth navbar-ligth fixed-top shadow">
+    <div class="container-lg mt-3 mt-sm-0">
+        <a class="navbar-brand d-none d-sm-block d-lg-none d-xl-none d-xxl-block" href="/">
+            <img src="https://software-design.de/static/img/sd_grey.png" width="100" class="me-2" alt="SD Software-Design GmbH">
+        </a>
+        <a class="navbar-brand hidden-sm mt-1" href="/" title="Software-Design">SD <span style="color: #ff8128;">Software-Design</span> GmbH<br>
+            <small class="text-muted">Projektmanagement & Dokumentationen</small>
+        </a>
+        <div class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#navbar-content">
+            <div class="hamburger-toggle">
+                <div class="hamburger primary-txt">
+                    <i class="far fa-bars fa-2x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-content">
+            <ul class="navbar-nav mr-auto mb-2 mb-lg-0 d-flex ms-auto mt-4 mt-lg-0">
+                <li class="nav-item position-static">
+                    <a class="nav-link" href="/overview/">Alle Projekte</a>
+                </li>
+                {% if project %}
+                <li class="nav-item dropdown dropdown-mega position-static">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">{{ project.name }}</a>
+                    <div class="dropdown-menu shadow">
+                        <div class="mega-content p-3 mx-auto">
+                            <div class="container-lg">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-12">
+                                        <a href="/project/{{ project.path }}/{{ project.id }}">
+                                            <div class="item-itext row">
+                                                <div class="icon col-2">
+                                                    <i class="far fa-house"></i>
+                                                </div>
+                                                <div class="text col-10">
+                                                    <strong>Projektübersicht</strong><br>
+                                                    <p class="text-muted">Überblick und Leistungen</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12">
+                                        <a href="/project/{{ project.path }}/{{ project.id }}/milestones/">
+                                            <div class="item-itext row">
+                                                <div class="icon col-2">
+                                                    <i class="far fa-hand-holding-heart"></i>
+                                                </div>
+                                                <div class="text col-10">
+                                                    <strong>Meileinsteine</strong><br>
+                                                    <p class="text-muted">Wir unterstützen den guten Zweck.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a href="/project/{{ project.path }}/{{ project.id }}/issues/">
+                                            <div class="item-itext row">
+                                                <div class="icon col-2">
+                                                    <i class="far fa-hand-holding-heart"></i>
+                                                </div>
+                                                <div class="text col-10">
+                                                    <strong>Tickets</strong><br>
+                                                    <p class="text-muted">Wir unterstützen den guten Zweck.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+
+                {% if wikis %}
+                <li class="nav-item dropdown dropdown-mega position-static">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">Dokumentation</a>
+                    <div class="dropdown-menu shadow">
+                        <div class="mega-content p-3 mx-auto">
+                            <div class="container-lg">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-12">
+                                        <a href="/project/{{ project.path }}/{{ project.id }}/documentation">
+                                            <div class="item-itext row">
+                                                <div class="icon col-2">
+                                                    <i class="far fa-house"></i>
+                                                </div>
+                                                <div class="text col-10">
+                                                    <strong>Inhaltsverzeichnis</strong><br>
+                                                    <p class="text-muted">Überblick und Leistungen</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12">
+                                        <ul>
+                                        {% for wiki in wikis %}
+                                            <li><a class="dropdown-item" href="/project/{{ project.path }}/{{ project.id }}/documentation/?category={{ wiki.title }}">{{ forloop.counter }} {% if wiki.title == '/' %}{% trans 'Documentation' %}{% else %}{{ wiki.title }}{% endif %}</a></li>
+                                        {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                <li class="nav-item position-static">
+                    <a class="nav-link" href="https://software-design.de/kontakt/">Kontakt</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+
+{% block container %}
+<br><br>
+<div class="container mt-5">
+{% block content %}
+{% endblock %}
+</div>
 {% endblock %}
 
 {% block footer %}
@@ -83,22 +208,22 @@
           <h5>Unsere Kernkompetenzen</h5>
           <ul class="list-group list-group-flush">
             <li class="list-group-item secondary-txt">
-              <a href="/leistungen/programmierung-webentwicklung"><i class="primary-txt fa-fw far fa-browser"></i> Individuelle Programmierung</a>
+              <a href="https://software-design.de/leistungen/programmierung-webentwicklung"><i class="primary-txt fa-fw far fa-browser"></i> Individuelle Programmierung</a>
             </li>
             <li class="list-group-item secondary-txt">
-              <a href="/leistungen/cross-plattform-mobile-apps"><i class="primary-txt fa-fw far fa-phone-laptop"></i> Cross-Plattform Apps</a>
+              <a href="https://software-design.de/leistungen/cross-plattform-mobile-apps"><i class="primary-txt fa-fw far fa-phone-laptop"></i> Cross-Plattform Apps</a>
             </li>
             <li class="list-group-item secondary-txt">
-              <a href="/leistungen/cloud-software-entwicklung"><i class="primary-txt fa-fw far fa-cloud"></i> Cloud-Software (SaaS)</a>
+              <a href="https://software-design.de/leistungen/cloud-software-entwicklung"><i class="primary-txt fa-fw far fa-cloud"></i> Cloud-Software (SaaS)</a>
             </li>
             <li class="list-group-item secondary-txt">
-              <a href="/leistungen/big-data-datenanalyse"><i class="primary-txt fa-fw far fa-database"></i> Datenbanken & Schnittstellen</a>
+              <a href="https://software-design.de/leistungen/big-data-datenanalyse"><i class="primary-txt fa-fw far fa-database"></i> Datenbanken & Schnittstellen</a>
             </li>
             <li class="list-group-item secondary-txt">
-              <a href="/leistungen/datenschutzberatung"><i class="primary-txt fa-fw far fa-user-shield"></i> Datenschutz & DSGVO</a>
+              <a href="https://software-design.de/leistungen/datenschutzberatung"><i class="primary-txt fa-fw far fa-user-shield"></i> Datenschutz & DSGVO</a>
             </li>
             <li class="list-group-item secondary-txt">
-              <a href="/leistungen/digitalisierung"><i class="primary-txt fa-fw far fa-paper-plane"></i> Prozess-Digitalisierung</a>
+              <a href="https://software-design.de/leistungen/digitalisierung"><i class="primary-txt fa-fw far fa-paper-plane"></i> Prozess-Digitalisierung</a>
             </li>
           </ul>
           <br />
@@ -117,7 +242,7 @@
   <div class="container-lg">
     <small><strong>© 2012 - 2022</strong> | <a href="/" title="Individuelle Softwareentwicklung von Software-Design" class="nolink">SD Software-Design GmbH</a></small>
     <div class="float-start float-md-end">
-      <small><a href="/rechtliches/impressum" title="Software-Design Impressum" class="nolink">Impressum</a> | <a href="/rechtliches/datenschutz" title="Software-Design Datenschutz" class="nolink">Datenschutz</a> | <a href="/karriere/" class="nolink">Karriere</a> | <a href="/service/" class="nolink">Online-Services</a></small>
+      <small><a href="https://software-design.de/rechtliches/impressum" title="Software-Design Impressum" class="nolink">Impressum</a> | <a href="https://software-design.de/rechtliches/datenschutz" title="Software-Design Datenschutz" class="nolink">Datenschutz</a> | <a href="https://software-design.de/karriere/" class="nolink">Karriere</a> | <a href="/service/" class="nolink">Online-Services</a></small>
     </div>
   </div>
 {% endblock %}
