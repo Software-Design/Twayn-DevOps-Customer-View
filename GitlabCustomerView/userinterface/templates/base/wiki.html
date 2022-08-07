@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends base %}
 {% load i18n %}
 {% load static %}
 
@@ -21,7 +21,7 @@
       {% if not request.GET.category %}
         <h3>{% trans "Documentation" %}</h3>
       {% else %}
-        <h3>{% trans "Chapter" %} "{{ request.GET.category }}"</h3>
+        <h3>{% trans "Chapter" %}{% if request.GET.category != '/' %} "{{ request.GET.category }}"{% else %} "{% trans 'Documentation' %}"{% endif %}</h3>
       {% endif %}
           {% include './partials/tableofcontents.html' %}
           <br />

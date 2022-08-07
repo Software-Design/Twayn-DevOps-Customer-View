@@ -1,20 +1,16 @@
-{% extends './base.html' %}
+{% extends base %}
 {% load i18n %}
 {% load static %}
 {% load parse_date %}
 {% load date_diff %}
 {% load markdown %}
+{% load prettify %}
 
 {% block content %}
 
-<div class="btn-group float-end" role="group" aria-label="Basic outlined example">
-  <button type="button" class="btn btn-outline-primary"><i class="fa fa-clock-rotate-left"></i> {% if issue.time_stats.human_time_estimate %}{{ issue.time_stats.human_time_estimate }}{% else %}{% trans 'No time' %}{% endif %} {% trans 'planned' %}</button>
-  <button type="button" class="btn btn-outline-primary"><i class="far fa-clock"></i> {% if issue.time_stats.human_total_time_spent %}{{ issue.time_stats.human_total_time_spent }}{% else %}{% trans 'No time' %}{% endif %} {% trans 'spent' %}</button>
-</div>
-
-<h1>{{ project.name }}</h1>
 <h2>#{{ issue.iid }} - {{ issue.title }}</h2>
-  <br><br>
+<h3><i class="far fa-archive"></i> {{ project.name }} <span class="float-end"><i class="far fa-folder-open"></i> {{ issue.milestone.title }}</span></h3>
+  <br>
   <div class="row">
     <div class="col-4">
       <table class="table">
@@ -22,24 +18,36 @@
         <tr><td>{% trans 'Created' %}</td><td>{{ issue.created_at|parse_iso|date:settings.DATETIME_FORMAT }}</td></tr>
         <tr><td>{% trans 'Last Updated' %}</td><td>{{ issue.updated_at|parse_iso|date:settings.DATETIME_FORMAT }}</td></tr>
         <tr><td>{% trans 'Due Date' %}</td><td>{{ issue.due_date|parse_iso|date:settings.DATETIME_FORMAT }}</td></tr>
-        <tr><td>{% trans 'Milestone' %}</td><td>{{ issue.milestone.title }}</td></tr>
-        <tr><td>{% trans 'Labels' %}</td><td>{% for label in issue.labels %}<span class="badge bg-primary">{{ label }}</span>{% endfor %}</td></tr>
+        <tr><td>{% trans 'Labels' %}</td><td>{% for label in issue.labels %}<span class="badge bg-primary">{{ label }}</span> {% endfor %}</td></tr>
         <tr><td>{% trans 'Author' %}</td><td><img src="{{ issue.author.avatar_url }}" width="50"> {{ issue.author.name }}</td></tr>
         <tr><td>{% trans 'Assigned to' %}</td><td>{% for assignee in issue.assignees%}<img src="{{ assignee.avatar_url }}" width="50"> {{ assignee.name }}{% endfor %}</td></tr>
-        <tr><td>{% trans 'Type' %}</td><td>{{ issue.issue_type }}</td></tr>
       </table>
+      <br>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-outline-primary"><i class="far fa-history"></i> {% if issue.time_stats.human_time_estimate %}{{ issue.time_stats.human_time_estimate }}{% else %}{% trans 'No time' %}{% endif %} {% trans 'planned' %}</button>
+        <button type="button" class="btn btn-outline-primary"><i class="far fa-clock"></i> {% if issue.time_stats.human_total_time_spent %}{{ issue.time_stats.human_total_time_spent }}{% else %}{% trans 'No time' %}{% endif %} {% trans 'spent' %}</button>
+      </div>
     </div>
     <div class="col-7 offset-1">
-      <br>
-      <br><br>
-      {% autoescape off %}{{ issue.description|markdown }}{% endautoescape %}
+      {% autoescape off %}{{ issue.description|markdown|replaceUsernames }}{% endautoescape %}
       </div>
       <div class="col-12">
+        <br><br>
+        <h3>{% trans 'Progress' %}</h3>
+        <div class="text-muted">
             {% for note in  notes %}
-              
-              {{ note.author.name }} {% autoescape off %}{{ note.body|markdown }}{% endautoescape %} on {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }}
-              <hr>
+              {% if note.system == True %}
+              <div class="alert alert-light" role="alert">
+                <small><i class="far fa-calendar-plus"></i> {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }} - <strong>{{ note.author.name }}</strong> {% autoescape off %}{{ note.body|markdown|replaceUsernames }}{% endautoescape %}</small>
+              </div>
+              {% else %}
+              <div class="alert alert-secondary" role="alert">
+                <h5><img src="{{ note.author.avatar_url }}" width="25"> <strong>{{ note.author.name }}</strong> {% trans 'wrote on' %} {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }}:</h5>
+                {% autoescape off %}{{ note.body|markdown|replaceUsernames }}{% endautoescape %}
+              </div>
+              {% endif %}
             {% endfor %}
+        </div>
       </div>
   </div>
   

@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends base %}
 {% load i18n %}
 {% load static %}
 {% load markdown %}
@@ -17,7 +17,7 @@
     {% include './partials/tableofcontents.html' %}
   </div>
   <div class="col-8 offset-1">
-    <h2>{{ page.title }}</h2>
+    <h2 class="text-capitalize">{{ page.title }}</h2>
     {% autoescape off %}{{ page.content|markdown }}{% endautoescape %}
   </div>
   </div>

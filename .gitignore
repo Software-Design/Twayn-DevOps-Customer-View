@@ -2,3 +2,4 @@ GitlabCustomerView/db.sqlite3
 GitlabCustomerView/main/local.py
 venv/
 *.pyc
+.gitmodules
