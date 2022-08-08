@@ -3,3 +3,4 @@ GitlabCustomerView/main/local.py
 venv/
 *.pyc
 .gitmodules
+GitlabCustomerView/userinterface/templates/software-design
