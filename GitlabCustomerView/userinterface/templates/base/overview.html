@@ -3,10 +3,8 @@
 {% load parse_date %}
 
 {% block content %}
-
 <h1>{% trans "All your projects with us" %}</h1>
   <br>
-  {% block card %}
   <div class="row">
   {% for p in projects %}
     <div class="col-3">
@@ -29,5 +27,4 @@
       </div>
     {% endfor %}
   </div>
-  {% endblock %}
 {% endblock %}
