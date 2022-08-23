@@ -14,7 +14,6 @@ def loadProject(projectId:int,accessToken:str):
 
     return project
 
-
 def loadWikiPage(projectId:int,accessToken:str,slug:str):
     id = 'glp_'+projectId+'_'+slug
     page = cache.get(id)
@@ -25,8 +24,6 @@ def loadWikiPage(projectId:int,accessToken:str,slug:str):
         cache.set(id,page,settings.CACHE_PROJECTS)
 
     return page
-
-
 
 def loadIssues(projectId:int,accessToken:str,iid:int):
     gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=accessToken)
