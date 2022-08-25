@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.core.cache import cache
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 from .models import Customer, Project
 from .tools.gitlabCache import loadIssues, loadProject,loadWikiPage
@@ -21,7 +21,15 @@ def index(request):
         else:
             return redirect('/')
 
+    if request.user.is_authenticated:
+        return redirect('/overview/')
+
+
     return HttpResponse(template('login').render({},request))
+
+def logginout(request):
+    logout(request)
+    return redirect('/')
 
 @login_required
 def overview(request):
@@ -37,7 +45,7 @@ def overview(request):
 @login_required
 def project(request, slug, id):
     project = Project.objects.get(gitlabProjectId=id)
-    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
+    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken) | {'p': project}
     
     return HttpResponse(template('project').render(glProject, request))
 

@@ -9,16 +9,18 @@
   <div class="col-12">
     <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
       <button type="button" class="btn btn-outline-primary"><i class="fa fa-book"></i> Download Documentation</button>
-      <button type="button" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create Ticket</button>
+      {% if request.user.is_superuser %}
+          <a href="{{ project.web_url }}/-/wikis/{{ page.slug }}" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
+      {% endif %}
     </div>
     <br><br><br>
   </div>
-  <div class="col-3">
+  <div class="col-4">
     {% include './partials/tableofcontents.html' %}
   </div>
-  <div class="col-8 offset-1">
+  <div class="col-8 px-3">
     <h2 class="text-capitalize">{{ page.title }}</h2>
-    {% autoescape off %}{{ page.content|markdown }}{% endautoescape %}
+    {% autoescape off %}{{ page.content|markdown|linebreaks }}{% endautoescape %}
   </div>
   </div>
 {% endblock %}

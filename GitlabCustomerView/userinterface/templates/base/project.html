@@ -56,6 +56,9 @@
 
 <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
   <button type="button" class="btn btn-outline-primary"><i class="fa fa-plus"></i> {% trans "Create Ticket" %}</button>
+  {% if request.user.is_superuser %}
+  <a href="{{ project.web_url }}" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
+  {% endif %}
 </div>
 
 <h1>{{ project.name }}</h1>
@@ -71,42 +74,22 @@
     </div>
     <div class="col-12">
       <br>
-        <strong>{% trans "Last updated issues" %}</strong><br>
-              <ul class="list-group">
-              {% include './partials/issues.html' with issues=issues %}
-                </ul> <br /><br>
+      <h4>{% trans "Last updated issues" %}</h4><br>
+      <ul class="list-group">
+        {% include './partials/issues.html' with issues=issues %}
+      </ul>
+      <br><br>
     </div>
     <div class="col-12">
-        <div class="row">
+      <br>
+      <h4>{% trans "Person in charge" %}</h4><br>
+      <div class="row">
+        {% for assignee in p.assignees.all %}
           <div class="col-md-4">
-            <h4>{% trans 'Expired Milestones' %}</h4>
-            {% for milestone in milestones %} 
-              {% if milestone.state == 'active' and milestone.due_date and milestone.due_date|parse_date < now %}
-                {% include './partials/milestones.html' %}
-              {% endif %}
-            {% endfor %}
-            <br />
+            {% include './partials/employee.html' with user=assignee %}
           </div>
-          <div class="col-md-4">
-            <h4>{% trans 'Current Milestones' %}</h4>
-            {% for milestone in milestones %} 
-              {% if milestone.state == 'active' and not milestone.start_date or milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
-                {% include './partials/milestones.html' %}
-                <br>
-              {% endif %}
-            {% endfor %}
-            <br />
-          </div>
-          <div class="col-md-4">
-            <h4>{% trans 'Upcomming Milestones' %}</h4>
-            {% for milestone in milestones %} 
-              {% if milestone.state == 'active' and milestone.start_date and milestone.start_date|parse_date >= now %}
-                {% include './partials/milestones.html' %}
-              {% endif %}
-            {% endfor %}
-            <br />
-          </div>
-        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
   

@@ -1,0 +1,15 @@
+{% load prettify %}
+<div class="row">
+    {% if user.avatar_url %}
+    <div class="col-3 text-end">
+        <img src="{{ user.avatar_url }}" width="75">
+    </div>
+    {% endif %}
+    <div class="col-9">
+        <strong>{{ user.name }}</strong><br>
+            {% with user.username|getEmployee as employee %}
+                <i class="far fa-envelope"></i> {% if employee.email %}{{ employee.email }}{% else %}{{ user.email }}{% endif %}<br>
+                <i class="far fa-phone"></i> {% if employee.phone %}{{ employee.phone }}{% else %}{{ user.phone }}{% endif %}
+            {% endwith %}
+    </div>
+</div>
