@@ -1,0 +1,33 @@
+{% extends base %}
+{% load i18n %}
+{% load static %}
+{% load parse_date %}
+{% load date_diff %}
+
+{% block content %}
+
+<h1>{{ project.name }}</h1>
+{{ project.description }}
+  <br><br>
+  <div class="row">
+      <div class="col-12">
+              <ul class="list-group">
+              {% include './partials/issues.html' with issues=issues %}
+                </ul><br><br>
+      </div>
+        <div class="col-4">
+          {% if request.GET.page|add:0 > 1 %}
+            <a href="?page={{ request.GET.page|add:"-1" }}" class="btn btn-primary">{% trans "Previous Page" %}</a>
+          {% endif %}
+        </div>
+      <div class="col-4 text-center pt-2">
+          {% trans "Page" %} {% if request.GET.page %}{{ request.GET.page|add:1 }}{% else %}1{% endif %}
+      </div>
+        <div class="col-4 text-end">
+          {% if issues|length == 20 %}
+            <a href="?page={% if request.GET.page %}{{ request.GET.page|add:"1" }}{% else %}2{% endif %}" class="btn btn-primary">{% trans "Next Page" %}</a>
+          {% endif %}
+        </div>
+  </div>
+  
+{% endblock %}

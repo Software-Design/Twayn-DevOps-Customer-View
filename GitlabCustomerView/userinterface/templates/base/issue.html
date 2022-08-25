@@ -1,0 +1,70 @@
+{% extends base %}
+{% load i18n %}
+{% load static %}
+{% load parse_date %}
+{% load date_diff %}
+{% load markdown %}
+{% load prettify %}
+
+{% block content %}
+<h2>#{{ issue.iid }} - {{ issue.title }}{% if request.user.is_superuser %}
+  <a href="{{ issue.web_url }}" target="_blank"><i class="fab fa-gitlab float-end"></i></a> 
+{% endif %}</h2>
+<h3><i class="far fa-archive"></i> {{ project.name }} {% if issue.milestone %}<span class="float-end"><i class="far fa-clipboard-list"></i> {{ issue.milestone.title }}</span>{% endif %}</h3>
+  <br>
+  <div class="row">
+    <div class="col-5">
+      <table class="table table-striped">
+        <tr><th>{% trans 'State' %}</th><td>{% if issue.state == 'opened' %}{% trans "Open" %}{% else %}{% trans "Closed on" %} {{ issue.closed_at|parse_iso|date:settings.DATETIME_FORMAT }} {{ issue.closed_as_duplicate_of }}h{% endif %}</td></tr>
+        {% if issue.milestone %}
+          <tr><th>{% trans 'Milestone' %}</th>
+            <td>
+              <i class="far fa-clipboard-list"></i> <a href="/project/{{ project.path }}/{{ project.id }}/milestones/{{ issue.milestone.iid }}">{{ issue.milestone.title }}</a> {% if request.user.is_superuser %}<a href="{{ issue.milestone.web_url }}" target="_blank"><i class="fab fa-gitlab"></i></a>{% endif %}
+              <br><small class="text-muted">{{ issue.milestone.start_date|parse_date|date:settings.DATE_FORMAT }} - {{ issue.milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+            </td>
+          </tr>
+        {% endif %}
+        <tr><th>{% trans 'Created' %}</th><td>{{ issue.created_at|parse_iso|date:settings.DATETIME_FORMAT }}h</td></tr>
+        <tr><th>{% trans 'Updated' %}</th><td>{{ issue.updated_at|parse_iso|date:settings.DATETIME_FORMAT }}h</td></tr>
+        {% if issue.due_date %}
+        <tr><th>{% trans 'Due Date' %}</th><td>{{ issue.due_date|parse_iso|date:settings.DATETIME_FORMAT }}</td></tr>
+        {% endif %}
+        {% if issue.labels|length > 0 %}
+        <tr><th>{% trans 'Labels' %}</th><td>{% for label in issue.labels %}<span class="badge bg-primary">{{ label }}</span> {% endfor %}</td></tr>
+        {% endif %}
+        <tr><th>{% trans 'Author' %}</th><td>{% include './partials/employee.html' with user=issue.author %}</td></tr>
+        {% if issue.assignees|length > 0 %}
+          <tr><th>{% trans 'Assigned' %}</th><td>{% for assignee in issue.assignees%}{% include './partials/employee.html' with user=assignee %}{% endfor %}</td></tr>
+        {% endif %}
+      </table>
+      <br>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-outline-primary"><i class="far fa fa-history"></i> {% if issue.time_stats.human_time_estimate %}{{ issue.time_stats.human_time_estimate }}{% else %}{% trans 'No time' %}{% endif %} {% trans 'estimated' %}</button>
+        <button type="button" class="btn btn-outline-primary"><i class="far fa fa-clock"></i> {% if issue.time_stats.human_total_time_spent %}{{ issue.time_stats.human_total_time_spent }} {% trans 'spent' %}{% else %}{% trans 'No time spent' %}{% endif %}</button>
+      </div>
+    </div>
+    <div class="col-7 px-3">
+      {% autoescape off %}{{ issue.description|translateDescriptions|markdown|linebreaks }}{% endautoescape %}
+      </div>
+      <div class="col-12">
+        <br><br>
+        <h3>{% trans 'Progress' %}</h3>
+        <div class="text-muted">
+            {% for note in  notes %}
+              {% if note.system == True %}
+              <div class="alert alert-light" role="alert">
+                <small><i class="far fa-calendar-plus"></i> {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }} - <strong>{{ note.author.name }}</strong> {% autoescape off %}{{ note.body|markdown|translateDescriptions }}{% endautoescape %}</small>
+              </div>
+              {% else %}
+              <div class="alert alert-secondary" role="alert">
+                <h5><img src="{{ note.author.avatar_url }}" width="25"> <strong>{{ note.author.name }}</strong> {% trans 'wrote on' %} {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }}:</h5>
+                {% autoescape off %}{{ note.body|markdown|translateDescriptions }}{% endautoescape %}
+              </div>
+              {% endif %}
+              <hr>
+            {% endfor %}
+        </div>
+      </div>
+  </div>
+  
+{% endblock %}

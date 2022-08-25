@@ -1,92 +1,45 @@
 # GitLab Customer View
 
+The GitLab Customer View is a simple web portal that provides a quick overview and access to progress and status information of tickets and milestones as well as the wiki for projects managed with GitLab.
 
+Given a Project ID and a GitLab Acces Token this UI provides authenticated users a couple of views and functions to view and create tickets (issues) and track on the current project status. Furthermore it provides readable access to the time tracking feature of GitLab and the projects documentation hosted inside the GitLab Wiki. The Webinterface itselfs is designed to store as little information as possible inside it's own database but using the GitLab API and a caching infrastructure to provide the information given.
 
-## Getting started
+## Setup
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Follow the [Django Setup Guide](https://docs.djangoproject.com/en/4.1/intro/tutorial01/) to prepare your environment. We recommend using a virtuale environment to install the dependencies from our ´requirements.txt´.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+After installing Django do the migrations and remove the `.example` ending from your `main/local.py.example` and adjust the settings according to your needs. If you need to change other settings copy the corresponding section from `main/settings.py` to your ´local.py´ instead of manipulating the ´settings.py´ itself.
 
-## Add your files
+You may change the CACHE setting to use redis, memcached or any other caching backend. By default the database cache is activated - you need to run ´python manage.py createcachetable´ to create and use the caching table, if you want to stay with database caching.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### Create first project
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/sd-software-design-gmbh-public/gitlab-customer-view.git
-git branch -M main
-git push -uf origin main
-```
+1. [Create a superuser](https://docs.djangoproject.com/en/4.1/intro/tutorial01/), start your server and log in to the django admin panel.
+2. Add a customer with a valid email address using the django admin panel.
+3. Create a new project and assign it to the customer. Add the project ID - you find a GitLab projects ID within the "Settings > General" section.
+4. [Create a project access token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) and add it to the project. If your are on trial plan or on any tier below "Premium" you may have to use the personal access token instead. If you create your access token assign it the role "reporter" and allow access to "api". No other permissions are needed.
+5. Save and login by entering the email address of your customer.
 
-## Integrate with your tools
+## Custom themes
+Please do not add custom themes / designs / template in this repository! 
 
-- [ ] [Set up project integrations](https://gitlab.com/sd-software-design-gmbh-public/gitlab-customer-view/-/settings/integrations)
+Create your own repo and add your own ´base.html´ (you might want to copy and modify or prefferably [extend](https://docs.djangoproject.com/en/4.0/ref/templates/language/) ´/userinterface/templates/base/base.html´).
+Go to the project root of your GitLab Customer View and load your custom theme as a submodule with `git submodule add {url} ./GitLabCustomerView/userinterface/templates/{theme-name}`.
 
-## Collaborate with your team
+Go to local.py and change the name of the active theme to the `{theme-name}`.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Whenever you want to overwrite a template or a block inside a template create a file with the same name inside your theme. [Extend](https://docs.djangoproject.com/en/4.0/ref/templates/language/) the original file from the base template and overwirte the blocks you want to change inside it.
 
-## Test and Deploy
+Whenever a template file is not present in your individual theme the default from the base theme is being used.
 
-Use the built-in continuous integration in GitLab.
+## Author
+This project is maintained by the [SD Software-Design GmbH](https://software-design.de) - a software development company based in Freiburg, Germany.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## License 
+This software is provided and maintained under the [MIT License](/LICENSE).
+We kindly ask to send merge requests to our public repo in case you are adding features to your invidividual copy of this software.
 
-***
+## Contribution
+We are happy to review your merge requests when you feel that you can contribute to, extend or improved the software in any way.
 
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Please make sure that you make use of our aproach to allow custom themes and modifications as described within the [custom themes](#custom-themes) section of this page.

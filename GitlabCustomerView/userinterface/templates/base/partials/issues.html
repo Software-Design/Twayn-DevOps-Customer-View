@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load parse_date %}
+{% for issue in issues %} 
+    {% if issue.confidential == False %}
+        <a href="/project/{{ project.path }}/{{ project.id }}/issues/{{ issue.iid }}" class="text-decoration-none">
+            <li class="list-group-item">
+                <div class="float-end">
+                    {% if issue.time_stats.human_time_estimate %}<i class="far fa-history"></i> {{ issue.time_stats.human_time_estimate }} {% trans 'estimated' %}{% endif %}
+                    <i class="far fa-clock"></i> {% if issue.time_stats.human_total_time_spent %}{{ issue.time_stats.human_total_time_spent }} {% trans 'spent' %}{% else %}{% trans "No time spent" %}{% endif %}
+                </div>
+                <strong {% if issue.state == 'closed' %}class="text-muted"{% endif %}>
+                    <span class="badge bg-primary rounded-pill">{{ issue.user_notes_count }} <i class="far fa-comments"></i></span> {{ issue.title  }}
+                </strong><br>
+                <div class="text-muted float-end">
+                    {% for label in issue.labels %}<span class="badge bg-primary">{{ label }}</span> {% endfor %}
+                </div>
+                <div class="text-muted">
+                    #{{ issue.iid }} - {% if issue.state == 'opened' %}<i class="far fa-folder-open"></i> {% trans 'Open' %}, {% trans 'updated' %} {{ issue.updated_at|parse_iso|date:settings.DATE_FORMAT }}{% else %}<i class="far fa-folder"></i> {% trans 'Closed' %} {% trans 'on' %} {{ issue.closed_at|parse_iso|date:settings.DATE_FORMAT }}{% endif %}
+                    {% if issue.milestone %} - <i class="far fa-clipboard-list"></i> {{ issue.milestone.title }}{% endif %}
+                </div>
+            </li>
+        </a> 
+    {% endif %}
+{% endfor %}

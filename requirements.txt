@@ -1,0 +1,9 @@
+asgiref==3.5.2
+distlib==0.3.4
+Django==4.1
+filelock==3.7.1
+platformdirs==2.5.2
+sqlparse==0.4.2
+virtualenv==20.14.1
+python-gitlab
+markdown
