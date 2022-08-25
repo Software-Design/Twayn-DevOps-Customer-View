@@ -1,0 +1,254 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-08-24 13:33+0000\n"
+"PO-Revision-Date: 2022-08-24 15:38+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: userinterface/templates/base/base.html:39
+msgid "All Projects"
+msgstr "Alle Projekte"
+
+#: userinterface/templates/base/base.html:50
+msgid "Overview"
+msgstr "Übersicht"
+
+#: userinterface/templates/base/base.html:52
+msgid "Milestones / Kanban Board"
+msgstr "Meilensteine / Kanban-Board"
+
+#: userinterface/templates/base/base.html:53
+msgid "Browse all Issues"
+msgstr "Alle Tickets durchsuchen"
+
+#: userinterface/templates/base/base.html:61
+#: userinterface/templates/base/base.html:67
+#: userinterface/templates/base/partials/tableofcontents.html:6
+#: userinterface/templates/base/wiki.html:22
+#: userinterface/templates/base/wiki.html:24
+#: userinterface/templates/software-design/base.html:164
+msgid "Documentation"
+msgstr "Dokumentation"
+
+#: userinterface/templates/base/base.html:64
+msgid "Full  Documentation"
+msgstr "Vollständige Dokumentation"
+
+#: userinterface/templates/base/base.html:76
+msgid "Administration"
+msgstr "Administration"
+
+#: userinterface/templates/base/base.html:79
+msgid "Administraion"
+msgstr "Verwaltung"
+
+#: userinterface/templates/base/base.html:80
+msgid "Clear cache"
+msgstr "Cache leeren"
+
+#: userinterface/templates/base/base.html:81
+msgid "Warmup cache"
+msgstr "Cache aufwärmen"
+
+#: userinterface/templates/base/issue.html:17
+msgid "State"
+msgstr "Status"
+
+#: userinterface/templates/base/issue.html:18
+msgid "Created"
+msgstr "Erstellt"
+
+#: userinterface/templates/base/issue.html:19
+msgid "Last Updated"
+msgstr "Zuletzt aktualisiert"
+
+#: userinterface/templates/base/issue.html:20
+msgid "Due Date"
+msgstr "Fälligkeitsdatum"
+
+#: userinterface/templates/base/issue.html:21
+msgid "Labels"
+msgstr "Labels"
+
+#: userinterface/templates/base/issue.html:22
+msgid "Author"
+msgstr "Autor"
+
+#: userinterface/templates/base/issue.html:23
+msgid "Assigned to"
+msgstr "Zugewiesen an"
+
+#: userinterface/templates/base/issue.html:27
+#: userinterface/templates/base/issue.html:28
+msgid "No time"
+msgstr "Keine Zeitangabe"
+
+#: userinterface/templates/base/issue.html:27
+#: userinterface/templates/base/partials/issues.html:7
+msgid "estimated"
+msgstr "geschätzt"
+
+#: userinterface/templates/base/issue.html:28
+#: userinterface/templates/base/partials/issues.html:7
+msgid "spent"
+msgstr "aufgewendet"
+
+#: userinterface/templates/base/issue.html:36
+msgid "Progress"
+msgstr "Fortschritt"
+
+#: userinterface/templates/base/issue.html:45
+msgid "wrote on"
+msgstr "schrieb am"
+
+#: userinterface/templates/base/login.html:8
+msgid "Login"
+msgstr "Anmelden"
+
+#: userinterface/templates/base/login.html:14
+msgid "Please sign in"
+msgstr "Bitte anmelden"
+
+#: userinterface/templates/base/login.html:15
+#: userinterface/templates/base/login.html:16
+msgid "Email address"
+msgstr "E-Mail-Adresse"
+
+#: userinterface/templates/base/login.html:18
+#: userinterface/templates/base/login.html:19
+msgid "Password"
+msgstr "Passwort"
+
+#: userinterface/templates/base/login.html:21
+msgid "Sign in"
+msgstr "Anmelden"
+
+#: userinterface/templates/base/login.html:26
+msgid "Don't have an account yet?"
+msgstr "Noch kein Konto?"
+
+#: userinterface/templates/base/login.html:27
+msgid ""
+"Our representatives will create an account for you and send you the login "
+"credentials once the first project within our tool is assigend to you."
+msgstr ""
+"Unsere Mitarbeiter werden ein Konto für Sie einrichten und Ihnen die "
+"Anmeldedaten zusenden, sobald Ihnen das erste Projekt in unserem Tool "
+"zugewiesen wurde."
+
+#: userinterface/templates/base/overview.html:6
+#: userinterface/templates/software-design/overview.html:6
+msgid "All your projects with us"
+msgstr "Alle Ihre Projekte"
+
+#: userinterface/templates/base/overview.html:17
+msgid "Current Milestone(s)"
+msgstr "Aktuelle Projektphase(n)"
+
+#: userinterface/templates/base/overview.html:24
+#: userinterface/templates/software-design/overview.html:36
+msgid "Go to project &raquo;"
+msgstr "Weiter zum Projekt &raquo;"
+
+#: userinterface/templates/base/partials/issues.html:7
+msgid "No time spent"
+msgstr "Kein Aufwand erfasst"
+
+#: userinterface/templates/base/partials/issues.html:9
+msgid "Last update:"
+msgstr "Letztes Update:"
+
+#: userinterface/templates/base/partials/issues.html:10
+msgid "Open"
+msgstr "Offen"
+
+#: userinterface/templates/base/partials/issues.html:10
+msgid "Closed"
+msgstr "Geschlossen"
+
+#: userinterface/templates/base/partials/issues.html:10
+msgid "on"
+msgstr "am"
+
+#: userinterface/templates/base/partials/milestones.html:7
+msgid "No specified time range"
+msgstr "Keine angegebene Zeitspanne"
+
+#: userinterface/templates/base/project.html:58
+msgid "Create Ticket"
+msgstr "Ticket erstellen"
+
+#: userinterface/templates/base/project.html:68
+msgid "Project"
+msgstr "Projekt"
+
+#: userinterface/templates/base/project.html:75
+msgid "Last updated issues"
+msgstr "Zuletzt aktualisierte Tickets"
+
+#: userinterface/templates/base/project.html:83
+msgid "Expired Milestones"
+msgstr "Abgelaufene Projektphasen"
+
+#: userinterface/templates/base/project.html:92
+msgid "Current Milestones"
+msgstr "Aktuelle Projektphasen"
+
+#: userinterface/templates/base/project.html:102
+msgid "Upcomming Milestones"
+msgstr "Kommende Projektphasen"
+
+#: userinterface/templates/base/wiki.html:24
+msgid "Chapter"
+msgstr "Kapitel"
+
+#: userinterface/templatetags/prettify.py:12
+msgid "changed the description"
+msgstr "hat die Beschreibung geändert"
+
+#: userinterface/templatetags/prettify.py:13
+#, python-format
+msgid "assigned to %s"
+msgstr "zugewiesen an %s"
+
+#~ msgid "planned"
+#~ msgstr "geplant"
+
+#~ msgid "Quarter Day"
+#~ msgstr "Quartalstag"
+
+#~ msgid "Half Day"
+#~ msgstr "Halbtags"
+
+#~ msgid "Day"
+#~ msgstr "Tag"
+
+#~ msgid "Week"
+#~ msgstr "Woche"
+
+#~ msgid "Month"
+#~ msgstr "Monat"
+
+#, python-format
+#~ msgid "marked the checklist item - %s as completed"
+#~ msgstr "hat den Punkt - %s auf der Checkliste markiert"
+
+#, python-format
+#~ msgid "assigned to @%s and unassigned @%s"
+#~ msgstr "Zugeordnet zu @%s und @%s entfernt"
+
+#~ msgid "as completed"
+#~ msgstr "als abgeschlossen markiert"

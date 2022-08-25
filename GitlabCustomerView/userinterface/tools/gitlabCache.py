@@ -25,23 +25,23 @@ def loadWikiPage(projectId:int,accessToken:str,slug:str):
 
     return page
 
-def loadIssues(projectId:int,accessToken:str,iid:int):
+def loadIssues(projectId:int,accessToken:str,iid:int,page:int):
     gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=accessToken)
 
     if iid:
         id = 'glp_'+projectId+'_issues_'+str(iid)
     else:
         id = 'glp_'+projectId+'_issues'
-        
+    
     issue = cache.get(iid)
     if not issue:
         project = gl.projects.get(projectId)
         if iid:
             issue = project.issues.get(iid)
-            if issue.confidential == True:
+            if issue.confidential == True: 
                 issue = None
         else:
-            issue = project.issues.list(confidential=False)  
+            issue = project.issues.list(confidential=False,page=page)  
         cache.set(id,issue,settings.CACHE_PROJECTS)
 
     return issue

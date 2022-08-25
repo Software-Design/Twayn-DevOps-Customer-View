@@ -12,5 +12,7 @@ urlpatterns = [
     path('project/<slug:slug>/<int:id>/issues/', views.issues, name='issues'),
     path('project/<slug:slug>/<int:id>/issues/<int:issue>', views.issue, name='issue'),
     path('project/<slug:slug>/<int:id>/milestones/', views.milestones, name='milestones'),
+    path('cache/clear/', views.clearCache, name='clearCache'),
+    path('cache/warmup/', views.warmupCache, name='warmupCache'),
     path('admin/', admin.site.urls),
 ]

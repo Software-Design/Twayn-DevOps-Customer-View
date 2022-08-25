@@ -1,5 +1,5 @@
 from django.template import Library
-from .prettify import replaceUsernames
+from .prettify import translateDescriptions
 import markdown as md
 import re
 
@@ -14,7 +14,7 @@ def markdown(value):
         "\[x\]": '<input type="checkbox" checked disabled>'
     }
 
-    text = replaceUsernames(md.markdown(value))
+    text = translateDescriptions(md.markdown(value))
     for key,value in customTranslations.items():
         text = re.sub(key,value,text)
 

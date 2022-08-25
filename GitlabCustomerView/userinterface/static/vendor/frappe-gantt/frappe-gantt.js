@@ -661,12 +661,12 @@ var Gantt = (function () {
 
             const start_date = date_utils.format(
                 this.task._start,
-                'MMM D',
+                'D.MM.YYYY',
                 this.gantt.options.language
             );
             const end_date = date_utils.format(
                 date_utils.add(this.task._end, -1, 'second'),
-                'MMM D',
+                'D.MM.YYYY',
                 this.gantt.options.language
             );
             const subtitle = start_date + ' - ' + end_date;
@@ -1294,7 +1294,6 @@ var Gantt = (function () {
 
         bind_events() {
             this.bind_grid_click();
-            this.bind_bar_events();
         }
 
         render() {
@@ -1347,7 +1346,7 @@ var Gantt = (function () {
             });
 
             $.attr(this.$svg, {
-                height: grid_height + this.options.padding + 100,
+                height: grid_height + this.options.padding,
                 width: '100%',
             });
         }
@@ -1472,6 +1471,11 @@ var Gantt = (function () {
 
         make_dates() {
             for (let date of this.get_dates_to_draw()) {
+
+                if (this.view_is(VIEW_MODE.YEAR)) {
+                    date.lower_text = parseInt(date.lower_text) + 1;
+                    date.upper_text = parseInt(date.upper_text) + 1;
+                }
                 createSVG('text', {
                     x: date.lower_x,
                     y: date.lower_y,
@@ -1776,62 +1780,7 @@ var Gantt = (function () {
                     bar.set_action_completed();
                 });
             });
-
-            this.bind_bar_progress();
         }
-
-        bind_bar_progress() {
-            let x_on_start = 0;
-            let y_on_start = 0;
-            let is_resizing = null;
-            let bar = null;
-            let $bar_progress = null;
-            let $bar = null;
-
-            $.on(this.$svg, 'mousedown', '.handle.progress', (e, handle) => {
-                is_resizing = true;
-                x_on_start = e.offsetX;
-                y_on_start = e.offsetY;
-
-                const $bar_wrapper = $.closest('.bar-wrapper', handle);
-                const id = $bar_wrapper.getAttribute('data-id');
-                bar = this.get_bar(id);
-
-                $bar_progress = bar.$bar_progress;
-                $bar = bar.$bar;
-
-                $bar_progress.finaldx = 0;
-                $bar_progress.owidth = $bar_progress.getWidth();
-                $bar_progress.min_dx = -$bar_progress.getWidth();
-                $bar_progress.max_dx = $bar.getWidth() - $bar_progress.getWidth();
-            });
-
-            $.on(this.$svg, 'mousemove', (e) => {
-                if (!is_resizing) return;
-                let dx = e.offsetX - x_on_start;
-                e.offsetY - y_on_start;
-
-                if (dx > $bar_progress.max_dx) {
-                    dx = $bar_progress.max_dx;
-                }
-                if (dx < $bar_progress.min_dx) {
-                    dx = $bar_progress.min_dx;
-                }
-
-                const $handle = bar.$handle_progress;
-                $.attr($bar_progress, 'width', $bar_progress.owidth + dx);
-                $.attr($handle, 'points', bar.get_progress_polygon_points());
-                $bar_progress.finaldx = dx;
-            });
-
-            $.on(this.$svg, 'mouseup', () => {
-                is_resizing = false;
-                if (!($bar_progress && $bar_progress.finaldx)) return;
-                bar.progress_changed();
-                bar.set_action_completed();
-            });
-        }
-
         get_all_dependent_tasks(task_id) {
             let out = [];
             let to_process = [task_id];

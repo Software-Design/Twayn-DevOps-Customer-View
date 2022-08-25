@@ -10,19 +10,23 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'vendor/frappe-gantt/frappe-gantt.min.js' %}"></script>
+<script src="{% static 'vendor/frappe-gantt/frappe-gantt.js' %}"></script>
 <script>
   var tasks = [
   {% for milestone in milestones %} 
-    {% if milestone.start_date and milestone.due_date and milestone.expired == False %}
-    {
-      id: '{{ milestone.id }}',
-      name: '{{ milestone.title }}',
-      start: '{{ milestone.start_date }}',
-      end: '{{ milestone.due_date }}',
-      progress: 0,
-      dependencies: 'Task 2, Task 3',
-    },
+    
+    {% if milestone.start_date and milestone.due_date %}
+      {% with milestone.due_date|parse_date|dayssince as dayssince %}
+        {% if milestone.expired == False or milestone.expired == True and dayssince < 365 %}
+        {
+          id: '{{ milestone.id }}',
+          name: '{{ milestone.title }}',
+          start: '{{ milestone.start_date|parse_date|date:"Y-m-d" }}',
+          end: '{{ milestone.due_date|parse_date|date:"Y-m-d" }}',
+          progress: 0,
+        },
+        {% endif %}
+      {% endwith %}
     {% endif %}
   {% endfor %}
   ]
@@ -30,7 +34,6 @@
       header_height: 50,
       column_width: 30,
       step: 24,
-      view_modes: ['{% trans 'Quarter Day' %}', '{% trans 'Half Day' %}', '{% trans 'Day' %}', '{% trans 'Week' %}', '{% trans 'Month' %}'],
       bar_height: 40,
       bar_corner_radius: 0,
       arrow_curve: 5,
@@ -52,8 +55,7 @@
 {% block content %}
 
 <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
-  <button type="button" class="btn btn-outline-primary"><i class="fa fa-book"></i> Download Documentation</button>
-  <button type="button" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create Ticket</button>
+  <button type="button" class="btn btn-outline-primary"><i class="fa fa-plus"></i> {% trans "Create Ticket" %}</button>
 </div>
 
 <h1>{{ project.name }}</h1>
@@ -62,20 +64,19 @@
   <div class="row">
     <div class="col-3">
       <div class="card-img-top" style="height: 200px; width: 90%; background-image: url('{{ project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
-      <br><br>
-      Project #{{ project.id }}
     </div>
     <div class="col-9">
       <br>
-      <svg id="gantt"></svg><br>
-      </div>
-      <div class="col-12">
+      <svg id="gantt"></svg>
+    </div>
+    <div class="col-12">
+      <br>
         <strong>{% trans "Last updated issues" %}</strong><br>
               <ul class="list-group">
               {% include './partials/issues.html' with issues=issues %}
                 </ul> <br /><br>
-      </div>
-      <div class="col-12">
+    </div>
+    <div class="col-12">
         <div class="row">
           <div class="col-md-4">
             <h4>{% trans 'Expired Milestones' %}</h4>
@@ -106,7 +107,7 @@
             <br />
           </div>
         </div>
-      </div>
+    </div>
   </div>
   
 {% endblock %}

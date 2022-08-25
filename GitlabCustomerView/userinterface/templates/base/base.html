@@ -32,6 +32,7 @@
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
+          {% if request.user.is_authenticated %}
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
@@ -68,8 +69,22 @@
                 </ul>
               </li>
               {% endif %}
+
+              {% if request.user.is_superuser %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="/overview/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-book"></i> {% trans "Administration" %}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarWikiDropdown">
+                  <li><a class="dropdown-item" href="/admin/">{% trans "Administraion" %}</a></li>
+                  <li><a class="dropdown-item" href="/cache/clear?redirect={{ request.path }}">{% trans "Clear cache" %}</a></li>
+                  <li><a class="dropdown-item" href="/cache/warmup?redirect={{ request.path }}">{% trans "Warmup cache" %}</a></li>
+                </ul>
+              </li>
+              {% endif %}
             </ul>
           </div>
+          {% endif %}
         </div>
       </nav>
     {% endblock %}
