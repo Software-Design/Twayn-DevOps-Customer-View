@@ -24,7 +24,7 @@ You may change the CACHE setting to use redis, memcached or any other caching ba
 Please do not add custom themes / designs / template in this repository! 
 
 Create your own repo and add your own ´base.html´ (you might want to copy and modify or prefferably [extend](https://docs.djangoproject.com/en/4.0/ref/templates/language/) ´/userinterface/templates/base/base.html´).
-Go to the project root of your GitLab Customer View and load your custom theme as a submodule with `git submodule add {url} ./GitLabCustomerView/userinterface/templates/{theme-name}`.
+Go to the project root of your GitLab Customer View and load your custom theme as a submodule with `git submodule add -f {url} ./GitlabCustomerView/userinterface/templates/{theme-name}`.
 
 Go to local.py and change the name of the active theme to the `{theme-name}`.
 
