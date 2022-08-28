@@ -4,7 +4,7 @@ The GitLab Customer View is a simple web portal that provides a quick overview a
 
 Given a Project ID and a GitLab Acces Token this UI provides authenticated users a couple of views and functions to view and create tickets (issues) and track on the current project status. Furthermore it provides readable access to the time tracking feature of GitLab and the projects documentation hosted inside the GitLab Wiki. The Webinterface itselfs is designed to store as little information as possible inside it's own database but using the GitLab API and a caching infrastructure to provide the information given.
 
-## Setup
+## Getting started
 
 Follow the [Django Setup Guide](https://docs.djangoproject.com/en/4.1/intro/tutorial01/) to prepare your environment. We recommend using a virtuale environment to install the dependencies from our ´requirements.txt´.
 
@@ -17,9 +17,16 @@ You may change the CACHE setting to use redis, memcached or any other caching ba
 1. [Create a superuser](https://docs.djangoproject.com/en/4.1/intro/tutorial01/), start your server and log in to the django admin panel.
 2. Add a customer with a valid email address using the django admin panel.
 3. Create a new project and assign it to the customer. Add the project ID - you find a GitLab projects ID within the "Settings > General" section.
-4. [Create a project access token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) and add it to the project. If your are on trial plan or on any tier below "Premium" you may have to use the personal access token instead. If you create your access token assign it the role "reporter" and allow access to "api". No other permissions are needed.
+4. [Create a project access token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) and add it to the project. See additional notes below.
 5. Save and login by entering the email address of your customer.
 
+#### **Some notes on access tokens:**
+If your are on trial plan or on any tier below "Premium" you may have to use the personal access token instead. 
+
+Please note that the name of the access token is used and shown as author / editor in comments or logs. So if you create a projects access it should have your customers / managers name.
+
+Assign it the role "reporter" to your acces token and allow access to "api".
+No other permissions are needed. 
 ## Custom themes
 Please do not add custom themes / designs / template in this repository! 
 
@@ -43,3 +50,11 @@ We kindly ask to send merge requests to our public repo in case you are adding f
 We are happy to review your merge requests when you feel that you can contribute to, extend or improved the software in any way.
 
 Please make sure that you make use of our aproach to allow custom themes and modifications as described within the [custom themes](#custom-themes) section of this page.
+
+#### Notes on basic priciples and design choices
+1. Respect [GitLabs API Terms](https://about.gitlab.com/handbook/legal/api-terms/)
+There are terms and conditions when using the GitLab API - respect them.
+2. Store / manage as little data as possible.
+Since this project is meant to be an interface it should mainly use GitLab as a data source and store as little information as poissble within its own database.
+3. Don't break the permission and access control features of GitLab - use them! 
+Assign individual tokens to each user and don't use any method that allows access beyond the token-based permissions.
