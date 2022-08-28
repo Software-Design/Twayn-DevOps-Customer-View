@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
-from .models import Customer, Project
+from .models import UserProjectAssignment, Project
 from .tools.gitlabCache import loadIssues, loadProject,loadWikiPage
 from .tools.templateHelper import template
 
@@ -33,58 +33,68 @@ def logginout(request):
 
 @login_required
 def overview(request):
-    customer = Customer.objects.first()
+    projectAssignments = UserProjectAssignment.objects.filter(user=request.user)
 
     projects = []
-    for project in customer.project_set.all():
-        glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
+    for assignment in projectAssignments:
+        glProject = loadProject(assignment.project, assignment.accessToken)
         projects.append(glProject)
 
     return HttpResponse(template('overview').render({'projects': projects}, request))
 
 @login_required
 def project(request, slug, id):
-    project = Project.objects.get(gitlabProjectId=id)
-    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken) | {'p': project}
+    project = Project.objects.get(projectIdentifier=id)
+    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+    glProject = loadProject(project, assigment.accessToken) | {'p': project}
     
     return HttpResponse(template('project').render(glProject, request))
 
 @login_required
 def issues(request, slug, id):
-    project = Project.objects.get(gitlabProjectId=id)
-    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
-    glProject['issues'] = loadIssues(project.gitlabProjectId, project.gitlabAccessToken,None,request.GET.get('page',1))
+    project = Project.objects.get(projectIdentifier=id)
+    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+    glProject = loadProject(project, assigment.accessToken)
+    glProject['issues'] = loadIssues(project.projectIdentifier, assigment.accessToken, None, request.GET.get('page',1))
     
     return HttpResponse(template('issues').render(glProject, request))
 
 @login_required
 def issue(request, slug, id, issue):
-    project = Project.objects.get(gitlabProjectId=id)
-    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
-    glProject['issue'] = loadIssues(project.gitlabProjectId, project.gitlabAccessToken, issue, None)
+    project = Project.objects.get(projectIdentifier=id)
+    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+    glProject = loadProject(project, assigment.accessToken)
+    glProject['issue'] = loadIssues(project.projectIdentifier, assigment.accessToken, issue, None)
     glProject['notes'] = glProject['issue'].notes.list(system=False)
     
     return HttpResponse(template('issue').render(glProject, request))
 
 @login_required
 def milestones(request, slug, id):
-    project = Project.objects.get(gitlabProjectId=id)
-    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
+    project = Project.objects.get(projectIdentifier=id)
+    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+    glProject = loadProject(project, assigment.accessToken)
     
     return HttpResponse(template('milestones').render(glProject, request))
 
 @login_required
 def wiki(request, slug, id):
-    project = Project.objects.get(gitlabProjectId=id)
-    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
+    project = Project.objects.get(projectIdentifier=id)
+    if project.enableDocumentation == False:
+        return redirect('/')
+    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+    glProject = loadProject(project, assigment.accessToken)
     
     return HttpResponse(template('wiki').render(glProject, request))
 
 @login_required
 def wikipage(request, slug, id, page):
-    project = Project.objects.get(gitlabProjectId=id)
-    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
-    glProject['page'] = loadWikiPage(project.gitlabProjectId, project.gitlabAccessToken, page)
+    project = Project.objects.get(projectIdentifier=id)
+    if project.enableDocumentation == False:
+        return redirect('/')
+    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+    glProject = loadProject(project, assigment.accessToken)
+    glProject['page'] = loadWikiPage(project.projectIdentifier, assigment.accessToken, page)
     
     return HttpResponse(template('wikipage').render(glProject, request))
 
@@ -98,6 +108,7 @@ def clearCache(request):
 
 @login_required
 def warmupCache(request):
+    assigment = UserProjectAssignment.objects.all()
     for project in Project.objects.all():
-        loadProject(project.gitlabProjectId, project.gitlabAccessToken)
+        loadProject(project, project.assigment)
     return redirect(request.GET.get('redirect','/'))

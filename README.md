@@ -41,6 +41,7 @@ Whenever a template file is not present in your individual theme the default fro
 
 ## Author
 This project is maintained by the [SD Software-Design GmbH](https://software-design.de) - a software development company based in Freiburg, Germany.
+Any other authors, contributors and volunteers are welcome.
 
 ## License 
 This software is provided and maintained under the [MIT License](/LICENSE).
@@ -48,8 +49,7 @@ We kindly ask to send merge requests to our public repo in case you are adding f
 
 ## Contribution
 We are happy to review your merge requests when you feel that you can contribute to, extend or improved the software in any way.
-
-Please make sure that you make use of our aproach to allow custom themes and modifications as described within the [custom themes](#custom-themes) section of this page.
+Please make sure that you make use of our aproach to allow custom themes and modifications as described within the [custom themes](#custom-themes) section of this page and the following principles.
 
 #### Notes on basic priciples and design choices
 1. Respect [GitLabs API Terms](https://about.gitlab.com/handbook/legal/api-terms/)

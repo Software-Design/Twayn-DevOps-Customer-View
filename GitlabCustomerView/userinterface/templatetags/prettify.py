@@ -1,5 +1,5 @@
 from django.template import Library
-from userinterface.models import Employee
+from userinterface.models import TeamMember
 
 from django.utils.translation import gettext as _
 import re
@@ -14,11 +14,11 @@ def translateDescriptions(value):
     assignedTo = _('assigned to %s')
     opened =_('opened')
 
-    for employee in Employee.objects.all():
-        value = _(re.sub('<[^<]+?>', '', value).replace(employee.gitlabUsername,'%s')).replace('%s',employee.name)
+    for employee in TeamMember.objects.all():
+        value = _(re.sub('<[^<]+?>', '', value).replace(employee.username,'%s')).replace('%s',employee.name)
         
     return _(value)
 
 @register.filter()
-def getEmployee(value):
-    return Employee.objects.filter(gitlabUsername='@'+value).first()
+def getTeamMember(value):
+    return TeamMember.objects.filter(username='@'+value).first()
