@@ -1,5 +1,5 @@
 {% load i18n %}
-{% load parse_date %}
+{% load dates %}
 <strong>&raquo; {{ milestone.title }}</strong>
 {% if request.user.is_superuser %}
 <a href="{{ p.project.web_url }}" target="_blank"><i class="fab fa-gitlab"></i></a>

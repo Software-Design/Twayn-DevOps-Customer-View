@@ -1,5 +1,5 @@
 {% load i18n %}
-{% load parse_date %}
+{% load dates %}
 {% for issue in issues %} 
     {% if issue.confidential == False %}
         <a href="/project/{{ project.path }}/{{ project.id }}/issues/{{ issue.iid }}" class="text-decoration-none">

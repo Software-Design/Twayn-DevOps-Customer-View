@@ -23,6 +23,15 @@ def loadProject(projectObject,accessToken:str):
 
     return project
 
+def loadLabels(projectId:int,accessToken:str):
+    id = 'glp_'+projectId+'_labels'
+    labels = cache.get(id)
+    if not labels:
+        gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=accessToken)
+        labels = gl.projects.get(projectId).labels.list()
+        cache.set(id,labels,settings.CACHE_PROJECTS)
+    return labels
+
 def loadWikiPage(projectId:int,accessToken:str,slug:str):
     id = 'glp_'+projectId+'_'+slug
     page = cache.get(id)

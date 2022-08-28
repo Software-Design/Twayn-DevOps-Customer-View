@@ -1,8 +1,8 @@
 {% extends base %}
 {% load i18n %}
 {% load static %}
-{% load parse_date %}
-{% load date_diff %}
+{% load dates %}
+{% load numbers %}
 {% load markdown %}
 {% load prettify %}
 
@@ -38,9 +38,16 @@
         {% endif %}
       </table>
       <br>
-      <div class="btn-group" role="group">
-        <button type="button" class="btn btn-outline-primary"><i class="far fa fa-history"></i> {% if issue.time_stats.human_time_estimate %}{{ issue.time_stats.human_time_estimate }}{% else %}{% trans 'No time' %}{% endif %} {% trans 'estimated' %}</button>
+
+      {% if issue.time_stats.human_time_estimate and issue.time_stats.human_total_time_spent %}
+      <div class="progress" style="height: 20px;">
+        <div class="progress-bar bg-primary" role="progressbar" style="width: {% widthratio issue.time_stats.human_total_time_spent|intval issue.time_stats.human_time_estimate|intval 100 %}%;" aria-valuenow="{% widthratio issue.time_stats.human_total_time_spent|intval issue.time_stats.human_time_estimate|intval 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issue.time_stats.human_total_time_spent|intval issue.time_stats.human_time_estimate|intval 100 %} %</div>
+      </div>
+      <br>
+      {% endif %}
+      <div class="btn-group w-100" role="group">
         <button type="button" class="btn btn-outline-primary"><i class="far fa fa-clock"></i> {% if issue.time_stats.human_total_time_spent %}{{ issue.time_stats.human_total_time_spent }} {% trans 'spent' %}{% else %}{% trans 'No time spent' %}{% endif %}</button>
+        <button type="button" class="btn btn-outline-primary"><i class="far fa fa-history"></i> {% if issue.time_stats.human_time_estimate %}{{ issue.time_stats.human_time_estimate }}{% else %}{% trans 'No time' %}{% endif %} {% trans 'estimated' %}</button>
       </div>
     </div>
     <div class="col-7 px-3">
