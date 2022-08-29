@@ -1,15 +1,18 @@
 from django.contrib import admin
 
-from .models import Customer, Employee, Project
+from .models import UserProjectAssignment, TeamMember, Project
 
 class PeopleAdmin(admin.ModelAdmin):
     list_display = ('name','email')
 
-class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('name','customerName', 'assigneesNames', 'gitlabProjectId')
+class AssignmentAdmin(admin.ModelAdmin):
+    list_display = ('userName','project')
 
-    def customerName(self,project):
-        return project.customer.name
+    def userName(self,assigment):
+        return '{} {}'.format(assigment.user.first_name,assigment.user.last_name)
+
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('name', 'assigneesNames', 'projectIdentifier')
 
     def assigneesNames(self,project):
         assignees = ""
@@ -19,5 +22,5 @@ class ProjectAdmin(admin.ModelAdmin):
         return assignees[:-2]
 
 admin.site.register(Project,ProjectAdmin)
-admin.site.register(Customer,PeopleAdmin)
-admin.site.register(Employee,PeopleAdmin)
+admin.site.register(UserProjectAssignment,AssignmentAdmin)
+admin.site.register(TeamMember,PeopleAdmin)

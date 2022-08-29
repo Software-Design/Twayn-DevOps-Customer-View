@@ -1,4 +1,5 @@
 {% load prettify %}
+{% load i18n %}
 <div class="row">
     {% if user.avatar_url %}
     <div class="col-3 text-end">
@@ -7,9 +8,17 @@
     {% endif %}
     <div class="col-9">
         <strong>{{ user.name }}</strong><br>
-            {% with user.username|getEmployee as employee %}
-                <i class="far fa-envelope"></i> {% if employee.email %}{{ employee.email }}{% else %}{{ user.email }}{% endif %}<br>
-                <i class="far fa-phone"></i> {% if employee.phone %}{{ employee.phone }}{% else %}{{ user.phone }}{% endif %}
+            {% with user.username|getTeamMember as employee %}
+                {% if employee.email %}
+                    <i class="far fa-envelope"></i> {{ employee.email }}<br>
+                {% endif %}
+                {% if employee.phone %}
+                    <i class="far fa-phone"></i> {{ employee.phone }}
+                {% endif %}
+                {% if not employee.phone and not employee.email %}
+                    @{{ user.username }}<br>
+                    <a href="{{ user.web_url }}" target="_blank"><i class="fab fa-gitlab"></i> {% trans "GitLab Profile" %}</a>
+                {% endif %}
             {% endwith %}
     </div>
 </div>

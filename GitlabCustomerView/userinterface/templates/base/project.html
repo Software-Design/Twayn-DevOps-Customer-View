@@ -1,8 +1,7 @@
 {% extends base %}
 {% load i18n %}
 {% load static %}
-{% load parse_date %}
-{% load date_diff %}
+{% load dates %}
 
 
 {% block extra_css %}
@@ -10,46 +9,48 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'vendor/frappe-gantt/frappe-gantt.js' %}"></script>
-<script>
-  var tasks = [
-  {% for milestone in milestones %} 
-    
-    {% if milestone.start_date and milestone.due_date %}
-      {% with milestone.due_date|parse_date|dayssince as dayssince %}
-        {% if milestone.expired == False or milestone.expired == True and dayssince < 365 %}
-        {
-          id: '{{ milestone.id }}',
-          name: '{{ milestone.title }}',
-          start: '{{ milestone.start_date|parse_date|date:"Y-m-d" }}',
-          end: '{{ milestone.due_date|parse_date|date:"Y-m-d" }}',
-          progress: 0,
-        },
+  {% if milestones %}
+    <script src="{% static 'vendor/frappe-gantt/frappe-gantt.js' %}"></script>
+    <script>
+      var tasks = [
+      {% for milestone in milestones %} 
+        
+        {% if milestone.start_date and milestone.due_date %}
+          {% with milestone.due_date|parse_date|dayssince as dayssince %}
+            {% if milestone.expired == False or milestone.expired == True and dayssince < 365 %}
+            {
+              id: '{{ milestone.id }}',
+              name: '{{ milestone.title }}',
+              start: '{{ milestone.start_date|parse_date|date:"Y-m-d" }}',
+              end: '{{ milestone.due_date|parse_date|date:"Y-m-d" }}',
+              progress: 0,
+            },
+            {% endif %}
+          {% endwith %}
         {% endif %}
-      {% endwith %}
-    {% endif %}
-  {% endfor %}
-  ]
-  var gantt = new Gantt(document.querySelector('#gantt'), tasks, {
-      header_height: 50,
-      column_width: 30,
-      step: 24,
-      bar_height: 40,
-      bar_corner_radius: 0,
-      arrow_curve: 5,
-      padding: 18,
-      {% with project.created_at|parse_iso|dayssince as dayssince %}
-        {% if dayssince < 180 or milestones|length == 1 %}
-          view_mode: 'Week',
-        {% elif dayssince < 365 %}
-          view_mode: 'Month',
-        {% else %}
-          view_mode: 'Year',
-        {% endif %}
-      {% endwith %}
-      date_format: 'YYYY-MM-DD',
-  });
-</script>
+      {% endfor %}
+      ]
+      var gantt = new Gantt(document.querySelector('#gantt'), tasks, {
+          header_height: 50,
+          column_width: 30,
+          step: 24,
+          bar_height: 40,
+          bar_corner_radius: 0,
+          arrow_curve: 5,
+          padding: 18,
+          {% with project.created_at|parse_iso|dayssince as dayssince %}
+            {% if dayssince < 180 or milestones|length == 1 %}
+              view_mode: 'Week',
+            {% elif dayssince < 365 %}
+              view_mode: 'Month',
+            {% else %}
+              view_mode: 'Year',
+            {% endif %}
+          {% endwith %}
+          date_format: 'YYYY-MM-DD',
+      });
+    </script>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -62,15 +63,21 @@
 </div>
 
 <h1>{{ project.name }}</h1>
-{{ project.description }}
+  {% if milestones %}
+    {{ project.description }}
+  {% endif %}
   <br><br>
   <div class="row">
     <div class="col-3">
       <div class="card-img-top" style="height: 200px; width: 90%; background-image: url('{{ project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
     </div>
     <div class="col-9">
+      {% if not milestones %}
+        {{ project.description }}
+      {% else %}
       <br>
       <svg id="gantt"></svg>
+      {% endif %}
     </div>
     <div class="col-12">
       <br>

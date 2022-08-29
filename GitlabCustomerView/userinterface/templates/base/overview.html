@@ -1,6 +1,6 @@
 {% extends base %}
 {% load i18n %}
-{% load parse_date %}
+{% load dates %}
 
 {% block content %}
 <h1>{% trans "All your projects with us" %}</h1>
@@ -12,7 +12,7 @@
           <div class="card-img-top" style="height: 200px; width: 90%; background-image: url('{{ p.project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
           <div class="card-body">
             <h5 class="card-title">{{ p.project.name }}</h5>
-            <p class="card-text">{{ p.project.description }}
+            <p class="card-text">{{ p.project.description }}{{ project.error }}
               <br><br>
               <strong>{% trans "Current Milestone(s)" %}:</strong><br>
               {% for milestone in p.milestones %} 
@@ -21,7 +21,9 @@
                 {% endif %}
               {% endfor %} <br />
             </p>
+            {% if p.project.path %}
             <a href="/project/{{ p.project.path }}/{{ p.project.id }}" class="btn btn-primary">{% trans "Go to project &raquo;" %}</a>
+            {% endif %}
           </div>
         </div>
       </div>
