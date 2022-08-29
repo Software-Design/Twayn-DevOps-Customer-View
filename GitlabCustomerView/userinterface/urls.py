@@ -1,6 +1,5 @@
 from . import views
-from django.contrib import admin
-from django.urls import include, path
+from django.urls import path
 
 
 urlpatterns = [
@@ -16,5 +15,4 @@ urlpatterns = [
     path('project/<slug:slug>/<int:id>/milestones/', views.milestones, name='milestones'),
     path('cache/clear/', views.clearCache, name='clearCache'),
     path('cache/warmup/', views.warmupCache, name='warmupCache'),
-    path('admin/', admin.site.urls),
 ]

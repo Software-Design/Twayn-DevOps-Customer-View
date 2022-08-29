@@ -115,6 +115,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 MEDIA_ROOT = 'uploads/'
+MEDIA_URL = 'uploads/'
 
 STATIC_URL = 'static/'
 LOGIN_URL = '/'

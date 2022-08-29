@@ -18,7 +18,13 @@ def loadProject(projectObject,accessToken:str):
         except Exception as e:
             return {'project': {'name': projectObject.name },'error': _('An error occurred')+': '+str(e)}
 
-        project = {'project': glProject,'milestones': glProject.milestones.list() if projectObject.enableMilestones else False,'issues': glProject.issues.list(confidential=False, order_by='updated_at', sort='desc')[:5],'wikis': parseStructure(glProject.wikis.list()) if projectObject.enableDocumentation else False}
+        project = {
+                'project': glProject,
+                'instance': projectObject,
+                'milestones': glProject.milestones.list() if projectObject.enableMilestones else False,
+                'issues': glProject.issues.list(confidential=False, order_by='updated_at', sort='desc')[:5],
+                'wikis': parseStructure(glProject.wikis.list()) if projectObject.enableDocumentation else False
+            }
         cache.set(id,project,settings.CACHE_PROJECTS)
 
     return project

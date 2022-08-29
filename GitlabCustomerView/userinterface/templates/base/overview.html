@@ -9,7 +9,13 @@
   {% for p in projects %}
     <div class="col-3">
       <div class="card">
-          <div class="card-img-top" style="height: 200px; width: 90%; background-image: url('{{ p.project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
+          <div class="card-img-top">
+            {% if p.instance.image %}
+              <div style="height: 200px; width: 90%; background-image: url('{{ p.instance.image.url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
+            {% else %}
+              <div style="height: 200px; width: 90%; background-image: url('{{ p.project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
+            {% endif %}
+          </div>
           <div class="card-body">
             <h5 class="card-title">{{ p.project.name }}</h5>
             <p class="card-text">{{ p.project.description }}{{ project.error }}

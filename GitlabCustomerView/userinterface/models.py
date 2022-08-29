@@ -11,7 +11,7 @@ class TeamMember(models.Model):
         return '{} ({})'.format(self.name, self.username)
 
     name = models.CharField(max_length=200)
-    avatar = models.ImageField()
+    avatar = models.ImageField(blank=True)
     email = models.CharField(max_length=200)
     phone = models.CharField(max_length=200)
     username = models.CharField(max_length=200)
@@ -24,8 +24,9 @@ class Project(models.Model):
     def __str__(self):
         return '{} ({})'.format(self.name, self.projectIdentifier)
 
-    assignees = models.ManyToManyField(TeamMember)
+    assignees = models.ManyToManyField(TeamMember, blank=True)
     name = models.CharField(max_length=500)
+    image = models.ImageField(blank=True)
 
     enableDocumentation = models.BooleanField(default=True,help_text="Make the documentation accessible for users")
     enableMilestones = models.BooleanField(default=True,help_text="Visualize milestones and create a gantt chart")
