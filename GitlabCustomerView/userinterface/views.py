@@ -1,3 +1,4 @@
+import re
 from django.utils import translation
 from django.http import HttpResponse
 from django.core.cache import cache
@@ -50,12 +51,24 @@ def project(request, slug, id):
     return HttpResponse(template('project').render(glProject, request))
 
 @login_required
-def issues(request, slug, id):
+def issueList(request, slug, id):
     project = Project.objects.get(gitlabProjectId=id)
     glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
     glProject['issues'] = loadIssues(project.gitlabProjectId, project.gitlabAccessToken,None,request.GET.get('page',1))
     
-    return HttpResponse(template('issues').render(glProject, request))
+    return HttpResponse(template('issueList').render(glProject, request))
+
+@login_required
+def issueCreate(request, slug, id):
+    project = Project.objects.get(gitlabProjectId=id)
+    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
+
+    if request.POST.get('title'):
+        print(request.POST['label'])
+        glProject['project'].issues.create({'title': request.POST['title'], 'description': request.POST['description'], 'labels': request.POST['label'],'milestone_id': request.POST['milestone']})
+        return redirect('/project/'+glProject['project'].path+'/'+str(glProject['project'].id)+'/issues/')
+
+    return HttpResponse(template('issueCreate').render(glProject, request))
 
 @login_required
 def issue(request, slug, id, issue):

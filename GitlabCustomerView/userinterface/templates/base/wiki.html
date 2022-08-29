@@ -4,9 +4,8 @@
 
 {% block content %}
 
-<div class="btn-group float-end" role="group" aria-label="Basic outlined example">
-  <button type="button" class="btn btn-outline-primary"><i class="fa fa-book"></i> Download Documentation</button>
-  <button type="button" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create Ticket</button>
+<div class="btn-group float-end" role="group">
+  <a href="/project/{{ project.path }}/{{ project.id }}/issues/create" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create Ticket</button>
 </div>
 
 <h1>{{ project.name }}</h1>

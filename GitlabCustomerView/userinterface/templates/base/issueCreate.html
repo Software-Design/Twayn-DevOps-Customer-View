@@ -1,0 +1,61 @@
+{% extends base %}
+{% load i18n %}
+{% load static %}
+{% load parse_date %}
+{% load date_diff %}
+{% load markdown %}
+{% load prettify %}
+
+{% block content %}
+<h2>Create new issue</h2>
+  <br>
+  <div class="row">
+    <div class="col-5">
+      <div class="card-img-top" style="height: 200px; width: 90%; background-image: url('{{ project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
+      <br>
+      <table class="table table-striped">
+        <tr><th>{% trans 'Project' %}</th><td>{{ project.name }}</td></tr>
+        <tr><th>{% trans 'Description' %}</th><td>{{ project.description }}</td></tr>
+      </table>
+    </div>
+    <div class="col-7 px-3">
+      <form method="post">
+        {% csrf_token %}
+          <div class="form-floating">
+            <input type="text" name="title" class="form-control" placeholder="{% trans "Title of the ticket" %}" required>
+            <label>{% trans "Title of the ticket" %}</label>
+          </div>
+        <br>
+        <div class="form-floating">
+          <select class="form-select" name="milestone" aria-label="{% trans "Milestone" %}">
+            {% for milestone in project.milestones.list %}
+                {% if milestone.state == 'active' %}
+                <optgroup label="{% trans "Until" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}">
+                  <option value="{{ milestone.id }}">{{ milestone.title }}</option>
+                </optgroup>
+                {% endif %}
+            {% endfor %}
+          </select>
+          <label for="floatingSelect">{% trans "Milestone" %}</label>
+        </div>
+        <br>
+        <div class="form-floating">
+          <select class="form-select" name="label" aria-label="{% trans "Label" %}">
+            {% for label in project.labels.list %}
+              <option value="{{ label.name }}">{{ label.name }}</option>
+            {% endfor %}
+          </select>
+          <label for="floatingSelect">{% trans "Label" %}</label>
+        </div>
+        <br>
+        <div class="form-floating">
+          <textarea class="form-control" placeholder="{% trans "Description" %}" name="description" style="height: 300px"></textarea>
+          <label for="floatingTextarea2">{% trans "Description" %}</label>
+        </div>
+        <br>
+        <input type="submit" class="btn btn-primary float-end">
+      </form>
+    </div>
+</div>
+
+{% endblock %}
