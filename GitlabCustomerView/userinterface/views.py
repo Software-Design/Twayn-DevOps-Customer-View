@@ -62,8 +62,9 @@ def issueList(request, slug, id):
 
 @login_required
 def issueCreate(request, slug, id):
-    project = Project.objects.get(gitlabProjectId=id)
-    glProject = loadProject(project.gitlabProjectId, project.gitlabAccessToken)
+    project = Project.objects.get(projectIdentifier=id)
+    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+    glProject = loadProject(project, assigment.accessToken)
 
     if request.POST.get('title'):
         print(request.POST['label'])
