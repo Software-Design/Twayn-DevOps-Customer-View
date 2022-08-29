@@ -14,11 +14,12 @@ You may change the CACHE setting to use redis, memcached or any other caching ba
 
 ### Create first project
 
-1. [Create a superuser](https://docs.djangoproject.com/en/4.1/intro/tutorial01/), start your server and log in to the django admin panel.
-2. Add a customer with a valid email address using the django admin panel.
-3. Create a new project and assign it to the customer. Add the project ID - you find a GitLab projects ID within the "Settings > General" section.
-4. [Create a project access token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) and add it to the project. See additional notes below.
-5. Save and login by entering the email address of your customer.
+1. [Create a superuser](https://docs.djangoproject.com/en/4.1/ref/django-admin/#createsuperuser), start your server and log in to the django admin panel.
+2. Add a ´User´ with a valid email address using the django admin panel.
+3. Create a new ´Project´ and assign it to the user. Add the project ID - you find a GitLab projects ID within the "Settings > General" section.
+4. [Create a project access token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html). See additional notes below.
+5. Create an ´UserProjectAssignment´ and chose the already created ´User´ and ´Project´. Add the access token created in step 4.
+6. Save and login by entering the email address and password of your user.
 
 #### **Some notes on access tokens:**
 If your are on trial plan or on any tier below "Premium" you may have to use the personal access token instead. 
