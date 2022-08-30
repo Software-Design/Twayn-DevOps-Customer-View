@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.core.cache import cache
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 
 from .models import UserProjectAssignment, Project
 from .tools.gitlabCache import loadIssues, loadProject,loadWikiPage
@@ -14,8 +14,11 @@ import gitlab
 
 def index(request):
 
-    if request.POST.get('username'):
-        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+    if request.POST.get('email'):
+        # dirty way to get the username of the user from the email
+        UserModel = get_user_model()
+        user = UserModel.objects.filter(email=request.POST.get('email')).first()
+        user = authenticate(request, username=getattr(user, 'username', None), password=request.POST['password'])
         if user is not None:
             login(request, user)
             return redirect('/overview/')
