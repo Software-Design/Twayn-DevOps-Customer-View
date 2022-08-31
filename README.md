@@ -6,19 +6,19 @@ Given a Project ID and a GitLab Acces Token this UI provides authenticated users
 
 ## Getting started
 
-Follow the [Django Setup Guide](https://docs.djangoproject.com/en/4.1/intro/tutorial01/) to prepare your environment. We recommend using a virtuale environment to install the dependencies from our ´requirements.txt´.
+Follow the [Django Setup Guide](https://docs.djangoproject.com/en/4.1/intro/tutorial01/) to prepare your environment. We recommend using a virtuale environment to install the dependencies from our `requirements.txt`.
 
-After installing Django do the migrations and remove the `.example` ending from your `main/local.py.example` and adjust the settings according to your needs. If you need to change other settings copy the corresponding section from `main/settings.py` to your ´local.py´ instead of manipulating the ´settings.py´ itself.
+After installing Django do the migrations and remove the `.example` ending from your `main/local.py.example` and adjust the settings according to your needs. If you need to change other settings copy the corresponding section from `main/settings.py` to your `local.py` instead of manipulating the `settings.py` itself.
 
-You may change the CACHE setting to use redis, memcached or any other caching backend. By default the database cache is activated - you need to run ´python manage.py createcachetable´ to create and use the caching table, if you want to stay with database caching.
+You may change the CACHE setting to use redis, memcached or any other caching backend. By default the database cache is activated - you need to run `python manage.py createcachetable` to create and use the caching table, if you want to stay with database caching.
 
 ### Create first project
 
 1. [Create a superuser](https://docs.djangoproject.com/en/4.1/ref/django-admin/#createsuperuser), start your server and log in to the django admin panel.
-2. Add a ´User´ with a valid email address using the django admin panel.
-3. Create a new ´Project´ and assign it to the user. Add the project ID - you find a GitLab projects ID within the "Settings > General" section.
+2. Add a `User` with a valid email address using the django admin panel.
+3. Create a new `Project` and assign it to the user. Add the project ID - you find a GitLab projects ID within the "Settings > General" section.
 4. [Create a project access token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html). See additional notes below.
-5. Create an ´UserProjectAssignment´ and chose the already created ´User´ and ´Project´. Add the access token created in step 4.
+5. Create an `UserProjectAssignment` and chose the already created `User` and `Project`. Add the access token created in step 4.
 6. Save and login by entering the email address and password of your user.
 
 #### **Some notes on access tokens:**
@@ -31,7 +31,7 @@ No other permissions are needed.
 ## Custom themes
 Please do not add custom themes / designs / template in this repository! 
 
-Create your own repo and add your own ´base.html´ (you might want to copy and modify or prefferably [extend](https://docs.djangoproject.com/en/4.0/ref/templates/language/) ´/userinterface/templates/base/base.html´).
+Create your own repo and add your own `base.html` (you might want to copy and modify or prefferably [extend](https://docs.djangoproject.com/en/4.0/ref/templates/language/) `/userinterface/templates/base/base.html`).
 Go to the project root of your GitLab Customer View and load your custom theme as a submodule with `git submodule add -f {url} ./GitlabCustomerView/userinterface/templates/{theme-name}`.
 
 Go to local.py and change the name of the active theme to the `{theme-name}`.
