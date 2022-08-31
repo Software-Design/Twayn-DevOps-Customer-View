@@ -7,6 +7,7 @@ from .wikiParser import parseStructure
 
 from django.utils.translation import gettext as _
 
+# TODO descripe the dict that this function returns
 def loadProject(projectObject,accessToken:str):
     id = 'glp_'+projectObject.projectIdentifier
 
