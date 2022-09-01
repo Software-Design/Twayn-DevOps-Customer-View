@@ -11,7 +11,7 @@
 <h2>#{{ issue.data.iid }} - {{ issue.data.title }}{% if request.user.is_superuser %}
   <a href="{{ issue.data.web_url }}" target="_blank"><i class="fab fa-gitlab float-end"></i></a> 
 {% endif %}</h2>
-<h3><i class="far fa-archive"></i> {{ remoteProject.name }} {% if issue.data.milestone %}<span class="float-end"><i class="far fa-clipboard-list"></i> {{ issue.data.milestone.title }}</span>{% endif %}</h3>
+<h3><i class="fa far fa-archive"></i> {{ remoteProject.name }} {% if issue.data.milestone %}<span class="float-end"><i class="far fa-clipboard-list"></i> {{ issue.data.milestone.title }}</span>{% endif %}</h3>
   <br>
   <div class="row">
     <div class="col-5">

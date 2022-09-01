@@ -38,15 +38,13 @@
           bar_corner_radius: 0,
           arrow_curve: 5,
           padding: 18,
-          {% with remoteProject.created_at|parse_iso|dayssince as dayssince %}
-            {% if dayssince < 180 or milestones|length == 1 %}
-              view_mode: 'Week',
-            {% elif dayssince < 365 %}
-              view_mode: 'Month',
-            {% else %}
-              view_mode: 'Year',
-            {% endif %}
-          {% endwith %}
+          {% if daysbetween < 180 %}
+            view_mode: 'Week',
+          {% elif daysbetween < 365 %}
+            view_mode: 'Month',
+          {% else %}
+            view_mode: 'Year',
+          {% endif %}
           date_format: 'YYYY-MM-DD',
       });
     </script>

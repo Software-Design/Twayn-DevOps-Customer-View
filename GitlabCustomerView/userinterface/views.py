@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
+from .templatetags.dates import parse_date
 from .models import UserProjectAssignment, Project
 from .tools.gitlabCache import loadIssues, loadProject,loadWikiPage
 from .tools.templateHelper import template
@@ -50,8 +51,23 @@ def project(request, slug, id):
     project = Project.objects.get(projectIdentifier=id)
     assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
     glProject = loadProject(project, assigment.accessToken) | {'localProject': project}
+
+    firstMilestoneStart = None
+    lastMilestoneEnd = None
+    for milestone in glProject['allMilestones']:
+        if milestone.start_date and milestone.due_date:
+            start = parse_date(milestone.start_date)
+            end = parse_date(milestone.due_date)
+            if (milestone.expired == False or (milestone.expired == True and (end - start).days < 365)):
+                if firstMilestoneStart == None or start < firstMilestoneStart:
+                    firstMilestoneStart = start
+                if lastMilestoneEnd == None or end > lastMilestoneEnd:
+                    lastMilestoneEnd = end
+    daysbetween = 0
+    if lastMilestoneEnd and firstMilestoneStart:
+        daysbetween = (lastMilestoneEnd - firstMilestoneStart).days
     
-    return HttpResponse(template('project').render(glProject, request))
+    return HttpResponse(template('project').render(glProject | {'daysbetween': daysbetween}, request))
 
 @login_required
 def issueList(request, slug, id):
