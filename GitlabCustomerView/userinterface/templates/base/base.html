@@ -17,8 +17,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     {% block base_css %}
-      <link rel="stylesheet" href="/static/cdn/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC">
-      <link rel="stylesheet" href="/static/cdn/css/font-awesome-all.min.css" integrity="sha256-99464ceb71bc9bbdcc72275faefe44f98eb5cbb6b5d8ee665b87b35376f1a96e"/>
+      <link rel="stylesheet" href="/static/cdn/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/static/cdn/css/font-awesome-all.min.css" />
     {% endblock %}
     {% block extra_css %}{% endblock %}
 
@@ -26,7 +26,7 @@
 
   <body>
     {% block navigation %}
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
           <a class="navbar-brand" href="/">{{ settings.INTERFACE_NAME }}</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,13 +100,14 @@
         {% block content %}
         {% endblock %}
         </div>
+        <br><br>
     {% endblock %}
     
     {% block footer %}
     {% endblock %}
 
     {% block base_js %}
-      <script src="/static/cdn/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"></script>
+      <script src="/static/cdn/js/bootstrap.bundle.min.js"></script>
     {% endblock %}
     {% block extra_js %}
     {% endblock %}
