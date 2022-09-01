@@ -6,7 +6,7 @@
 
 <div class="btn-group float-end" role="group">
   {% if localProject.enableExports %}
-    <button type="button" class="btn btn-outline-primary"><i class="fa fa-book"></i> Download Documentation</button>
+    <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/print" class="btn btn-outline-primary"><i class="fa fa-book"></i> Download Documentation</a>
   {% endif %}
     <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create Ticket</a>
 </div>

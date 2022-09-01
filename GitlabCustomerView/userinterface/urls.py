@@ -8,6 +8,7 @@ urlpatterns = [
     path('overview/', views.overview, name='overview'),
     path('project/<slug:slug>/<int:id>', views.project, name='project'),
     path('project/<slug:slug>/<int:id>/documentation/', views.wiki, name='wiki'),
+    path('project/<slug:slug>/<int:id>/documentation/print', views.printWiki, name='printWiki'),
     path('project/<slug:slug>/<int:id>/documentation/<path:page>', views.wikipage, name='wikipage'),
     path('project/<slug:slug>/<int:id>/issues/', views.issueList, name='issueList'),
     path('project/<slug:slug>/<int:id>/issues/create', views.issueCreate, name='issueCreate'),

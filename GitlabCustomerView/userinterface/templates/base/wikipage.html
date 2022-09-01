@@ -9,7 +9,7 @@
   <div class="col-12">
     <div class="btn-group float-end" role="group">
       {% if localProject.enableExports %}
-      <button type="button" class="btn btn-outline-primary"><i class="fa fa-book"></i> Download Documentation</button>
+      <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/print" class="btn btn-outline-primary"><i class="fa fa-book"></i> Download Documentation</a>
       {% endif %}
       {% if request.user.is_superuser %}
           <a href="{{ project.web_url }}/-/wikis/{{ page.slug }}" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>

@@ -1,4 +1,4 @@
-import re
+import pdfkit, os
 from django.utils import translation
 from django.http import HttpResponse
 from django.core.cache import cache
@@ -10,8 +10,6 @@ from .templatetags.dates import parse_date
 from .models import UserProjectAssignment, Project
 from .tools.gitlabCache import loadIssues, loadProject,loadWikiPage
 from .tools.templateHelper import template
-
-import gitlab
 
 def index(request):
 
@@ -172,6 +170,36 @@ def wikipage(request, slug, id, page):
     glProject['page'] = loadWikiPage(project, assigment.accessToken, page)
     
     return HttpResponse(template('wikipage').render(glProject, request))
+
+@login_required
+def printWiki(request, slug, id):
+    project = Project.objects.get(projectIdentifier=id)
+    
+    if project.enableDocumentation == False:
+        return redirect('/')
+
+    if request.user.is_staff:
+        assigment = UserProjectAssignment.objects.filter(project=project).first()
+    else:
+        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
+    glProject = loadProject(project, assigment.accessToken)
+    
+    pages = []
+    for page in glProject['wikiFull']:
+        pages.append(loadWikiPage(project, assigment.accessToken, page.slug))
+        
+    pdfkit.from_string(template('print/wiki').render(glProject | {'pages':pages}, request), project.projectIdentifier+'.pdf', {'encoding': "UTF-8"})
+    
+    with open(project.projectIdentifier+'.pdf', 'rb') as f:
+        file_data = f.read()
+    
+    os.remove(project.projectIdentifier+'.pdf')
+    
+    response = HttpResponse(file_data, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="out.pdf"'
+
+    return response
 
 #
 # Caching helpers

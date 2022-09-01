@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load markdown %}
+<h3>{% trans "Documentation" %}</h3>
+{% include '../partials/tableofcontents.html' %}
+<br />
+{% for page in pages %}
+<div class="row">
+    <div class="col-12">
+      <h2 class="text-capitalize">{{ page.title }}</h2>
+      {% autoescape off %}{{ page.content|markdown|linebreaks }}{% endautoescape %}
+    </div>
+</div>
+{% endfor %}
