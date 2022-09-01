@@ -31,6 +31,7 @@ class Project(models.Model):
     enableDocumentation = models.BooleanField(default=True,help_text="Make the documentation accessible for users")
     enableMilestones = models.BooleanField(default=True,help_text="Visualize milestones and create a gantt chart")
     enableTicketCreation = models.BooleanField(default=True,help_text="Allow customers to create new tickets")
+    enableExports = models.BooleanField(default=True,help_text="Allow users to download contents of this project")
 
     labelPrefix = models.CharField(max_length=500, help_text="User are not allowed to create issues with labels that don't start with this prefix", null=True, blank=True)
     wikiPrefix =  models.CharField(max_length=500, help_text="User are not allowed to view wiki pages with paths that don't start with this prefix", null=True, blank=True)

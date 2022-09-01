@@ -5,7 +5,10 @@
 {% block content %}
 
 <div class="btn-group float-end" role="group">
-  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create Ticket</a>
+  {% if localProject.enableExports %}
+    <button type="button" class="btn btn-outline-primary"><i class="fa fa-book"></i> Download Documentation</button>
+  {% endif %}
+    <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create Ticket</a>
 </div>
 
 <h1>{{ remoteProject.name }}</h1>
