@@ -37,7 +37,11 @@ def logginout(request):
 
 @login_required
 def overview(request):
-    projectAssignments = UserProjectAssignment.objects.filter(user=request.user)
+
+    if request.user.is_staff:
+        projectAssignments = UserProjectAssignment.objects.all()
+    else:
+        projectAssignments = UserProjectAssignment.objects.filter(user=request.user)
 
     projects = []
     for assignment in projectAssignments:
@@ -49,7 +53,12 @@ def overview(request):
 @login_required
 def project(request, slug, id):
     project = Project.objects.get(projectIdentifier=id)
-    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
+    if request.user.is_staff:
+        assigment = UserProjectAssignment.objects.filter(project=project).first()
+    else:
+        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
     glProject = loadProject(project, assigment.accessToken) | {'localProject': project}
 
     firstMilestoneStart = None
@@ -72,7 +81,12 @@ def project(request, slug, id):
 @login_required
 def issueList(request, slug, id):
     project = Project.objects.get(projectIdentifier=id)
-    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
+    if request.user.is_staff:
+        assigment = UserProjectAssignment.objects.filter(project=project).first()
+    else:
+        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
     glProject = loadProject(project, assigment.accessToken)
     glProject['issues'] = loadIssues(project, assigment.accessToken, page=request.GET.get('page',1))
     
@@ -81,7 +95,11 @@ def issueList(request, slug, id):
 @login_required
 def issueCreate(request, slug, id):
     project = Project.objects.get(projectIdentifier=id)
-    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
+    if request.user.is_staff:
+        assigment = UserProjectAssignment.objects.filter(project=project).first()
+    else:
+        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
 
     glProject = loadProject(project, assigment.accessToken)
 
@@ -95,7 +113,12 @@ def issueCreate(request, slug, id):
 @login_required
 def issue(request, slug, id, issue):
     project = Project.objects.get(projectIdentifier=id)
-    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
+    if request.user.is_staff:
+        assigment = UserProjectAssignment.objects.filter(project=project).first()
+    else:
+        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
     glProject = loadProject(project, assigment.accessToken)
     glProject['issue'] = loadIssues(project, assigment.accessToken, iid=issue)
     
@@ -107,8 +130,12 @@ def milestones(request, slug, id):
 
     if project.enableMilestones == False:
         return redirect('/')
+    
+    if request.user.is_staff:
+        assigment = UserProjectAssignment.objects.filter(project=project).first()
+    else:
+        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
 
-    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
     glProject = loadProject(project, assigment.accessToken)
     
     return HttpResponse(template('milestones').render(glProject, request))
@@ -120,7 +147,11 @@ def wiki(request, slug, id):
     if project.enableDocumentation == False:
         return redirect('/')
 
-    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+    if request.user.is_staff:
+        assigment = UserProjectAssignment.objects.filter(project=project).first()
+    else:
+        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
     glProject = loadProject(project, assigment.accessToken)
     
     return HttpResponse(template('wiki').render(glProject, request))
@@ -132,7 +163,11 @@ def wikipage(request, slug, id, page):
     if project.enableDocumentation == False:
         return redirect('/')
 
-    assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+    if request.user.is_staff:
+        assigment = UserProjectAssignment.objects.filter(project=project).first()
+    else:
+        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
     glProject = loadProject(project, assigment.accessToken)
     glProject['page'] = loadWikiPage(project, assigment.accessToken, page)
     
