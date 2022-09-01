@@ -16,56 +16,104 @@ def loadProject(projectObject,accessToken:str):
             gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=accessToken)
             glProject = gl.projects.get(projectObject.projectIdentifier)
         except Exception as e:
-            return {'project': {'name': projectObject.name },'error': _('An error occurred')+': '+str(e)}
+            return {
+                'localProject': {'name': projectObject.name },
+                'error': _('An error occurred')+': '+str(e)
+                }
 
         project = {
-                'project': glProject,
-                'instance': projectObject,
-                'milestones': glProject.milestones.list() if projectObject.enableMilestones else False,
-                'issues': glProject.issues.list(confidential=False, order_by='updated_at', sort='desc')[:5],
-                'wikis': parseStructure(glProject.wikis.list()) if projectObject.enableDocumentation else False
+                'remoteProject': glProject,
+                'localProject': projectObject,
+                'allMilestones': loadMilestones(projectObject, glProject),
+                'mostRecentIssues': loadIssues(projectObject, glProject, page=1),
+                'wikiPages': parseStructure(loadWikiPage(projectObject, glProject)),
+                'projectLabels': loadLabels(projectObject, glProject)
             }
         cache.set(id,project,settings.CACHE_PROJECTS)
 
     return project
 
-def loadLabels(projectId:int,accessToken:str):
-    id = 'glp_'+projectId+'_labels'
+def getInstance(projectObject, tokenOrInstance):
+
+    if type(tokenOrInstance) == str:
+        gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=tokenOrInstance)
+        project = gl.projects.get(projectObject.projectIdentifier)
+    else:
+        project = tokenOrInstance
+
+    return project
+
+def loadLabels(projectObject,tokenOrInstance):
+    
+    project = getInstance(projectObject, tokenOrInstance)
+    id = 'glp_'+projectObject.projectIdentifier+'_labels'
+
     labels = cache.get(id)
     if not labels:
-        gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=accessToken)
-        labels = gl.projects.get(projectId).labels.list()
+        labels = project.labels.list()
         cache.set(id,labels,settings.CACHE_PROJECTS)
     return labels
 
-def loadWikiPage(projectId:int,accessToken:str,slug:str):
-    id = 'glp_'+projectId+'_'+slug
+def loadMilestones(projectObject,tokenOrInstance):
+    
+    if not projectObject.enableMilestones:
+        return False
+
+    project = getInstance(projectObject, tokenOrInstance)
+    id = 'glp_'+projectObject.projectIdentifier+'_milestones'
+
+    milestones = cache.get(id)
+    if not milestones:
+        milestones = project.milestones.list()
+        cache.set(id,milestones,settings.CACHE_PROJECTS)
+    return milestones
+
+def loadWikiPage(projectObject,tokenOrInstance,slug:str=None):
+
+    if not projectObject.enableDocumentation:
+        return False
+    
+    project = getInstance(projectObject, tokenOrInstance)
+
+    if slug:
+        id = 'glp_'+projectObject.projectIdentifier+'_'+slug
+    else:
+        id = 'glp_'+projectObject.projectIdentifier
+
     page = cache.get(id)
     if not page:
-        gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=accessToken)
-        project = gl.projects.get(projectId)
-        page = project.wikis.get(slug)
+        if slug:
+            if not projectObject.wikiPrefix or slug.startswith(projectObject.wikiPrefix):
+                page = project.wikis.get(slug)
+        else:
+            page = project.wikis.list()
+
         cache.set(id,page,settings.CACHE_PROJECTS)
 
     return page
 
-def loadIssues(projectId:int,accessToken:str,iid:int,page:int):
-    gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=accessToken)
+def loadIssues(projectObject,tokenOrInstance,iid:int=None,page:int=None):
+
+    project = getInstance(projectObject, tokenOrInstance)
 
     if iid:
-        id = 'glp_'+projectId+'_issues_'+str(iid)
+        id = 'glp_'+projectObject.projectIdentifier+'_issues_'+str(iid)
     else:
-        id = 'glp_'+projectId+'_issues'
-    
+        id = 'glp_'+projectObject.projectIdentifier+'_issues_'+str(page)
+
     issue = cache.get(iid)
     if not issue:
-        project = gl.projects.get(projectId)
-        if iid:
-            issue = project.issues.get(iid)
+        if iid:          
+            issue = project.issues.get(iid)  
             if issue.confidential == True: 
                 issue = None
+            else:
+                issue = {
+                    'data': project.issues.get(iid),
+                    'notes': issue.notes.list(system=False)
+                }
         else:
-            issue = project.issues.list(confidential=False,page=page)  
+            issue = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page)
         cache.set(id,issue,settings.CACHE_PROJECTS)
 
     return issue

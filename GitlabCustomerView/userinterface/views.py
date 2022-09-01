@@ -28,7 +28,6 @@ def index(request):
     if request.user.is_authenticated:
         return redirect('/overview/')
 
-
     return HttpResponse(template('login').render({},request))
 
 def logginout(request):
@@ -50,7 +49,7 @@ def overview(request):
 def project(request, slug, id):
     project = Project.objects.get(projectIdentifier=id)
     assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
-    glProject = loadProject(project, assigment.accessToken) | {'p': project}
+    glProject = loadProject(project, assigment.accessToken) | {'localProject': project}
     
     return HttpResponse(template('project').render(glProject, request))
 
@@ -59,7 +58,7 @@ def issueList(request, slug, id):
     project = Project.objects.get(projectIdentifier=id)
     assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
     glProject = loadProject(project, assigment.accessToken)
-    glProject['issues'] = loadIssues(project.projectIdentifier, assigment.accessToken, None, request.GET.get('page',1))
+    glProject['issues'] = loadIssues(project, assigment.accessToken, page=request.GET.get('page',1))
     
     return HttpResponse(template('issueList').render(glProject, request))
 
@@ -67,6 +66,7 @@ def issueList(request, slug, id):
 def issueCreate(request, slug, id):
     project = Project.objects.get(projectIdentifier=id)
     assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+
     glProject = loadProject(project, assigment.accessToken)
 
     if request.POST.get('title'):
@@ -81,14 +81,17 @@ def issue(request, slug, id, issue):
     project = Project.objects.get(projectIdentifier=id)
     assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
     glProject = loadProject(project, assigment.accessToken)
-    glProject['issue'] = loadIssues(project.projectIdentifier, assigment.accessToken, issue, None)
-    glProject['notes'] = glProject['issue'].notes.list(system=False)
+    glProject['issue'] = loadIssues(project, assigment.accessToken, iid=issue)
     
     return HttpResponse(template('issue').render(glProject, request))
 
 @login_required
 def milestones(request, slug, id):
     project = Project.objects.get(projectIdentifier=id)
+
+    if project.enableMilestones == False:
+        return redirect('/')
+
     assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
     glProject = loadProject(project, assigment.accessToken)
     
@@ -97,8 +100,10 @@ def milestones(request, slug, id):
 @login_required
 def wiki(request, slug, id):
     project = Project.objects.get(projectIdentifier=id)
+    
     if project.enableDocumentation == False:
         return redirect('/')
+
     assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
     glProject = loadProject(project, assigment.accessToken)
     
@@ -107,11 +112,13 @@ def wiki(request, slug, id):
 @login_required
 def wikipage(request, slug, id, page):
     project = Project.objects.get(projectIdentifier=id)
+    
     if project.enableDocumentation == False:
         return redirect('/')
+
     assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
     glProject = loadProject(project, assigment.accessToken)
-    glProject['page'] = loadWikiPage(project.projectIdentifier, assigment.accessToken, page)
+    glProject['page'] = loadWikiPage(project, assigment.accessToken, page)
     
     return HttpResponse(template('wikipage').render(glProject, request))
 

@@ -10,7 +10,7 @@
         <div class="row">
           <div class="col-md-4">
             <h4>{% trans 'Expired Milestones' %}</h4>
-            {% for milestone in milestones %} 
+            {% for milestone in allMilestones %} 
               {% if milestone.state == 'active' and milestone.due_date and milestone.due_date|parse_date < now %}
                 {% include './partials/milestones.html' %}
               {% endif %}
@@ -19,7 +19,7 @@
           </div>
           <div class="col-md-4">
             <h4>{% trans 'Current Milestones' %}</h4>
-            {% for milestone in milestones %} 
+            {% for milestone in allMilestones %} 
               {% if milestone.state == 'active' and not milestone.start_date or milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
                 {% include './partials/milestones.html' %}
                 <br>
@@ -29,7 +29,7 @@
           </div>
           <div class="col-md-4">
             <h4>{% trans 'Upcomming Milestones' %}</h4>
-            {% for milestone in milestones %} 
+            {% for milestone in allMilestones %} 
               {% if milestone.state == 'active' and milestone.start_date and milestone.start_date|parse_date >= now %}
                 {% include './partials/milestones.html' %}
               {% endif %}
