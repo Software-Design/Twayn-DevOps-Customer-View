@@ -4,11 +4,20 @@ from django.core.cache import cache
 
 
 from .wikiParser import parseStructure
+from userinterface.models import Project
 
 from django.utils.translation import gettext as _
 
-# TODO descripe the dict that this function returns
-def loadProject(projectObject,accessToken:str):
+
+def loadProject(projectObject: Project, accessToken: str) -> dict:
+    """
+    Loads the project from gitlab and all its information and returns them
+
+    @return:
+        dict:
+            { 'project': GitLabProjectObject, 'instance': Project, 'milestones': list or False, 'issues': list[:5], 'wikis': list or False }
+    """
+
     id = 'glp_'+projectObject.projectIdentifier
 
     project = cache.get(id)
@@ -30,7 +39,8 @@ def loadProject(projectObject,accessToken:str):
 
     return project
 
-def loadLabels(projectId:int,accessToken:str):
+
+def loadLabels(projectId: int, accessToken: str):
     id = 'glp_'+projectId+'_labels'
     labels = cache.get(id)
     if not labels:
@@ -39,7 +49,7 @@ def loadLabels(projectId:int,accessToken:str):
         cache.set(id,labels,settings.CACHE_PROJECTS)
     return labels
 
-def loadWikiPage(projectId:int,accessToken:str,slug:str):
+def loadWikiPage(projectId: int, accessToken: str, slug: str):
     id = 'glp_'+projectId+'_'+slug
     page = cache.get(id)
     if not page:

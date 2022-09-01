@@ -170,13 +170,27 @@ def wikipage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
 # Caching helpers
 #
 @login_required
-def clearCache(request):
+def clearCache(request: WSGIRequest) -> HttpResponseRedirect:
+    """
+    Handles the requests for /cache/clear
+    Resets the whole cache and redirects to /
+    """
+
     cache.clear()
     return redirect(request.GET.get('redirect','/'))
 
+
 @login_required
-def warmupCache(request):
-    assigment = UserProjectAssignment.objects.all()
-    for project in Project.objects.all():
-        loadProject(project, project.assigment)
+def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
+    """
+    Handles the requests for /cache/warmup
+    Loads every project (from gitlab) and redirects to /
+    """
+
+    for project in Project.objects.all().prefetch_related('userprojectassignment_set'):
+        # TODO: loading every project in the cache may cause long waiting times if there are many projects
+        if len(project.userprojectassignment_set.all()) > 0:
+            # .first() will break the prefetch
+            loadProject(project, project.userprojectassignment_set.all()[0].accessToken)
+
     return redirect(request.GET.get('redirect','/'))
