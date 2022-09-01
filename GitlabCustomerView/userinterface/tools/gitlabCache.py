@@ -5,6 +5,7 @@ from django.core.cache import cache
 
 from .wikiParser import parseStructure
 from userinterface.models import Project
+from gitlab.v4.objects.wikis import ProjectWiki
 
 from django.utils.translation import gettext as _
 
@@ -18,7 +19,7 @@ def loadProject(projectObject: Project, accessToken: str) -> dict:
             { 'project': GitLabProjectObject, 'instance': Project, 'milestones': list or False, 'issues': list[:5], 'wikis': list or False }
     """
 
-    id = 'glp_'+projectObject.projectIdentifier
+    id = f'glp_{projectObject.projectIdentifier}'
 
     project = cache.get(id)
     if not project:
@@ -40,37 +41,60 @@ def loadProject(projectObject: Project, accessToken: str) -> dict:
     return project
 
 
-def loadLabels(projectId: int, accessToken: str):
-    id = 'glp_'+projectId+'_labels'
+def loadLabels(projectIdentifier: int, accessToken: str) -> list:
+    """
+    Loads the labels from gitlab for the specified project using the project identifier
+
+    @return:
+        list:
+            A list containing ProjectLabel object
+            [ gitlab.v4.objects.labels.ProjectLabel, ... ]
+    """
+
+    id = f'glp_{projectIdentifier}_labels'
     labels = cache.get(id)
     if not labels:
-        gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=accessToken)
-        labels = gl.projects.get(projectId).labels.list()
+        gl = gitlab.Gitlab(url=settings.GITLAB_URL, private_token=accessToken)
+        labels = gl.projects.get(projectIdentifier).labels.list()
         cache.set(id,labels,settings.CACHE_PROJECTS)
     return labels
 
-def loadWikiPage(projectId: int, accessToken: str, slug: str):
-    id = 'glp_'+projectId+'_'+slug
+
+def loadWikiPage(projectIdentifier: int, accessToken: str, slug: str) -> ProjectWiki:
+    """
+    Loads the project wiki page object from gitlab using the project identifier and slug
+    """
+    
+    id = f'glp_{projectIdentifier}_{slug}'
     page = cache.get(id)
     if not page:
-        gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=accessToken)
-        project = gl.projects.get(projectId)
+        gl = gitlab.Gitlab(url=settings.GITLAB_URL, private_token=accessToken)
+        project = gl.projects.get(projectIdentifier)
         page = project.wikis.get(slug)
         cache.set(id,page,settings.CACHE_PROJECTS)
 
     return page
 
-def loadIssues(projectId:int,accessToken:str,iid:int,page:int):
+
+def loadIssues(projectIdentifier: int, accessToken: str, iid: int, page: int) -> list:
+    """
+    Loads the issues objects from gitlab in a list using the the project identifier and slug
+
+    @return:
+        list:
+            A list containing ProjectIssue objects
+            [ gitlab.v4.objects.issues.ProjectIssue ]
+    """
+
     gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=accessToken)
 
+    id = f'glp_{projectIdentifier}_issues'
     if iid:
-        id = 'glp_'+projectId+'_issues_'+str(iid)
-    else:
-        id = 'glp_'+projectId+'_issues'
+        id = f'{id}_{str(iid)}'
     
     issue = cache.get(iid)
     if not issue:
-        project = gl.projects.get(projectId)
+        project = gl.projects.get(projectIdentifier)
         if iid:
             issue = project.issues.get(iid)
             if issue.confidential == True: 
