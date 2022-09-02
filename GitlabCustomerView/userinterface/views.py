@@ -44,7 +44,8 @@ def overview(request):
     projects = []
     for assignment in projectAssignments:
         glProject = loadProject(assignment.project, assignment.accessToken)
-        projects.append(glProject)
+        if glProject not in projects:
+            projects.append(glProject)
 
     return HttpResponse(template('overview').render({'projects': projects}, request))
 
