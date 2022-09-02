@@ -27,7 +27,6 @@ def loadProject(projectObject,accessToken:str):
                 'allMilestones': loadMilestones(projectObject, glProject),
                 'mostRecentIssues': loadIssues(projectObject, glProject, page=1),
                 'wikiPages': parseStructure(loadWikiPage(projectObject, glProject)),
-                'wikiFull': loadWikiPage(projectObject, glProject),
                 'projectLabels': loadLabels(projectObject, glProject)
             }
         cache.set(id,project,settings.CACHE_PROJECTS)

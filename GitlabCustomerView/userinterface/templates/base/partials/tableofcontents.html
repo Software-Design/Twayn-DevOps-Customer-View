@@ -5,7 +5,7 @@
         {% with forloop.counter as no %}
             <li class="list-group-item list-group-item-light"><div class="fw-bold">{{ no }} {% if path == '/' %}{% trans 'Documentation' %}{% else %}{{ path }}{% endif %}</div></li>
                 {% for page in category %}
-                <li class="list-group-item text-capitalize"> &nbsp; <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/{{ page.slug }}">{{ no }}.{{ forloop.counter }} {{ page.title }}</a>
+                <li class="list-group-item text-capitalize"> &nbsp; {% if links != False %}<a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/{{ page.slug }}">{{ no }}.{{ forloop.counter }} {{ page.title }}</a>{% else %}{{ no }}.{{ forloop.counter }} {{ page.title }}{% endif %}
                 </li>
                 {% endfor %}
         {% endwith %}

@@ -103,7 +103,6 @@ def issueCreate(request, slug, id):
     glProject = loadProject(project, assigment.accessToken)
 
     if request.POST.get('title'):
-        print(request.POST['label'])
         glProject['project'].issues.create({'title': request.POST['title'], 'description': request.POST['description'], 'labels': request.POST['label'],'milestone_id': request.POST['milestone']})
         return redirect('/project/'+glProject['project'].path+'/'+str(glProject['project'].id)+'/issues/')
 
@@ -186,11 +185,7 @@ def printWiki(request, slug, id):
 
     glProject = loadProject(project, assigment.accessToken)
     
-    pages = []
-    for page in glProject['wikiFull']:
-        pages.append(loadWikiPage(project, assigment.accessToken, page.slug))
-        
-    pdfkit.from_string(template('print/wiki').render(glProject | {'pages':pages}, request), project.projectIdentifier+'.pdf', {'encoding': "UTF-8"})
+    pdfkit.from_string(template('print/wiki').render(glProject, request), project.projectIdentifier+'.pdf', {'encoding': "UTF-8"})
     
     with open(project.projectIdentifier+'.pdf', 'rb') as f:
         file_data = f.read()
@@ -198,7 +193,7 @@ def printWiki(request, slug, id):
     os.remove(project.projectIdentifier+'.pdf')
     
     response = HttpResponse(file_data, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="out.pdf"'
+    response['Content-Disposition'] = 'attachment; filename="documentation.pdf"'
 
     return response
 
