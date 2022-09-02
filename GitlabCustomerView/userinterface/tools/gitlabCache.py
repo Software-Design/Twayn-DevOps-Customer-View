@@ -1,14 +1,25 @@
+from typing import Union
+
 import gitlab
 from django.conf import settings
 from django.core.cache import cache
-
+from django.utils.translation import gettext as _
+from gitlab.v4.objects.wikis import ProjectWiki
+from userinterface.models import Project
 
 from .wikiParser import parseStructure
 
-from django.utils.translation import gettext as _
 
-def loadProject(projectObject,accessToken:str):
-    id = 'glp_'+projectObject.projectIdentifier
+def loadProject(projectObject: Project, accessToken: str) -> dict:
+    """
+    Loads the project from gitlab and all its information and returns them
+
+    @return:
+        dict:
+            { 'remoteProject': GitLabProjectObject, 'localProject': Project, 'allMilestones': list or False, 'mostRecentIssues': list[:5], 'wikiPages': list or False, 'projectLabels':  }
+    """
+
+    id = f'glp_{projectObject.projectIdentifier}'
 
     project = cache.get(id)
     if not project:
@@ -33,48 +44,19 @@ def loadProject(projectObject,accessToken:str):
 
     return project
 
-def getInstance(projectObject, tokenOrInstance):
 
-    if type(tokenOrInstance) == str:
-        gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=tokenOrInstance)
-        project = gl.projects.get(projectObject.projectIdentifier)
-    else:
-        project = tokenOrInstance
+def loadWikiPage(projectObject: Project, tokenOrInstance, slug: str=None) -> Union[ProjectWiki, list]:
+    """
+    Loads a project wiki page or all wiki pages object from gitlab using the project identifier and slug
 
-    return project
-
-def loadLabels(projectObject,tokenOrInstance):
-    
-    project = getInstance(projectObject, tokenOrInstance)
-    id = 'glp_'+projectObject.projectIdentifier+'_labels'
-
-    labels = cache.get(id)
-    if not labels:
-        labels = project.labels.list()
-        cache.set(id,labels,settings.CACHE_PROJECTS)
-    return labels
-
-def loadMilestones(projectObject,tokenOrInstance):
-    
-    if not projectObject.enableMilestones:
-        return False
-
-    project = getInstance(projectObject, tokenOrInstance)
-    id = 'glp_'+projectObject.projectIdentifier+'_milestones'
-
-    milestones = cache.get(id)
-    if not milestones:
-        milestones = project.milestones.list()
-        cache.set(id,milestones,settings.CACHE_PROJECTS)
-    return milestones
-
-def loadWikiPage(projectObject,tokenOrInstance,slug:str=None):
+    @return:
+        Either a single wiki page if slug is set or all pages of the project in a list
+    """
 
     if not projectObject.enableDocumentation:
         return False
-    
-    project = getInstance(projectObject, tokenOrInstance)
 
+    project = getInstance(projectObject, tokenOrInstance)
     if slug:
         id = 'glp_'+projectObject.projectIdentifier+'_'+slug
     else:
@@ -87,19 +69,98 @@ def loadWikiPage(projectObject,tokenOrInstance,slug:str=None):
                 page = project.wikis.get(slug)
         else:
             page = project.wikis.list()
-
         cache.set(id,page,settings.CACHE_PROJECTS)
 
     return page
 
-def loadIssues(projectObject,tokenOrInstance,iid:int=None,page:int=None):
+
+def getInstance(projectObject: Project, tokenOrInstance):
+    """
+    Get the gitlab project object instance (remoteProject)
+
+    @params:
+        tokenOrInstance:
+            Is either a string (token) or a gitlab.v4.objects.projects.Project instance
+    
+    @return:
+        gitlab.v4.objects.projects.Project
+    """
+
+    if type(tokenOrInstance) == str:
+        gl = gitlab.Gitlab(url=settings.GITLAB_URL,private_token=tokenOrInstance)
+        project = gl.projects.get(projectObject.projectIdentifier)
+    else:
+        project = tokenOrInstance
+
+    return project
+
+
+def loadLabels(projectObject: Project, tokenOrInstance: str) -> list:
+    """
+    Loads the labels from gitlab for the given project object
+
+    @return:
+        list:
+            A list containing ProjectLabel objects
+            [ gitlab.v4.objects.labels.ProjectLabel, ... ]
+    """
+    
+    project = getInstance(projectObject, tokenOrInstance)
+    id = f'glp_{projectObject.projectIdentifier}_labels'
+
+    labels = cache.get(id)
+    if not labels:
+        labels = project.labels.list()
+        cache.set(id,labels,settings.CACHE_PROJECTS)
+
+    return labels
+
+
+def loadMilestones(projectObject: Project, tokenOrInstance) -> list:
+    """
+    Loads the milestones from gitlab for the given project object
+
+    @params:
+        tokenOrInstance:
+            Is either a string (token) or a gitlab.v4.objects.projects.Project instance
+    
+    @return:
+        A list containing ProjectMilestone objects
+        [ gitlab.v4.objects.milestones.ProjectMilestone, ... ]
+    """
+    
+    if not projectObject.enableMilestones:
+        return False
+
+    project = getInstance(projectObject, tokenOrInstance)
+    id = 'glp_'+projectObject.projectIdentifier+'_milestones'
+
+    milestones = cache.get(id)
+    if not milestones:
+        milestones = project.milestones.list()
+        cache.set(id,milestones,settings.CACHE_PROJECTS)
+
+    return milestones
+
+
+def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int=None) -> Union[list, dict, None]:
+    """
+    Loads an issue or the issues from gitlab for the given project object
+
+    @params:
+        tokenOrInstance:
+            Is either a string (token) or a gitlab.v4.objects.projects.Project instance
+
+    @return:
+        Either a list containing ProjectIssue objects, an dict with the ProjectIssues or None
+        [ gitlab.v4.objects.issues.ProjectIssue ... ] or { 'data': gitlab.v4.objects.issues.ProjectIssue, 'notes': [] } or None
+    """
 
     project = getInstance(projectObject, tokenOrInstance)
 
+    id = f'glp_{projectObject.projectIdentifier}_issues'
     if iid:
-        id = 'glp_'+projectObject.projectIdentifier+'_issues_'+str(iid)
-    else:
-        id = 'glp_'+projectObject.projectIdentifier+'_issues_'+str(page)
+        id = f'{id}_{str(iid)}'
 
     issue = cache.get(iid)
     if not issue:
