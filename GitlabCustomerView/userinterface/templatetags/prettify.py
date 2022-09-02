@@ -22,3 +22,11 @@ def translateDescriptions(value):
 @register.filter()
 def getTeamMember(value):
     return TeamMember.objects.filter(username='@'+value).first()
+
+@register.filter('startswith')
+def startswith(text, starts):
+    return text.startswith(starts)
+
+@register.filter('split')
+def split(text, limit):
+    return text.split(limit)

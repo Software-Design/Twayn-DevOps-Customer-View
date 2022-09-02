@@ -10,25 +10,21 @@
     <div class="col-3">
       <div class="card">
           <div class="card-img-top">
-            {% if p.instance.image %}
-              <div style="height: 200px; width: 90%; background-image: url('{{ p.instance.image.url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
-            {% else %}
-              <div style="height: 200px; width: 90%; background-image: url('{{ p.project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
-            {% endif %}
+            <div style="height: 200px; width: 90%; background-image: url('{% if p.localProject.image %}{{ p.localProject.image.url }}{% else %}{{ p.remoteProject.avatar_url }}{% endif %}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
           </div>
           <div class="card-body">
-            <h5 class="card-title">{{ p.project.name }}</h5>
-            <p class="card-text">{{ p.project.description }}{{ project.error }}
+            <h5 class="card-title">{{ p.remoteProject.name }}</h5>
+            <p class="card-text">{{ p.remoteProject.description }}{{ p.error }}
               <br><br>
               <strong>{% trans "Current Milestone(s)" %}:</strong><br>
-              {% for milestone in p.milestones %} 
+              {% for milestone in p.allMilestones %} 
                 {% if milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
                   &raquo; {{ milestone.title }}<br>
                 {% endif %}
               {% endfor %} <br />
             </p>
-            {% if p.project.path %}
-            <a href="/project/{{ p.project.path }}/{{ p.project.id }}" class="btn btn-primary">{% trans "Go to project &raquo;" %}</a>
+            {% if p.remoteProject.path %}
+            <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="btn btn-primary">{% trans "Go to project &raquo;" %}</a>
             {% endif %}
           </div>
         </div>

@@ -10,11 +10,11 @@
   <br>
   <div class="row">
     <div class="col-5">
-      <div class="card-img-top" style="height: 200px; width: 90%; background-image: url('{{ project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
+      <div style="height: 200px; width: 90%; background-image: url('{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
       <br>
       <table class="table table-striped">
-        <tr><th>{% trans 'Project' %}</th><td>{{ project.name }}</td></tr>
-        <tr><th>{% trans 'Description' %}</th><td>{{ project.description }}</td></tr>
+        <tr><th>{% trans 'Project' %}</th><td>{{ remoteProject.name }}</td></tr>
+        <tr><th>{% trans 'Description' %}</th><td>{{ remoteProject.description }}</td></tr>
       </table>
     </div>
     <div class="col-7 px-3">
@@ -27,7 +27,7 @@
         <br>
         <div class="form-floating">
           <select class="form-select" name="milestone" aria-label="{% trans "Milestone" %}">
-            {% for milestone in project.milestones.list %}
+            {% for milestone in allMilestones %}
                 {% if milestone.state == 'active' %}
                 <optgroup label="{% trans "Until" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}">
                   <option value="{{ milestone.id }}">{{ milestone.title }}</option>
@@ -38,10 +38,13 @@
           <label for="floatingSelect">{% trans "Milestone" %}</label>
         </div>
         <br>
+
         <div class="form-floating">
           <select class="form-select" name="label" aria-label="{% trans "Label" %}">
-            {% for label in project.labels.list %}
-              <option value="{{ label.name }}">{{ label.name }}</option>
+            {% for label in projectLabels %}
+              {% if not localProject.labelPrefix or label.name|startswith:localProject.labelPrefix %}
+              <option value="{{ label.name }}">{% with names=label.name|split:"::" %}{% if names|length > 1 %}{{ names.0|capfirst }}: {{ names.1|capfirst }}{% else %}{{ names.0|capfirst }}{% endif %}{% endwith %}</option>
+              {% endif %}
             {% endfor %}
           </select>
           <label for="floatingSelect">{% trans "Label" %}</label>

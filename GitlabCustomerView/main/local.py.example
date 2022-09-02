@@ -1,8 +1,11 @@
 # When using this projekct in production set DEBUG to false or simple delete this line in your production environment
 DEBUG = True
 
-# Nome of the project
+# Name of the project
 INTERFACE_NAME = 'Gitlab Customer View'
+
+# URL of the project
+INTERFACE_URL = 'http://localhost:8000'
 
 # Add the hosts name you want to server your project from
 ALLOWED_HOSTS = []

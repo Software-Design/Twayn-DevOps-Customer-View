@@ -18,7 +18,11 @@ def getProject(request: WSGIRequest, id: int) -> dict:
     """
 
     project = Project.objects.filter(projectIdentifier=id).first()
-    assigment = UserProjectAssignment.objects.filter(user=request.user, project=project).first()
+
+    if request.user.is_staff:
+        assigment = UserProjectAssignment.objects.filter(project=project).first()
+    else:
+        assigment = UserProjectAssignment.objects.filter(user=request.user, project=project).first()
 
     if not project or not assigment:
         raise Http404

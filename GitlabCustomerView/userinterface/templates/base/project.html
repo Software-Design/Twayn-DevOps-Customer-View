@@ -9,11 +9,11 @@
 {% endblock %}
 
 {% block extra_js %}
-  {% if milestones %}
+  {% if allMilestones %}
     <script src="{% static 'vendor/frappe-gantt/frappe-gantt.js' %}"></script>
     <script>
       var tasks = [
-      {% for milestone in milestones %} 
+      {% for milestone in allMilestones %} 
         
         {% if milestone.start_date and milestone.due_date %}
           {% with milestone.due_date|parse_date|dayssince as dayssince %}
@@ -38,15 +38,13 @@
           bar_corner_radius: 0,
           arrow_curve: 5,
           padding: 18,
-          {% with project.created_at|parse_iso|dayssince as dayssince %}
-            {% if dayssince < 180 or milestones|length == 1 %}
-              view_mode: 'Week',
-            {% elif dayssince < 365 %}
-              view_mode: 'Month',
-            {% else %}
-              view_mode: 'Year',
-            {% endif %}
-          {% endwith %}
+          {% if daysbetween < 180 %}
+            view_mode: 'Week',
+          {% elif daysbetween < 365 %}
+            view_mode: 'Month',
+          {% else %}
+            view_mode: 'Year',
+          {% endif %}
           date_format: 'YYYY-MM-DD',
       });
     </script>
@@ -56,24 +54,24 @@
 {% block content %}
 
 <div class="btn-group float-end" role="group">
-  <a href="/project/{{ project.path }}/{{ project.id }}/issues/create" class="btn btn-outline-primary"><i class="fa fa-plus"></i> {% trans "Create Ticket" %}</a>
+  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa fa-plus"></i> {% trans "Create Ticket" %}</a>
   {% if request.user.is_superuser %}
-  <a href="{{ project.web_url }}" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
+  <a href="{{ remoteProject.web_url }}" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
   {% endif %}
 </div>
 
-<h1>{{ project.name }}</h1>
-  {% if milestones %}
-    {{ project.description }}
+<h1>{{ remoteProject.name }}</h1>
+  {% if allMilestones %}
+    {{ remoteProject.description }}
   {% endif %}
   <br><br>
   <div class="row">
     <div class="col-3">
-      <div class="card-img-top" style="height: 200px; width: 90%; background-image: url('{{ project.avatar_url }}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
+      <div style="height: 200px; width: 90%; background-image: url('{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
     </div>
     <div class="col-9">
-      {% if not milestones %}
-        {{ project.description }}
+      {% if not allMilestones %}
+        {{ remoteProject.description }}
       {% else %}
       <br>
       <svg id="gantt"></svg>
@@ -83,7 +81,7 @@
       <br>
       <h4>{% trans "Last updated issues" %}</h4><br>
       <ul class="list-group">
-        {% include './partials/issues.html' with issues=issues %}
+        {% include './partials/issues.html' with issues=mostRecentIssues %}
       </ul>
       <br><br>
     </div>
@@ -91,7 +89,7 @@
       <br>
       <h4>{% trans "Person in charge" %}</h4><br>
       <div class="row">
-        {% for assignee in p.assignees.all %}
+        {% for assignee in localProject.assignees.all %}
           <div class="col-md-4">
             {% include './partials/employee.html' with user=assignee %}
           </div>

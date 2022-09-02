@@ -17,8 +17,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     {% block base_css %}
-      <link rel="stylesheet" href="/static/cdn/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC">
-      <link rel="stylesheet" href="/static/cdn/css/font-awesome-all.min.css" integrity="sha256-99464ceb71bc9bbdcc72275faefe44f98eb5cbb6b5d8ee665b87b35376f1a96e"/>
+      <link rel="stylesheet" href="/static/cdn/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/static/cdn/css/font-awesome-all.min.css" />
     {% endblock %}
     {% block extra_css %}{% endblock %}
 
@@ -26,7 +26,7 @@
 
   <body>
     {% block navigation %}
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
           <a class="navbar-brand" href="/">{{ settings.INTERFACE_NAME }}</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,33 +38,35 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/overview/"><i class="fa fa-archive"></i> {% trans "All Projects" %}</a>
               </li>
-              {% if project %}
+              {% if remoteProject %}
               <li class="nav-item">
                 <a class="nav-link disabled" aria-current="page" href="/overview/">|</a>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="/project/{{ project.path }}/{{ project.id }}/" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <strong><i class="fa fa-folder-open"></i> {{ project.name }}</strong>
+                <a class="nav-link dropdown-toggle" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <strong><i class="fa fa-folder-open"></i> {{ remoteProject.name }}</strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="/project/{{ project.path }}/{{ project.id }}">{% trans "Overview" %}</a></li>
+                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}">{% trans "Overview" %}</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="/project/{{ project.path }}/{{ project.id }}/milestones/">{% trans "Milestones / Kanban Board" %}</a></li>
-                  <li><a class="dropdown-item" href="/project/{{ project.path }}/{{ project.id }}/issues/">{% trans "Browse all Issues" %}</a></li>
+                  {% if localProject.enableMilestones %}
+                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/">{% trans "Milestones / Kanban Board" %}</a></li>
+                  {% endif %}
+                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/">{% trans "Browse all Issues" %}</a></li>
                 </ul>
               </li>
               {% endif %}
 
-              {% if wikis  %}
+              {% if wikiPages and localProject.enableDocumentation  %}
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="/project/{{ project.path }}/{{ project.id }}/" id="navbarWikiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/" id="navbarWikiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-book"></i> {% trans "Documentation" %}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarWikiDropdown">
-                  <li><a class="dropdown-item" href="/project/{{ project.path }}/{{ project.id }}/documentation/">{% trans "Full  Documentation" %}</a></li>
+                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/">{% trans "Full  Documentation" %}</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  {% for wiki in wikis %}
-                    <li><a class="dropdown-item" href="/project/{{ project.path }}/{{ project.id }}/documentation/?category={{ wiki.title }}">{{ forloop.counter }} {% if wiki.title == '/' %}{% trans 'Documentation' %}{% else %}{{ wiki.title }}{% endif %}</a></li>
+                  {% for wiki in wikiPages %}
+                    <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/?category={{ wiki.title }}">{{ forloop.counter }} {% if wiki.title == '/' %}{% trans 'Documentation' %}{% else %}{{ wiki.title }}{% endif %}</a></li>
                   {% endfor %}
                 </ul>
               </li>
@@ -97,6 +99,11 @@
         <div class="container">
         {% block content %}
         {% endblock %}
+          <br>
+          <hr>  
+          &copy; 2022
+          <p class="float-end">powered by <a href="https://gitlab.com/software-design-public/gitlab-customer-view/" class="text-muted" target="_blank">GitLab Customer View</a></p>
+          <br><br>
         </div>
     {% endblock %}
     
@@ -104,7 +111,7 @@
     {% endblock %}
 
     {% block base_js %}
-      <script src="/static/cdn/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"></script>
+      <script src="/static/cdn/js/bootstrap.bundle.min.js"></script>
     {% endblock %}
     {% block extra_js %}
     {% endblock %}

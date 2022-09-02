@@ -8,3 +8,4 @@ virtualenv==20.14.1
 python-gitlab
 markdown
 Pillow
+pdfkit

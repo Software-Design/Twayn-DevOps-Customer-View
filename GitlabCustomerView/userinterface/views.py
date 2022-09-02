@@ -1,7 +1,9 @@
+import os
 import re
 from typing import Union
 
 import gitlab
+import pdfkit
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
@@ -12,6 +14,7 @@ from django.shortcuts import redirect
 from django.utils import translation
 
 from .models import Project, UserProjectAssignment
+from .templatetags.dates import parse_date
 from .tools.gitlabCache import loadIssues, loadProject, loadWikiPage
 from .tools.templateHelper import template
 from .tools.viewsHelper import getProject
@@ -62,7 +65,8 @@ def overview(request: WSGIRequest) -> HttpResponse:
     projects = []
     for assignment in projectAssignments:
         glProject = loadProject(assignment.project, assignment.accessToken)
-        projects.append(glProject)
+        if glProject not in projects:
+            projects.append(glProject)
 
     return HttpResponse(template('overview').render({'projects': projects}, request))
 
@@ -74,8 +78,24 @@ def project(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     Get all information needed to display a single project specified with the id
     """
 
-    glProject = getProject(request, id) | {'p': project}
-    return HttpResponse(template('project').render(glProject, request))
+    glProject = getProject(request, id) | {'localProject': project}
+
+    firstMilestoneStart = None
+    lastMilestoneEnd = None
+    for milestone in glProject['allMilestones']:
+        if milestone.start_date and milestone.due_date:
+            start = parse_date(milestone.start_date)
+            end = parse_date(milestone.due_date)
+            if (milestone.expired == False or (milestone.expired == True and (end - start).days < 365)):
+                if firstMilestoneStart == None or start < firstMilestoneStart:
+                    firstMilestoneStart = start
+                if lastMilestoneEnd == None or end > lastMilestoneEnd:
+                    lastMilestoneEnd = end
+    daysbetween = 0
+    if lastMilestoneEnd and firstMilestoneStart:
+        daysbetween = (lastMilestoneEnd - firstMilestoneStart).days
+
+    return HttpResponse(template('project').render(glProject | {'daysbetween': daysbetween}, request))
 
 
 @login_required
@@ -87,7 +107,7 @@ def issueList(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
 
     glProject = getProject(request, id)
     assigment = UserProjectAssignment.objects.get(user=request.user, project__projectIdentifier=id)
-    glProject['issues'] = loadIssues(glProject['instance'].projectIdentifier, assigment.accessToken, None, request.GET.get('page',1))
+    glProject['issues'] = loadIssues(glProject['localProject'], assigment.accessToken, page=request.GET.get('page',1))
     
     return HttpResponse(template('issueList').render(glProject, request))
 
@@ -117,8 +137,7 @@ def issue(request: WSGIRequest, slug: str, id: int, issue: int) -> HttpResponse:
 
     glProject = getProject(request, id)
     assigment = UserProjectAssignment.objects.get(user=request.user, project__projectIdentifier=id)
-    glProject['issue'] = loadIssues(glProject['instance'].projectIdentifier, assigment.accessToken, issue, None)
-    glProject['notes'] = glProject['issue'].notes.list(system=False)
+    glProject['issue'] = loadIssues(glProject['localProject'], assigment.accessToken, iid=issue)
     
     return HttpResponse(template('issue').render(glProject, request))
 
@@ -131,6 +150,9 @@ def milestones(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     """
 
     glProject = getProject(request, id)
+    if not glProject['localProject'].enableDocumentation:
+        return redirect('/')
+
     return HttpResponse(template('milestones').render(glProject, request))
 
 
@@ -143,7 +165,7 @@ def wiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRedirect
     """
 
     glProject = getProject(request, id)
-    if not glProject['instance'].enableDocumentation:
+    if not glProject['localProject'].enableDocumentation:
         return redirect('/')
     
     return HttpResponse(template('wiki').render(glProject, request))
@@ -158,13 +180,39 @@ def wikipage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
     """
 
     glProject = getProject(request, id)
-    if not glProject['instance'].enableDocumentation:
+    if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
     assigment = UserProjectAssignment.objects.get(user=request.user, project__projectIdentifier=id)
-    glProject['page'] = loadWikiPage(glProject['instance'].projectIdentifier, assigment.accessToken, page)
+    glProject['page'] = loadWikiPage(glProject['localProject'], assigment.accessToken, page)
     
     return HttpResponse(template('wikipage').render(glProject, request))
+
+
+@login_required
+def printWiki(request, slug, id):
+    """
+    Handles the requests for /project/<slug:slug>/<int:id>/documentation/print
+    Renders a pdf of the documentation pages to enable downloading them
+    Redirect to / if the documentation is disabled for the project
+    """
+
+    glProject = getProject(request, id)
+    projectIdentifier = glProject['localProject'].projectIdentifier
+    if not glProject['localProject'].enableDocumentation:
+        return redirect('/')
+
+    pdfkit.from_string(template('print/wiki').render(glProject, request), projectIdentifier+'.pdf', {'encoding': "UTF-8"})
+    
+    with open(projectIdentifier+'.pdf', 'rb') as f:
+        file_data = f.read()
+    
+    os.remove(projectIdentifier+'.pdf')
+    
+    response = HttpResponse(file_data, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="documentation.pdf"'
+
+    return response
 
 #
 # Caching helpers
