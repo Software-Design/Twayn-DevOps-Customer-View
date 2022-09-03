@@ -36,7 +36,7 @@ def loadProject(projectObject: Project, accessToken: str) -> dict:
                 'remoteProject': glProject,
                 'localProject': projectObject,
                 'allMilestones': loadMilestones(projectObject, glProject),
-                'mostRecentIssues': loadIssues(projectObject, glProject, page=1),
+                'mostRecentIssues': loadIssues(projectObject, glProject, page=1)[:5],
                 'wikiPages': parseStructure(loadWikiPage(projectObject, glProject)),
                 'projectLabels': loadLabels(projectObject, glProject)
             }

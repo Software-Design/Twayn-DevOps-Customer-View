@@ -1,12 +1,12 @@
 {% load prettify %}
 {% load i18n %}
 <div class="row">
-    {% if user.avatar_url %}
-    <div class="col-3 text-end">
-        <img src="{{ user.avatar_url }}" width="75">
+    {% if user.avatar %}
+    <div class="col-5 text-end">
+        <img src="{{ user.avatar.url }}" width="75">
     </div>
     {% endif %}
-    <div class="col-9">
+    <div class="col-7">
         <strong>{{ user.name }}</strong><br>
             {% with user.username|getTeamMember as employee %}
                 {% if employee.email %}

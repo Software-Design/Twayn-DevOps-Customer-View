@@ -64,8 +64,10 @@ def overview(request: WSGIRequest) -> HttpResponse:
     Gets all projects to show on the page
     """
 
-    projectAssignments = UserProjectAssignment.objects.filter(
-        user=request.user)
+    if request.user.is_staff:
+        projectAssignments = UserProjectAssignment.objects.all()
+    else:
+        projectAssignments = UserProjectAssignment.objects.filter(user=request.user)
 
     projects = []
     for assignment in projectAssignments:
@@ -78,20 +80,11 @@ def overview(request: WSGIRequest) -> HttpResponse:
 
 @login_required
 def project(request, slug, id):
-    project = Project.objects.get(projectIdentifier=id)
-
-    if request.user.is_staff:
-        assigment = UserProjectAssignment.objects.filter(
-            project=project).first()
-    else:
-        assigment = UserProjectAssignment.objects.get(
-            user=request.user, project=project)
-
-    glProject = loadProject(project, assigment.accessToken) | {
-        'localProject': project}
-
+    
+    glProject = getProject(request, id)
     firstMilestoneStart = None
     lastMilestoneEnd = None
+
     for milestone in glProject['allMilestones']:
         if milestone.start_date and milestone.due_date:
             start = parse_date(milestone.start_date)
@@ -114,18 +107,9 @@ def issueList(request, slug, id):
     Handles the requests for /project/<slug:slug>/<int:id>/issues/
     Shows a paginated list of issues in this project
     """
-    project = Project.objects.get(projectIdentifier=id)
 
-    if request.user.is_staff:
-        assigment = UserProjectAssignment.objects.filter(
-            project=project).first()
-    else:
-        assigment = UserProjectAssignment.objects.get(
-            user=request.user, project=project)
-
-    glProject = loadProject(project, assigment.accessToken)
-    glProject['issues'] = loadIssues(
-        project, assigment.accessToken, page=request.GET.get('page', 1))
+    glProject = getProject(request, id)
+    glProject['issues'] = loadIssues(glProject['localProject'], glProject['remoteProject'], page=request.GET.get('page', 1))
 
     return HttpResponse(template('issueList').render(glProject, request))
 
@@ -155,10 +139,8 @@ def issue(request: WSGIRequest, slug: str, id: int, issue: int) -> HttpResponse:
     """
 
     glProject = getProject(request, id)
-    assigment = UserProjectAssignment.objects.get(
-        user=request.user, project__projectIdentifier=id)
     glProject['issue'] = loadIssues(
-        glProject['localProject'], assigment.accessToken, iid=issue)
+        glProject['localProject'], glProject['remoteProject'], iid=issue)
 
     return HttpResponse(template('issue').render(glProject, request))
 
@@ -183,22 +165,13 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid:int) -> HttpRes
     Handles the requests for /project/<slug:slug>/<int:id>/milestone/<int:mid>
     Get the information needed to display a board of issues in this milestone
     """
+    glProject = getProject(request, id)
 
-    project = Project.objects.get(projectIdentifier=id)
-
-    if request.user.is_staff:
-        assigment = UserProjectAssignment.objects.filter(
-            project=project).first()
-    else:
-        assigment = UserProjectAssignment.objects.get(
-            user=request.user, project=project)
-
-    glProject = loadProject(project, assigment.accessToken)
     if not glProject['localProject'].enableMilestones:
         return redirect('/')
 
-    milestone = loadMilestones(glProject['localProject'], assigment.accessToken, mid)
-    milestoneIssues = loadIssues(glProject['localProject'], assigment.accessToken, milestone=mid)
+    milestone = loadMilestones(glProject['localProject'], glProject['remoteProject'], mid)
+    milestoneIssues = loadIssues(glProject['localProject'], glProject['remoteProject'], milestone=mid)
     issues = {'open': [], 'assigned': [], 'closed': []}
     for issue in milestoneIssues: 
         if issue.state == 'closed':
@@ -237,10 +210,8 @@ def wikipage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
-    assigment = UserProjectAssignment.objects.get(
-        user=request.user, project__projectIdentifier=id)
     glProject['page'] = loadWikiPage(
-        glProject['localProject'], assigment.accessToken, page)
+        glProject['localProject'], glProject['remoteProject'], page)
 
     return HttpResponse(template('wikipage').render(glProject, request))
 
@@ -295,7 +266,6 @@ def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
     """
 
     for project in Project.objects.all().prefetch_related('userprojectassignment_set'):
-        # TODO: loading every project in the cache may cause long waiting times if there are many projects
         if len(project.userprojectassignment_set.all()) > 0:
             # .first() will break the prefetch
             loadProject(project, project.userprojectassignment_set.all()[

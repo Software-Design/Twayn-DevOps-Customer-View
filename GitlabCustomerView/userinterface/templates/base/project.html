@@ -77,20 +77,20 @@
       <svg id="gantt"></svg>
       {% endif %}
     </div>
-    <div class="col-12">
+    <div class="col-8">
       <br>
       <h4>{% trans "Last updated issues" %}</h4><br>
       <ul class="list-group">
-        {% include './partials/issues.html' with issues=mostRecentIssues %}
+        {% include './partials/issues.html' with issues=mostRecentIssues limit=5 %}
       </ul>
       <br><br>
     </div>
-    <div class="col-12">
+    <div class="col-4">
       <br>
       <h4>{% trans "Person in charge" %}</h4><br>
       <div class="row">
         {% for assignee in localProject.assignees.all %}
-          <div class="col-md-4">
+          <div class="col-md-12">
             {% include './partials/employee.html' with user=assignee %}
           </div>
         {% endfor %}
