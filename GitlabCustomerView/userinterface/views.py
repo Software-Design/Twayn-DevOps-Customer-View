@@ -1,10 +1,12 @@
-import pdfkit, os
-from django.utils import translation
+import pdfkit, os, datetime
+from os.path import exists
 from django.http import HttpResponse
 from django.core.cache import cache
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.conf import settings
+from django.utils.translation import gettext as _
 
 from .templatetags.dates import parse_date
 from .models import UserProjectAssignment, Project
@@ -185,7 +187,13 @@ def printWiki(request, slug, id):
 
     glProject = loadProject(project, assigment.accessToken)
     
-    pdfkit.from_string(template('print/wiki').render(glProject, request), project.projectIdentifier+'.pdf', {'encoding': "UTF-8"})
+    path = str(settings.BASE_DIR)+'/userinterface/templates/'+settings.TEMPLATE+'/print/footer.html'
+    if exists(path):
+        footer = path
+    else:
+        footer = str(settings.BASE_DIR)+'/userinterface/templates/base/print/footer.html'
+
+    pdfkit.from_string(template('print/wiki').render(glProject, request), project.projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_('of')+' [topage]','--footer-left': settings.INTERFACE_NAME,'--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
     
     with open(project.projectIdentifier+'.pdf', 'rb') as f:
         file_data = f.read()

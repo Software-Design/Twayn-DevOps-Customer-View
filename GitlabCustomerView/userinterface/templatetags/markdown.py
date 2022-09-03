@@ -24,4 +24,4 @@ def markdown(value):
 
 @register.simple_tag
 def wikicontent(slug,localProject, remoteProject):
-    return markdown(loadWikiPage(localProject, remoteProject, slug).content)
+    return markdown(loadWikiPage(localProject, remoteProject, slug).content).replace('\n','<br>')
