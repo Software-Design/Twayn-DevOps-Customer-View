@@ -4,22 +4,24 @@ import datetime
 from os.path import exists
 from typing import Union
 
-import gitlab
 import pdfkit
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.cache import cache
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.conf import settings
+from django.utils.translation import gettext as _
 
 from .templatetags.dates import parse_date
 from .tools.gitlabCache import loadIssues, loadProject, loadWikiPage
 from .tools.templateHelper import template
 from .tools.viewsHelper import getProject
+from .models import *
 
 
 def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
@@ -195,7 +197,7 @@ def wikipage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
 
 
 @login_required
-def printWiki(request, slug, id):
+def printWiki(request: WSGIRequest, slug: str, id:int) -> Union[HttpResponseRedirect, HttpResponse]:
     """
     Handles the requests for /project/<slug:slug>/<int:id>/documentation/print
     Renders a pdf of the documentation pages to enable downloading them
@@ -207,22 +209,9 @@ def printWiki(request, slug, id):
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
-    if request.user.is_staff:
-        assigment = UserProjectAssignment.objects.filter(project=project).first()
-    else:
-        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
-
-    glProject = loadProject(project, assigment.accessToken)
+    pdfkit.from_string(template('print/wiki').render(glProject, request), projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_('of')+' [topage]','--footer-left': settings.INTERFACE_NAME,'--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
     
-    path = str(settings.BASE_DIR)+'/userinterface/templates/'+settings.TEMPLATE+'/print/footer.html'
-    if exists(path):
-        footer = path
-    else:
-        footer = str(settings.BASE_DIR)+'/userinterface/templates/base/print/footer.html'
-
-    pdfkit.from_string(template('print/wiki').render(glProject, request), project.projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_('of')+' [topage]','--footer-left': settings.INTERFACE_NAME,'--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
-    
-    with open(project.projectIdentifier+'.pdf', 'rb') as f:
+    with open(projectIdentifier+'.pdf', 'rb') as f:
         file_data = f.read()
     
     os.remove(projectIdentifier+'.pdf')
