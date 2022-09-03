@@ -19,6 +19,7 @@
     {% block base_css %}
       <link rel="stylesheet" href="/static/cdn/css/bootstrap.min.css">
       <link rel="stylesheet" href="/static/cdn/css/font-awesome-all.min.css" />
+      <link rel="stylesheet" href="/static/vendor/simplemde/simplemde.min.css" />
     {% endblock %}
     {% block extra_css %}{% endblock %}
 
@@ -112,8 +113,12 @@
 
     {% block base_js %}
       <script src="/static/cdn/js/bootstrap.bundle.min.js"></script>
+      <script src="/static/vendor/simplemde/simplemde.min.js"></script>
     {% endblock %}
     {% block extra_js %}
+    <script>
+      var simplemde = new SimpleMDE();
+    </script>
     {% endblock %}
   </body>
 </html>

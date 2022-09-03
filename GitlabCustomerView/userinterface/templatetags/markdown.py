@@ -1,7 +1,8 @@
 from django.template import Library
+from django.utils.translation import gettext as _
 
 from ..tools.gitlabCache import loadWikiPage
-from .prettify import translateDescriptions
+from ..models import *
 import markdown as md
 import re
 
@@ -12,16 +13,23 @@ def markdown(value):
 
     customTranslations = {
         "(^<p>|</p>$)": "",
+        "\[ \] -": '<input type="checkbox" disabled>',
+        "\[x\] -": '<input type="checkbox" checked disabled>',
         "\[ \]": '<input type="checkbox" disabled>',
-        "\[x\]": '<input type="checkbox" checked disabled>'
+        "\[x\]": '<input type="checkbox" checked disabled>',
+        '<ul>': '<ul class="list-group">',
+        '<li>': '<li class="list-group-item">'
     }
 
-    text = translateDescriptions(md.markdown(value))
+    text = md.markdown(value)
     for key,value in customTranslations.items():
         text = re.sub(key,value,text)
+
+    for employee in TeamMember.objects.all():
+        text = text.replace('@'+employee.username,'%s').replace('%s',employee.name)
 
     return text
 
 @register.simple_tag
 def wikicontent(slug,localProject, remoteProject):
-    return markdown(loadWikiPage(localProject, remoteProject, slug).content).replace('\n','<br>')
+    return markdown(loadWikiPage(localProject, remoteProject, slug).content)

@@ -139,13 +139,14 @@ def issue(request: WSGIRequest, slug: str, id: int, issue: int) -> HttpResponse:
     """
 
     glProject = getProject(request, id)
-    glProject['issue'] = loadIssues(
-        glProject['localProject'], glProject['remoteProject'], iid=issue)
 
     if request.POST.get('comment'):
-        glProject['remoteProject'].issues.get(id=issue).notes.create({'body': request.POST['comment']})
+        glProject['remoteProject'].issues.get(id=issue).notes.create({'body': '**'+request.user.first_name+' '+request.user.last_name+':**\n '+request.POST['comment']})
         id = 'glp_'+glProject['localProject'].projectIdentifier+'_issues_'+str(issue)
         cache.delete(id)
+
+    glProject['issue'] = loadIssues(
+        glProject['localProject'], glProject['remoteProject'], iid=issue)
 
     return HttpResponse(template('issue').render(glProject, request))
 
@@ -189,7 +190,7 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid:int) -> HttpRes
         issues['timeEstimated'] += time['time_estimate']
         issues['timeSpent'] += time['total_time_spent']
     
-    issues['totalTime'] = time['time_estimate'] + time['total_time_spent']
+    issues['totalTime'] = issues['timeEstimated'] + issues['timeSpent']
 
     return HttpResponse(template('milestoneBoard').render(glProject | {'issues': issues, 'milestone': milestone, 'total': len(issues['open'])+len(issues['assigned'])+len(issues['closed'])}, request))
 

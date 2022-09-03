@@ -62,10 +62,10 @@
   <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
   {% endif %}
   {% if localProject.enableMilestones %}
-  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/" class="btn btn-outline-primary"><i class="fa far fa-clipboard-list-check"></i> {% trans "Milestones" %}</a>
+  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/" class="btn btn-outline-primary"><i class="fa far fa-tasks"></i> {% trans "Milestones" %}</a>
   {% endif %}
   {% if localProject.enableDocumentation %}
-  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/" class="btn btn-outline-primary"><i class="fa far fa-list"></i> {% trans "Documentation" %}</a>
+  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/" class="btn btn-outline-primary"><i class="fa far fa-book"></i> {% trans "Documentation" %}</a>
   {% endif %}
   {% if request.user.is_superuser %}
   <a href="{{ remoteProject.web_url }}" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>

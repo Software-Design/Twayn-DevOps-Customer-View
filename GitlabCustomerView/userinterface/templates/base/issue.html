@@ -148,51 +148,79 @@
     </div>
     <br><br>
     {% autoescape off %}
-      {{ issue.data.description|translateDescriptions|markdown|linebreaks }}
+      {{ issue.data.description|markdown }}
     {% endautoescape %}
   </div>
   <div class="col-12">
     <br /><br />
-    <h3>{% trans 'Progress' %}</h3>
-    <div class="alert alert-secondary" role="alert">
+    <div class="btn-group float-end" role="group">
+      {% if localProject.enableAddComments %}
+      <a href="#progress" onclick="document.querySelector('.alert.d-none').classList.remove('d-none');this.style.display = 'none';" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Comment" %}</a>
+      {% endif %}
+      {% if localProject.showSystemNotes %}
+      <a href="#progress" onclick="[...document.querySelectorAll('.system.d-none')].map(x => x.classList.remove('d-none'));this.style.display = 'none';" class="btn btn-outline-primary"><i class="fa far fa-comments"></i> {% trans "Show" %} {{ issue.notes|length }} {% trans "notes" %}</a>
+      {% endif %}
+    </div>
+
+    <h3 id="#progress">{% trans 'Progress' %}</h3>
+    <hr>
+    <div class="alert alert-secondary d-none" role="alert">
       <h5>
         <strong>{% trans "Add new comment" %}:</strong>
         <form method="post">
           {% csrf_token %}
           <textarea name="comment" class="form-control" rows="5" placeholder="{% trans "You comment here..." %}"></textarea>
-          <button class="btn btn-primary float-end mt-1">Save</button>
+          <button class="btn btn-primary float-end mt-1">{% trans "Save" %}</button>
           <br>
         </form>
       </h5>
       {% autoescape off %}
-        {{ note.body|markdown|translateDescriptions }}
+        {{ note.body|markdown }}
       {% endautoescape %}
     </div>
     <div class="text-muted">
       {% for note in issue.notes %} 
         {% if note.system == True %}
-          <div class="alert alert-light" role="alert">
-            <small><i class="far fa-calendar-plus"></i>
-              {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }} -
-              <strong>{{ note.author.name }}</strong> 
-              {% autoescape off %}
-                {{ note.body|markdown|translateDescriptions }}
-              {% endautoescape %}
-            </small>
+          <div class="system d-none">
+            <div class="alert alert-light" role="alert">
+              <small><i class="far fa-calendar-plus"></i>
+                {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }} -
+                <strong>{{ note.author.name }}</strong> 
+                {% autoescape off %}
+                  {{ note.body|markdown }}
+                {% endautoescape %}
+              </small>
+            </div>
+            <hr />
           </div>
         {% else %}
           <div class="alert alert-secondary" role="alert">
-            <h5>
-              <img src="{{ note.author.avatar_url }}" width="25" />
-              <strong>{{ note.author.name }}</strong> {% trans 'wrote on' %}
-              {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }}:
-            </h5>
-            {% autoescape off %}
-              {{ note.body|markdown|translateDescriptions }}
-            {% endautoescape %}
+            {% with author=note.author.username|getTeamMember %}
+            <div class="row">
+              <div class="col-1">
+                {% if author %}
+                  {% if author.avatar.url != '*' %}
+                    <img src="{{ author.avatar.url }}" style="max-width: 100%;" />
+                  {% elif localProject.image %}
+                    <img src="{{ localProject.image.url }}" style="max-width: 100%;" />
+                  {% endif %}
+                {% endif %}
+              </div>
+              <div class="col-11">
+                <h5>
+                  <strong>
+                    {% if author %}{{ author.name }}{% else %}{{ note.author.name }}{% endif %}</strong> {% trans 'wrote on' %}
+                  {{ note.created_at|parse_iso|date:settings.DATE_FORMAT }}:
+                </h5>
+                {% endwith %}
+                {% autoescape off %}
+                  {{ note.body|markdown }}
+                {% endautoescape %}
+              </div>
+            </div>
           </div>
+          <hr />
         {% endif %}
-      <hr />
       {% endfor %}
     </div>
   </div>
