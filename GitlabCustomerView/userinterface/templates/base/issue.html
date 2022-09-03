@@ -7,14 +7,16 @@
 {% load prettify %}
 {% block content %}
 
-<h2>
-  #{{ issue.data.iid }} - {{ issue.data.title }}
-  {% if request.user.is_superuser %}
-    <a href="{{ issue.data.web_url }}" target="_blank">
-      <i class="fab fa-gitlab float-end"></i>
-    </a>
-  {% endif %}
-</h2>
+  <div class="btn-group float-end" role="group">
+    {% if localProject.enableTicketCreation %}
+    <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
+    {% endif %}
+    {% if request.user.is_superuser %}
+    <a href="{{ issue.data.web_url }}" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
+    {% endif %}
+  </div>
+      
+<h1>#{{ issue.data.iid }} - {{ issue.data.title }}</h1>
 <h3>
   <i class="fa far fa-archive"></i> {{ remoteProject.name }} 
   {% if issue.data.milestone %}
@@ -108,7 +110,8 @@
       {% endif %}
     </table>
     <br />
-
+  </div>
+  <div class="col-7 px-3">
     {% if issue.data.time_stats.human_time_estimate and issue.data.time_stats.human_total_time_spent %}
     <div class="progress" style="height: 20px">
       <div
@@ -143,8 +146,7 @@
         {% trans 'planned' %}
       </button>
     </div>
-  </div>
-  <div class="col-7 px-3">
+    <br><br>
     {% autoescape off %}
       {{ issue.data.description|translateDescriptions|markdown|linebreaks }}
     {% endautoescape %}
@@ -152,6 +154,20 @@
   <div class="col-12">
     <br /><br />
     <h3>{% trans 'Progress' %}</h3>
+    <div class="alert alert-secondary" role="alert">
+      <h5>
+        <strong>{% trans "Add new comment" %}:</strong>
+        <form method="post">
+          {% csrf_token %}
+          <textarea name="comment" class="form-control" rows="5" placeholder="{% trans "You comment here..." %}"></textarea>
+          <button class="btn btn-primary float-end mt-1">Save</button>
+          <br>
+        </form>
+      </h5>
+      {% autoescape off %}
+        {{ note.body|markdown|translateDescriptions }}
+      {% endautoescape %}
+    </div>
     <div class="text-muted">
       {% for note in issue.notes %} 
         {% if note.system == True %}

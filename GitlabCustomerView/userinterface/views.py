@@ -124,7 +124,7 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
     glProject = getProject(request, id)
 
     if request.POST.get('title'):
-        glProject['project'].issues.create({'title': request.POST['title'], 'description': request.POST['description'],
+        glProject['remoteProject'].issues.create({'title': request.POST['title'], 'description': request.POST['description'],
                                            'labels': request.POST['label'], 'milestone_id': request.POST['milestone']})
         return redirect('/project/'+glProject['project'].path+'/'+str(glProject['project'].id)+'/issues/')
 
@@ -141,6 +141,11 @@ def issue(request: WSGIRequest, slug: str, id: int, issue: int) -> HttpResponse:
     glProject = getProject(request, id)
     glProject['issue'] = loadIssues(
         glProject['localProject'], glProject['remoteProject'], iid=issue)
+
+    if request.POST.get('comment'):
+        glProject['remoteProject'].issues.get(id=issue).notes.create({'body': request.POST['comment']})
+        id = 'glp_'+glProject['localProject'].projectIdentifier+'_issues_'+str(issue)
+        cache.delete(id)
 
     return HttpResponse(template('issue').render(glProject, request))
 
