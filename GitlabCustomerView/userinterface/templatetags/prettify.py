@@ -21,7 +21,10 @@ def translateDescriptions(value):
 
 @register.filter()
 def getTeamMember(value):
-    return TeamMember.objects.filter(username=value).first()
+    member = TeamMember.objects.filter(username=value).first()
+    if not member:
+        member = TeamMember.objects.filter(username='@'+value).first()
+    return member
 
 @register.filter('startswith')
 def startswith(text, starts):

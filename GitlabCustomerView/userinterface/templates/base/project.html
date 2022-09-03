@@ -38,6 +38,10 @@
           bar_corner_radius: 0,
           arrow_curve: 5,
           padding: 18,
+          custom_popup_html: function(task) {
+            window.location = '/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestone/'+task.id;
+            return ``;
+          },
           {% if daysbetween < 180 %}
             view_mode: 'Week',
           {% elif daysbetween < 365 %}
@@ -81,7 +85,7 @@
       <br>
       <h4>{% trans "Last updated issues" %}</h4><br>
       <ul class="list-group">
-        {% include './partials/issues.html' with issues=mostRecentIssues limit=5 %}
+        {% include './partials/issues.html' with issues=mostRecentIssues large=True %}
       </ul>
       <br><br>
     </div>
@@ -90,8 +94,8 @@
       <h4>{% trans "Person in charge" %}</h4><br>
       <div class="row">
         {% for assignee in localProject.assignees.all %}
-          <div class="col-md-12">
-            {% include './partials/employee.html' with user=assignee %}
+          <div class="col-md-12 pb-3">
+            {% include './partials/employee.html' with employee=assignee %}
           </div>
         {% endfor %}
       </div>

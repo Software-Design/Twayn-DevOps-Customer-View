@@ -1,14 +1,17 @@
 {% load i18n %}
 {% load dates %}
-<a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestone/{{ milestone.id }}"><strong>&raquo; {{ milestone.title }}</strong></a>
-{% if request.user.is_superuser %}
-<a href="{{ p.project.web_url }}" target="_blank"><i class="fab fa-gitlab"></i></a>
-{% endif %}
-<br>
-{% if milestone.start_date or milestone.due_date %}
-    {% if milestone.description %}<i class="far fa-file-edit"></i> <small>{{ milestone.description }}</small><br>{% endif %}
-    <i class="far fa-calendar-alt"></i> <small>{{ milestone.start_date|parse_date|date:"d.m.Y" }} bis {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
-{% else %}
-    {% trans 'No specified time range' %}
-{% endif %}
-<br>
+<a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestone/{{ milestone.id }}">
+    <li class="list-group-item">
+        <strong>{{ milestone.title }} {% if request.user.is_superuser %}
+            <a href="{{ p.project.web_url }}" target="_blank"><i class="fab fa-gitlab"></i></a>
+            {% endif %}</strong><br>
+        <div class="text-muted">
+            {% if milestone.start_date or milestone.due_date %}
+                {% if milestone.description %}<i class="far fa-file-edit"></i> <small>{{ milestone.description }}</small><br>{% endif %}
+                <i class="far fa-calendar-alt"></i> <small>{{ milestone.start_date|parse_date|date:"d.m.Y" }} bis {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+            {% else %}
+                {% trans 'No specified time range' %}
+            {% endif %}
+        </div>
+    </li>
+</a>

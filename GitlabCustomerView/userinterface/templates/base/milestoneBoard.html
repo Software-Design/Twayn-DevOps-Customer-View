@@ -8,18 +8,65 @@
 
   <div class="row">
     <div class="col-12">
-      
         <h2>{{ milestone.title }}{% if request.user.is_superuser %}
         <a href="{{ milestone.web_url }}" target="_blank"><i class="fab fa-gitlab float-end"></i></a> 
         {% endif %}</h2>
         <h3><i class="fa far fa-archive"></i> {{ remoteProject.name }}</h3>
         <br>
-        {{ milestone.description }}
-        <br><br>
-        <div class="progress" style="height: 20px;">
-          <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio issues.closed|length total 100 %}%;" aria-valuenow="{% widthratio issues.closed|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.closed|length total 100 %}% closed</div>
-          <div class="progress-bar bg-primary" role="progressbar" style="width: {% widthratio issues.assigned|length total 100 %}%;" aria-valuenow="{% widthratio issues.assigned|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.assigned|length total 100 %}% assigned</div>
-          <div class="progress-bar bg-danger" role="progressbar" style="width: {% widthratio issues.open|length total 100 %}%;" aria-valuenow="{% widthratio issues.open|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.open|length total 100 %}% open</div>
+        <div class="row">
+          <div class="col-md-6">
+            {{ milestone.description }}
+            <br><br>
+          </div>
+          <div class="col-md-6">
+            <div class="btn-group w-100" role="group">
+              <button type="button" class="btn btn-outline-primary">
+                <i class="far fa fa-clock"></i>
+                  {{ issues.timeSpent|intval|humanizeTime }} {% trans 'spent' %}
+              </button>
+              <button type="button" class="btn btn-outline-primary">
+                <i class="far fa fa-history"></i> 
+                {{ issues.timeEstimated|intval|humanizeTime }}
+                {% trans 'planned' %}
+              </button>
+            </div>
+            <br><br>
+          </div>
+          <div class="col-md-6">
+            <div class="progress" style="height: 20px;">
+              <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio issues.closed|length total 100 %}%;" aria-valuenow="{% widthratio issues.closed|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.closed|length total 100 %}% closed</div>
+              <div class="progress-bar bg-primary" role="progressbar" style="width: {% widthratio issues.assigned|length total 100 %}%;" aria-valuenow="{% widthratio issues.assigned|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.assigned|length total 100 %}% assigned</div>
+              <div class="progress-bar bg-danger" role="progressbar" style="width: {% widthratio issues.open|length total 100 %}%;" aria-valuenow="{% widthratio issues.open|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.open|length total 100 %}% open</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+              <div class="progress" style="height: 20px">
+                {% if issues.timeEstimated|intval != 0 %}
+                  <div
+                    class="progress-bar bg-primary"
+                    role="progressbar"
+                    style="width: {% widthratio issues.timeSpent issues.timeEstimated 100 %}%;"
+                    aria-valuenow="{% widthratio issues.timeSpent issues.timeEstimated 100 %}"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                  {% widthratio issues.timeEstimated issues.timeEstimated 100 %} % time spent
+                  </div>
+                {% else %}
+                  <div
+                    class="progress-bar bg-primary"
+                    role="progressbar"
+                    style="width: 100%;"
+                    aria-valuenow="100"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                  100% time spent
+                  </div>
+                {% endif %}
+              </div>
+              <br />
+          </div>
         </div>
         <br><br><br>
         <div class="row">

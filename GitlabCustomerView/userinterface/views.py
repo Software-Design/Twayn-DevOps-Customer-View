@@ -172,7 +172,7 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid:int) -> HttpRes
 
     milestone = loadMilestones(glProject['localProject'], glProject['remoteProject'], mid)
     milestoneIssues = loadIssues(glProject['localProject'], glProject['remoteProject'], milestone=mid)
-    issues = {'open': [], 'assigned': [], 'closed': []}
+    issues = {'open': [], 'assigned': [], 'closed': [], 'timeEstimated': 0, 'timeSpent': 0}
     for issue in milestoneIssues: 
         if issue.state == 'closed':
             issues['closed'].append(issue)
@@ -180,6 +180,12 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid:int) -> HttpRes
             issues['assigned'].append(issue)
         else:
             issues['open'].append(issue)
+        time = issue.time_stats()
+        issues['timeEstimated'] += time['time_estimate']
+        issues['timeSpent'] += time['total_time_spent']
+    
+    issues['totalTime'] = time['time_estimate'] + time['total_time_spent']
+
     return HttpResponse(template('milestoneBoard').render(glProject | {'issues': issues, 'milestone': milestone, 'total': len(issues['open'])+len(issues['assigned'])+len(issues['closed'])}, request))
 
 
