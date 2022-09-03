@@ -16,7 +16,7 @@
                 </div>
                 <div class="text-muted">
                     #{{ issue.iid }} - {% if issue.state == 'opened' %}<i class="far fa-folder-open"></i> {% trans 'Open' %}, {% trans 'updated' %} {{ issue.updated_at|parse_iso|date:settings.DATE_FORMAT }}{% else %}<i class="far fa-folder"></i> {% trans 'Closed' %} {% trans 'on' %} {{ issue.closed_at|parse_iso|date:settings.DATE_FORMAT }}{% endif %}
-                    {% if issue.milestone %} - <i class="far fa-clipboard-list"></i> {{ issue.milestone.title }}{% endif %}
+                    {% if issue.milestone and milestones != False and localProject.enableMilestones == True %} - <i class="far fa-clipboard-list"></i> {{ issue.milestone.title }}{% endif %}
                 </div>
             </li>
         </a> 

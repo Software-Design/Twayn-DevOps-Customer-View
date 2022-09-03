@@ -20,7 +20,7 @@
         {% if issue.data.milestone %}
           <tr><th>{% trans 'Milestone' %}</th>
             <td>
-              <i class="far fa-clipboard-list"></i> <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/{{ issue.data.milestone.iid }}">{{ issue.data.milestone.title }}</a> {% if request.user.is_superuser %}<a href="{{ issue.data.milestone.web_url }}" target="_blank"><i class="fab fa-gitlab"></i></a>{% endif %}
+              <i class="far fa-clipboard-list"></i> <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestone/{{ issue.data.milestone.id }}">{{ issue.data.milestone.title }}</a> {% if request.user.is_superuser %}<a href="{{ issue.data.milestone.web_url }}" target="_blank"><i class="fab fa-gitlab"></i></a>{% endif %}
               <br><small class="text-muted">{{ issue.data.milestone.start_date|parse_date|date:settings.DATE_FORMAT }} - {{ issue.data.milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
             </td>
           </tr>

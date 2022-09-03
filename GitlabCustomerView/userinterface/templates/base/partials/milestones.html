@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load dates %}
-<strong>&raquo; {{ milestone.title }}</strong>
+<a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestone/{{ milestone.id }}"><strong>&raquo; {{ milestone.title }}</strong></a>
 {% if request.user.is_superuser %}
 <a href="{{ p.project.web_url }}" target="_blank"><i class="fab fa-gitlab"></i></a>
 {% endif %}

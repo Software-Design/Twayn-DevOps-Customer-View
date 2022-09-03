@@ -1,7 +1,5 @@
 import os
-import re
 import datetime
-from os.path import exists
 from typing import Union
 
 import pdfkit
@@ -18,7 +16,7 @@ from django.conf import settings
 from django.utils.translation import gettext as _
 
 from .templatetags.dates import parse_date
-from .tools.gitlabCache import loadIssues, loadProject, loadWikiPage
+from .tools.gitlabCache import loadIssues, loadMilestones, loadProject, loadWikiPage
 from .tools.templateHelper import template
 from .tools.viewsHelper import getProject
 from .models import *
@@ -33,8 +31,10 @@ def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     if request.POST.get('email'):
         # dirty way to get the username of the user from the email
         UserModel = get_user_model()
-        user = UserModel.objects.filter(email=request.POST.get('email')).first()
-        user = authenticate(request, username=getattr(user, 'username', None), password=request.POST['password'])
+        user = UserModel.objects.filter(
+            email=request.POST.get('email')).first()
+        user = authenticate(request, username=getattr(
+            user, 'username', None), password=request.POST['password'])
         if user is not None:
             login(request, user)
             return redirect('/overview/')
@@ -44,7 +44,7 @@ def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     if request.user.is_authenticated:
         return redirect('/overview/')
 
-    return HttpResponse(template('login').render({},request))
+    return HttpResponse(template('login').render({}, request))
 
 
 def logginout(request: WSGIRequest) -> HttpResponseRedirect:
@@ -64,7 +64,8 @@ def overview(request: WSGIRequest) -> HttpResponse:
     Gets all projects to show on the page
     """
 
-    projectAssignments = UserProjectAssignment.objects.filter(user=request.user)
+    projectAssignments = UserProjectAssignment.objects.filter(
+        user=request.user)
 
     projects = []
     for assignment in projectAssignments:
@@ -80,11 +81,14 @@ def project(request, slug, id):
     project = Project.objects.get(projectIdentifier=id)
 
     if request.user.is_staff:
-        assigment = UserProjectAssignment.objects.filter(project=project).first()
+        assigment = UserProjectAssignment.objects.filter(
+            project=project).first()
     else:
-        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+        assigment = UserProjectAssignment.objects.get(
+            user=request.user, project=project)
 
-    glProject = loadProject(project, assigment.accessToken) | {'localProject': project}
+    glProject = loadProject(project, assigment.accessToken) | {
+        'localProject': project}
 
     firstMilestoneStart = None
     lastMilestoneEnd = None
@@ -106,16 +110,23 @@ def project(request, slug, id):
 
 @login_required
 def issueList(request, slug, id):
+    """
+    Handles the requests for /project/<slug:slug>/<int:id>/issues/
+    Shows a paginated list of issues in this project
+    """
     project = Project.objects.get(projectIdentifier=id)
 
     if request.user.is_staff:
-        assigment = UserProjectAssignment.objects.filter(project=project).first()
+        assigment = UserProjectAssignment.objects.filter(
+            project=project).first()
     else:
-        assigment = UserProjectAssignment.objects.get(user=request.user,project=project)
+        assigment = UserProjectAssignment.objects.get(
+            user=request.user, project=project)
 
     glProject = loadProject(project, assigment.accessToken)
-    glProject['issues'] = loadIssues(project, assigment.accessToken, page=request.GET.get('page',1))
-    
+    glProject['issues'] = loadIssues(
+        project, assigment.accessToken, page=request.GET.get('page', 1))
+
     return HttpResponse(template('issueList').render(glProject, request))
 
 
@@ -129,7 +140,8 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
     glProject = getProject(request, id)
 
     if request.POST.get('title'):
-        glProject['project'].issues.create({'title': request.POST['title'], 'description': request.POST['description'], 'labels': request.POST['label'],'milestone_id': request.POST['milestone']})
+        glProject['project'].issues.create({'title': request.POST['title'], 'description': request.POST['description'],
+                                           'labels': request.POST['label'], 'milestone_id': request.POST['milestone']})
         return redirect('/project/'+glProject['project'].path+'/'+str(glProject['project'].id)+'/issues/')
 
     return HttpResponse(template('issueCreate').render(glProject, request))
@@ -143,9 +155,11 @@ def issue(request: WSGIRequest, slug: str, id: int, issue: int) -> HttpResponse:
     """
 
     glProject = getProject(request, id)
-    assigment = UserProjectAssignment.objects.get(user=request.user, project__projectIdentifier=id)
-    glProject['issue'] = loadIssues(glProject['localProject'], assigment.accessToken, iid=issue)
-    
+    assigment = UserProjectAssignment.objects.get(
+        user=request.user, project__projectIdentifier=id)
+    glProject['issue'] = loadIssues(
+        glProject['localProject'], assigment.accessToken, iid=issue)
+
     return HttpResponse(template('issue').render(glProject, request))
 
 
@@ -164,6 +178,39 @@ def milestones(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
 
 
 @login_required
+def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid:int) -> HttpResponse:
+    """
+    Handles the requests for /project/<slug:slug>/<int:id>/milestone/<int:mid>
+    Get the information needed to display a board of issues in this milestone
+    """
+
+    project = Project.objects.get(projectIdentifier=id)
+
+    if request.user.is_staff:
+        assigment = UserProjectAssignment.objects.filter(
+            project=project).first()
+    else:
+        assigment = UserProjectAssignment.objects.get(
+            user=request.user, project=project)
+
+    glProject = loadProject(project, assigment.accessToken)
+    if not glProject['localProject'].enableMilestones:
+        return redirect('/')
+
+    milestone = loadMilestones(glProject['localProject'], assigment.accessToken, mid)
+    milestoneIssues = loadIssues(glProject['localProject'], assigment.accessToken, milestone=mid)
+    issues = {'open': [], 'assigned': [], 'closed': []}
+    for issue in milestoneIssues: 
+        if issue.state == 'closed':
+            issues['closed'].append(issue)
+        elif len(issue.assignees) > 0:
+            issues['assigned'].append(issue)
+        else:
+            issues['open'].append(issue)
+    return HttpResponse(template('milestoneBoard').render(glProject | {'issues': issues, 'milestone': milestone, 'total': len(issues['open'])+len(issues['assigned'])+len(issues['closed'])}, request))
+
+
+@login_required
 def wiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRedirect, HttpResponse]:
     """
     Handles the requests for /project/<slug:slug>/<int:id>/documentation
@@ -174,7 +221,7 @@ def wiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRedirect
     glProject = getProject(request, id)
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
-    
+
     return HttpResponse(template('wiki').render(glProject, request))
 
 
@@ -190,14 +237,16 @@ def wikipage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
-    assigment = UserProjectAssignment.objects.get(user=request.user, project__projectIdentifier=id)
-    glProject['page'] = loadWikiPage(glProject['localProject'], assigment.accessToken, page)
-    
+    assigment = UserProjectAssignment.objects.get(
+        user=request.user, project__projectIdentifier=id)
+    glProject['page'] = loadWikiPage(
+        glProject['localProject'], assigment.accessToken, page)
+
     return HttpResponse(template('wikipage').render(glProject, request))
 
 
 @login_required
-def printWiki(request: WSGIRequest, slug: str, id:int) -> Union[HttpResponseRedirect, HttpResponse]:
+def printWiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRedirect, HttpResponse]:
     """
     Handles the requests for /project/<slug:slug>/<int:id>/documentation/print
     Renders a pdf of the documentation pages to enable downloading them
@@ -209,13 +258,14 @@ def printWiki(request: WSGIRequest, slug: str, id:int) -> Union[HttpResponseRedi
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
-    pdfkit.from_string(template('print/wiki').render(glProject, request), projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_('of')+' [topage]','--footer-left': settings.INTERFACE_NAME,'--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
-    
+    pdfkit.from_string(template('print/wiki').render(glProject, request), projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
+        'of')+' [topage]', '--footer-left': settings.INTERFACE_NAME, '--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
+
     with open(projectIdentifier+'.pdf', 'rb') as f:
         file_data = f.read()
-    
+
     os.remove(projectIdentifier+'.pdf')
-    
+
     response = HttpResponse(file_data, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="documentation.pdf"'
 
@@ -224,6 +274,8 @@ def printWiki(request: WSGIRequest, slug: str, id:int) -> Union[HttpResponseRedi
 #
 # Caching helpers
 #
+
+
 @login_required
 def clearCache(request: WSGIRequest) -> HttpResponseRedirect:
     """
@@ -232,7 +284,7 @@ def clearCache(request: WSGIRequest) -> HttpResponseRedirect:
     """
 
     cache.clear()
-    return redirect(request.GET.get('redirect','/'))
+    return redirect(request.GET.get('redirect', '/'))
 
 
 @login_required
@@ -246,6 +298,7 @@ def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
         # TODO: loading every project in the cache may cause long waiting times if there are many projects
         if len(project.userprojectassignment_set.all()) > 0:
             # .first() will break the prefetch
-            loadProject(project, project.userprojectassignment_set.all()[0].accessToken)
+            loadProject(project, project.userprojectassignment_set.all()[
+                        0].accessToken)
 
-    return redirect(request.GET.get('redirect','/'))
+    return redirect(request.GET.get('redirect', '/'))

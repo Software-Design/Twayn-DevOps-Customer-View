@@ -1,0 +1,48 @@
+{% extends base %}
+{% load i18n %}
+{% load static %}
+{% load dates %}
+{% load numbers %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-12">
+      
+        <h2>{{ milestone.title }}{% if request.user.is_superuser %}
+        <a href="{{ milestone.web_url }}" target="_blank"><i class="fab fa-gitlab float-end"></i></a> 
+        {% endif %}</h2>
+        <h3><i class="fa far fa-archive"></i> {{ remoteProject.name }}</h3>
+        <br>
+        {{ milestone.description }}
+        <br><br>
+        <div class="progress" style="height: 20px;">
+          <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio issues.closed|length total 100 %}%;" aria-valuenow="{% widthratio issues.closed|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.closed|length total 100 %}% closed</div>
+          <div class="progress-bar bg-primary" role="progressbar" style="width: {% widthratio issues.assigned|length total 100 %}%;" aria-valuenow="{% widthratio issues.assigned|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.assigned|length total 100 %}% assigned</div>
+          <div class="progress-bar bg-danger" role="progressbar" style="width: {% widthratio issues.open|length total 100 %}%;" aria-valuenow="{% widthratio issues.open|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.open|length total 100 %}% open</div>
+        </div>
+        <br><br><br>
+        <div class="row">
+          <div class="col-md-4">
+            <h4>{% trans 'Open Issues' %} ({{ issues.open|length }})</h4>
+            <hr>
+            {% include './partials/issues.html' with issues=issues.open milestones=False %}
+            <br />
+          </div>
+          <div class="col-md-4">
+            <h4>{% trans 'Assigned Issues' %} ({{ issues.assigned|length }})</h4>
+            <hr>
+            {% include './partials/issues.html' with issues=issues.assigned milestones=False %}
+            <br />
+          </div>
+          <div class="col-md-4">
+            <h4>{% trans 'Closed Issues' %} ({{ issues.closed|length }})</h4>
+            <hr>
+            {% include './partials/issues.html' with issues=issues.closed milestones=False %}
+            <br />
+          </div>
+        </div>
+    </div>
+  </div>
+  
+{% endblock %}

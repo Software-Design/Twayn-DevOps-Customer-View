@@ -116,7 +116,7 @@ def loadLabels(projectObject: Project, tokenOrInstance: str) -> list:
     return labels
 
 
-def loadMilestones(projectObject: Project, tokenOrInstance) -> list:
+def loadMilestones(projectObject: Project, tokenOrInstance, iid:int=None) -> Union[list,dict]:
     """
     Loads the milestones from gitlab for the given project object
 
@@ -134,16 +134,21 @@ def loadMilestones(projectObject: Project, tokenOrInstance) -> list:
 
     project = getInstance(projectObject, tokenOrInstance)
     id = 'glp_'+projectObject.projectIdentifier+'_milestones'
-
+    if iid:
+        id = f'{id}_{str(iid)}'
+    
     milestones = cache.get(id)
     if not milestones:
-        milestones = project.milestones.list()
+        if iid:
+            milestones = project.milestones.get(iid)
+        else:
+            milestones = project.milestones.list()
         cache.set(id,milestones,settings.CACHE_PROJECTS)
 
     return milestones
 
 
-def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int=None) -> Union[list, dict, None]:
+def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int=1, milestone:int=None) -> Union[list, dict, None]:
     """
     Loads an issue or the issues from gitlab for the given project object
 
@@ -161,6 +166,9 @@ def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int
     id = f'glp_{projectObject.projectIdentifier}_issues'
     if iid:
         id = f'{id}_{str(iid)}'
+    elif milestone:
+        id = f'{id}_m{str(milestone)}'
+    id = f'{id}_p{str(page)}'
 
     issue = cache.get(iid)
     if not issue:
@@ -173,6 +181,8 @@ def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int
                     'data': project.issues.get(iid),
                     'notes': issue.notes.list(system=False)
                 }
+        elif milestone:
+            issue = project.milestones.get(milestone).issues(confidential=False, order_by='updated_at', sort='desc', page=page)
         else:
             issue = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page)
         cache.set(id,issue,settings.CACHE_PROJECTS)
