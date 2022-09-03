@@ -63,7 +63,7 @@
                   <i class="fa fa-book"></i> {% trans "Documentation" %}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarWikiDropdown">
-                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/">{% trans "Full  Documentation" %}</a></li>
+                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/">{% trans "Full Documentation" %}</a></li>
                   <li><hr class="dropdown-divider"></li>
                   {% for wiki in wikiPages %}
                     <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/?category={{ wiki.title }}">{{ forloop.counter }} {% if wiki.title == '/' %}{% trans 'Documentation' %}{% else %}{{ wiki.title }}{% endif %}</a></li>
@@ -79,7 +79,7 @@
                   <i class="fa fa-book"></i> {% trans "Administration" %}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarWikiDropdown">
-                  <li><a class="dropdown-item" href="/admin/">{% trans "Administraion" %}</a></li>
+                  <li><a class="dropdown-item" href="/admin/">{% trans "Administration" %}</a></li>
                   <li><a class="dropdown-item" href="/cache/clear?redirect={{ request.path }}">{% trans "Clear cache" %}</a></li>
                   <li><a class="dropdown-item" href="/cache/warmup?redirect={{ request.path }}">{% trans "Warmup cache" %}</a></li>
                 </ul>
