@@ -11,6 +11,9 @@
     <div class="col-5">
       <form class="form-signin" method="post">
           {% csrf_token %}
+          {% if request.GET.error %}
+          <div class="alert alert-danger">{% trans "Login unsuccessful" %}</div>
+          {% endif %}
           <h4 class="h4 mb-3 font-weight-normal">{% trans "Please sign in" %}</h4>
           <label for="email" class="sr-only">{% trans "Email address" %}</label>
           <input type="text" name="email" class="form-control" placeholder="{% trans "Email address" %}" required autofocus>

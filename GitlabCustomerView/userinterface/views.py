@@ -29,17 +29,18 @@ def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     """
 
     if request.POST.get('email'):
-        # dirty way to get the username of the user from the email
         UserModel = get_user_model()
-        user = UserModel.objects.filter(
-            email=request.POST.get('email')).first()
-        user = authenticate(request, username=getattr(
-            user, 'username', None), password=request.POST['password'])
+        user = UserModel.objects.filter(email=request.POST['email']).first()
+        if not user:
+            user = authenticate(request, username=request.POST['email'], password=request.POST['password'])
+        elif not user:
+            user = authenticate(request, username=getattr(
+                user, 'username', None), password=request.POST['password'])
         if user is not None:
             login(request, user)
             return redirect('/overview/')
         else:
-            return redirect('/')
+            return redirect('/?error=invalid')
 
     if request.user.is_authenticated:
         return redirect('/overview/')
