@@ -127,7 +127,7 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
     if request.POST.get('title'):
         glProject['remoteProject'].issues.create({'title': request.POST['title'], 'description': request.POST['description'],
                                            'labels': request.POST['label'], 'milestone_id': request.POST['milestone']})
-        return redirect('/project/'+glProject['project'].path+'/'+str(glProject['project'].id)+'/issues/')
+        return redirect('/project/'+glProject['remoteProject'].path+'/'+str(glProject['project'].id)+'/issues/')
 
     return HttpResponse(template('issueCreate').render(glProject, request))
 
