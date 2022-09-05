@@ -110,7 +110,12 @@ def loadLabels(projectObject: Project, tokenOrInstance: str) -> list:
 
     labels = cache.get(id)
     if not labels:
-        labels = project.labels.list()
+        labels = []
+        glLabels = project.labels.list()
+        for label in glLabels:
+            if not projectObject.labelPrefix or label.name.startswith(projectObject.labelPrefix):
+                labels.append(label)
+            
         cache.set(id,labels,settings.CACHE_PROJECTS)
 
     return labels
@@ -170,7 +175,7 @@ def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int
         id = f'{id}_m{str(milestone)}'
     id = f'{id}_p{str(page)}'
 
-    issue = cache.get(iid)
+    issue = cache.get(id)
     if not issue:
         if iid:          
             issue = project.issues.get(iid)  
