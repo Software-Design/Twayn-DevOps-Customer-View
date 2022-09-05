@@ -9,7 +9,7 @@
     </div>
     {% endif %}
     <div class="col-9">
-        {% if employee.homepage %}<a href="{{ employee.homepage }}" target="_blank" class="text-decoration-none text-secondary">{% endif %}
+        {% if employee.homepage %}<a href="{{ employee.homepage }}" target="_blank" class="text-decoration-none text-secondary nolink">{% endif %}
         <strong class="nolink">{% if employee %}{{ employee.name }}{% else %}{{ user.name }}{% endif %} {% if employee.homepage %}&raquo;{% endif %}</strong><br>
         {% if employee.homepage %}</a>{% endif %}
 
