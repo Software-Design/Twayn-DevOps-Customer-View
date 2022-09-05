@@ -96,13 +96,13 @@
             {% if forloop.counter != 1 %}
               <hr>
             {% endif %}
-            {% trans "Last updated" %} {{ request.updated_at|parse_iso|date:settings.DATETIME_FORMAT }}
-            <div class="float-end">
+            {% trans "Last updated" %} {{ request.updated_at|parse_iso|date:settings.DATE_FORMAT }}
+              <br>
               {% if request.work_in_progress %}<span class="badge bg-primary">{% trans "WIP" %}</span>{% endif %}
               {% if request.draft %}<span class="badge bg-primary">{% trans "Draft" %}</span>{% endif %}
               {% if request.state != "opened" %}<span class="badge bg-primary">{% trans "Closed" %}</span>{% endif %}
               {% if request.user_notes_count > 0 %}<span class="badge bg-primary">{{ request.user_notes_count }} <i class="fa far fa-comments"></i></span>{% endif %}
-            </div>
+              {% if request.changes_count > 0 %}<span class="badge bg-primary">{{ request.changes_count }} <i class="fa far fa-code"></i></span>{% endif %}
           {% endfor %}
         </td>
       </tr>
