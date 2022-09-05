@@ -175,7 +175,7 @@ def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int
         id = f'{id}_m{str(milestone)}'
     id = f'{id}_p{str(page)}'
 
-    issue = cache.get(iid)
+    issue = cache.get(id)
     if not issue:
         if iid:          
             issue = project.issues.get(iid)  
