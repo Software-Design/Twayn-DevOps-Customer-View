@@ -20,7 +20,7 @@
                     {{ issue.title  }}
                 </strong><br>
                 <div class="row">
-                <div class="text-muted {% if large %}col-6{% else %}col-12{% endif %}">
+                <div class="text-muted {% if large %}col-8{% else %}col-12{% endif %}">
                     #{{ issue.iid }} - 
                     {% if issue.state == 'opened' %}
                         <i class="far fa-folder-open"></i> {% trans 'Open' %}, {% trans 'updated' %}
@@ -33,7 +33,7 @@
                         - <i class="far fa-clipboard-list"></i> {{ issue.milestone.title }}
                     {% endif %}
                 </div>
-                <div class="text-muted text-end {% if large %}col-6{% else %}col-12{% endif %}">
+                <div class="text-muted text-end {% if large %}col-4{% else %}col-12{% endif %}">
                     {% for label in issue.labels %}
                         <span class="badge bg-{% if issue.state != 'closed' %}primary{% else %}secondary{% endif %}">{{ label }}</span> 
                     {% endfor %}
