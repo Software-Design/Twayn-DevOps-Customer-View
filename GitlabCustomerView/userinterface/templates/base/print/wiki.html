@@ -4,14 +4,19 @@
   <head>
     <link rel="stylesheet" href="{{ settings.INTERFACE_URL }}/static/cdn/css/bootstrap.min.css">
     <style>
-
+        body { 
+            font-size: 20px;
+            font-family: 'Helvetica';
+        }
     </style>
   </head>
-  <body class="p-3 pt-4">
+  <body class="p-5">
       <div style="width: 80%; float: left;">
         <h1>{% trans "Documentation" %}</h1>
         <br><br>
-        {% include '../partials/tableofcontents.html' with links=False %}
+        <div style="line-height: 1.3em;">
+            {% include '../partials/tableofcontents.html' with links=False %}
+        </div>
         <br />
       </div>
       <div style="width: 20%; float: right;">
@@ -23,13 +28,15 @@
     {% for path, category in wikiPages.items %}
         {% with forloop.counter as no %}
         <div style = "display:block; clear:both; page-break-after:always;"></div>
-        <div class="col-12 pt-4">
-          <h3 class="text-capitalize">{{ no }} {% if path == '/' %}{% trans 'Documentation' %}{% else %}{{ path }}{% endif %}</h3>
+        <div class="col-12 pt-5">
+          <h1 class="text-capitalize">{{ no }} {% if path == '/' %}{% trans 'Documentation' %}{% else %}{{ path }}{% endif %}</h1>
               {% for page in category %}
                 {% if forloop.counter != 1 %} <div style="display:block; clear:both; page-break-after:always;"></div>{% endif %}
-                <h2 class="text-capitalize pt-4">{{ no }}.{{ forloop.counter }} {{ page.title }}</h2>
-                <div class="px-4">
-                  {% wikicontent page.slug localProject remoteProject %}
+                <h2 class="text-capitalize pt-5">{{ no }}.{{ forloop.counter }} {{ page.title }}</h2>
+                <div class="px-4" style="text-align: justify">
+                  {% autoescape off %}
+                    {% wikicontent page.slug localProject remoteProject %}
+                  {% endautoescape %}
                 </div>
               {% endfor %}
         </div>

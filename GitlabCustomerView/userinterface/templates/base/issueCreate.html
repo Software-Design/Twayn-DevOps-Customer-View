@@ -6,7 +6,15 @@
 {% load prettify %}
 
 {% block content %}
-<h2>Create new issue</h2>
+<div class="btn-group float-end" role="group">
+  {% if localProject.enableTicketCreation %}
+  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/" class="btn btn-outline-primary"><i class="fa far fa-folder-open"></i> {% trans "All Issues" %}</a>
+  {% endif %}
+  {% if request.user.is_superuser %}
+  <a href="{{ remoteProject.web_url }}/-/issues/new" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
+  {% endif %}
+</div>
+<h1>Create new issue</h1>
   <br>
   <div class="row">
     <div class="col-5">
@@ -52,7 +60,6 @@
         <br>
         <div class="form-floating">
           <textarea class="form-control" placeholder="{% trans "Description" %}" name="description" style="height: 300px"></textarea>
-          <label for="floatingTextarea2">{% trans "Description" %}</label>
         </div>
         <br>
         <input type="submit" class="btn btn-primary float-end">

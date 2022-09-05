@@ -1,24 +1,22 @@
 {% load prettify %}
 {% load i18n %}
 <div class="row">
-    {% if user.avatar_url %}
+    {% if employee.avatar %}
     <div class="col-3 text-end">
-        <img src="{{ user.avatar_url }}" width="75">
+        <img src="{{ employee.avatar.url }}" width="75">
     </div>
     {% endif %}
     <div class="col-9">
-        <strong>{{ user.name }}</strong><br>
-            {% with user.username|getTeamMember as employee %}
-                {% if employee.email %}
-                    <i class="far fa-envelope"></i> {{ employee.email }}<br>
-                {% endif %}
-                {% if employee.phone %}
-                    <i class="far fa-phone"></i> {{ employee.phone }}
-                {% endif %}
-                {% if not employee.phone and not employee.email %}
-                    @{{ user.username }}<br>
-                    <a href="{{ user.web_url }}" target="_blank"><i class="fab fa-gitlab"></i> {% trans "GitLab Profile" %}</a>
-                {% endif %}
-            {% endwith %}
+        <strong>{% if employee %}{{ employee.name }}{% else %}{{ user.name }}{% endif %}</strong><br>
+        {% if employee.email %}
+            <i class="fa far fa-envelope"></i> <a href="mailto:{{ employee.email }}">{{ employee.email }}</a><br>
+        {% endif %}
+        {% if employee.phone %}
+            <i class="fa far fa-phone"></i> <a href="tel:{{ employee.phone }}">{{ employee.phone }}</a>
+        {% endif %}
+        {% if not employee.phone and not employee.email %}
+            @{{ user.username }}<br>
+            <a href="{{ user.web_url }}" target="_blank"><i class="fab fa-gitlab"></i> {% trans "GitLab Profile" %}</a>
+        {% endif %}
     </div>
 </div>

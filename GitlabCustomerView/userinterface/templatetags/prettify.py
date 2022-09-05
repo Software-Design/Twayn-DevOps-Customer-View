@@ -7,21 +7,14 @@ import re
 register = Library()
 
 @register.filter()
-def translateDescriptions(value):
-
-    # todo find a goot aproach to translate note bodys
-    changedDescription = _('changed the description')
-    assignedTo = _('assigned to %s')
-    opened =_('opened')
-
-    for employee in TeamMember.objects.all():
-        value = _(re.sub('<[^<]+?>', '', value).replace(employee.username,'%s')).replace('%s',employee.name)
-        
-    return _(value)
-
-@register.filter()
 def getTeamMember(value):
-    return TeamMember.objects.filter(username='@'+value).first()
+    member = TeamMember.objects.filter(username=value).first()
+    if not member:
+        member = TeamMember.objects.filter(username='@'+value).first()
+    if not member:
+        if re.match('@?project_(.*)_bot', value) != None:
+            member = {'name': _('Customer'), 'avatar': {'url': '*'}}
+    return member
 
 @register.filter('startswith')
 def startswith(text, starts):
