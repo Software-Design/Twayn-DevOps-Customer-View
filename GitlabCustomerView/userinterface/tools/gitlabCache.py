@@ -184,7 +184,8 @@ def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int
             else:
                 issue = {
                     'data': project.issues.get(iid),
-                    'notes': issue.notes.list(system=False)
+                    'notes': issue.notes.list(system=False),
+                    'mergeRequests': issue.related_merge_requests()
                 }
         elif milestone:
             issue = project.milestones.get(milestone).issues(confidential=False, order_by='updated_at', sort='desc', page=page)

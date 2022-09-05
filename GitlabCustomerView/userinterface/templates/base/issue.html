@@ -20,7 +20,7 @@
 <h3>
   <i class="fa far fa-archive"></i> {{ remoteProject.name }} 
   {% if issue.data.milestone %}
-    <span class="float-end"><i class="far fa-tasks"></i> {{ issue.data.milestone.title }}</span>
+    <span class="float-end"><i class="fa far fa-tasks"></i> {{ issue.data.milestone.title }}</span>
   {% endif %}
 </h3>
 <br />
@@ -84,6 +84,25 @@
         <td>
           {% for label in issue.data.labels %}
             <span class="badge bg-primary">{{ label }}</span>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endif %}
+      {% if issue.mergeRequests %}
+      <tr>
+        <th>{% trans 'Merge Requests' %}</th>
+        <td>
+          {% for request in issue.mergeRequests %}
+            {% if forloop.counter != 1 %}
+              <hr>
+            {% endif %}
+            {% trans "Last updated" %} {{ request.updated_at|parse_iso|date:settings.DATETIME_FORMAT }}
+            <div class="float-end">
+              {% if request.work_in_progress %}<span class="badge bg-primary">{% trans "WIP" %}</span>{% endif %}
+              {% if request.draft %}<span class="badge bg-primary">{% trans "Draft" %}</span>{% endif %}
+              {% if request.state != "opened" %}<span class="badge bg-primary">{% trans "Closed" %}</span>{% endif %}
+              {% if request.user_notes_count > 0 %}<span class="badge bg-primary">{{ request.user_notes_count }} <i class="fa far fa-comments"></i></span>{% endif %}
+            </div>
           {% endfor %}
         </td>
       </tr>
