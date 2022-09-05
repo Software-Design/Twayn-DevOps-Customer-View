@@ -36,6 +36,7 @@
         <div class="form-floating">
           <select class="form-select" name="milestone" aria-label="{% trans "Milestone" %}">
             {% for milestone in allMilestones %}
+                <option value="">-- {% trans "Don't assign a milestone" %} --</option>
                 {% if milestone.state == 'active' %}
                 <optgroup label="{% trans "Until" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}">
                   <option value="{{ milestone.id }}">{{ milestone.title }}</option>
@@ -47,17 +48,18 @@
         </div>
         <br>
 
+        {% if projectLabels|length > 0 %}
         <div class="form-floating">
           <select class="form-select" name="label" aria-label="{% trans "Label" %}">
+            <option value="">-- {% trans "Don't assign a label" %} --</option>
             {% for label in projectLabels %}
-              {% if not localProject.labelPrefix or label.name|startswith:localProject.labelPrefix %}
               <option value="{{ label.name }}">{% with names=label.name|split:"::" %}{% if names|length > 1 %}{{ names.0|capfirst }}: {{ names.1|capfirst }}{% else %}{{ names.0|capfirst }}{% endif %}{% endwith %}</option>
-              {% endif %}
             {% endfor %}
           </select>
           <label for="floatingSelect">{% trans "Label" %}</label>
         </div>
         <br>
+        {% endif %}
         <div class="form-floating">
           <textarea class="form-control" placeholder="{% trans "Description" %}" name="description" style="height: 300px"></textarea>
         </div>
