@@ -12,7 +12,7 @@
   {% if localProject.enableMilestones %}
   <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/" class="btn btn-outline-primary"><i class="fa far fa-tasks"></i> {% trans "Milestones" %}</a>
   {% endif %}
-  {% if localProject.enableDocumentation %}
+  {% if wikiPages and localProject.enableDocumentation  %}
   <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/" class="btn btn-outline-primary"><i class="fa far fa-book"></i> {% trans "Documentation" %}</a>
   {% endif %}
   {% if request.user.is_superuser %}
