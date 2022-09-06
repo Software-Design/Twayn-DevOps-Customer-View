@@ -38,6 +38,8 @@ def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
                 user, 'username', None), password=request.POST['password'])
         if user is not None:
             login(request, user)
+            if(request.GET.get('next') and request.GET['next'].startswith('/')):
+                return redirect(request.GET['next'])
             return redirect('/overview/')
         else:
             return redirect('/?error=invalid')
