@@ -1,14 +1,17 @@
 # Purpose of this file:
 # This file provides some helping functions primary for the views.py to prevent redundancy
 
+from typing import Union
+
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import Http404
+from django.http import Http404, HttpResponse
+from .templateHelper import template
 from userinterface.models import Project, UserProjectAssignment
 
 from .gitlabCache import loadProject
 
 
-def getProject(request: WSGIRequest, id: int) -> dict:
+def getProject(request: WSGIRequest, id: int) -> Union[dict, HttpResponse]:
     """
     Get the project (currently only gitlab project) from the cache
 
@@ -28,4 +31,11 @@ def getProject(request: WSGIRequest, id: int) -> dict:
         raise Http404
 
     # TODO: if we plan to support other things besides gitlab we should extend this to load even other projects (none-gitlab projects)
-    return loadProject(project, assigment.accessToken)
+    project = loadProject(project, assigment.accessToken)
+    if 'error' in project:
+        if '404' in project['error']:
+            raise Http404
+        else:
+            return HttpResponse(template('defaultErrorPage').render({ **project }, request))
+
+    return project

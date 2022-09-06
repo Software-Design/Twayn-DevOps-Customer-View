@@ -1,0 +1,9 @@
+{% extends base %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+    <h1>404 {% trans "Page not found" %}</h1>
+    <span>{% blocktrans %}Please return to the <a href="/">overview</a> and try again.{% endblocktrans %}</span>
+</div>
+{% endblock content %}
