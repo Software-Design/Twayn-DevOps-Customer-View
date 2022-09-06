@@ -1,25 +1,23 @@
-import os
 import datetime
+import os
 from typing import Union
 
 import pdfkit
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseRedirect
-from django.core.cache import cache
 from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout, get_user_model
-from django.conf import settings
 from django.utils.translation import gettext as _
 
+from .models import *
 from .templatetags.dates import parse_date
-from .tools.gitlabCache import loadIssues, loadMilestones, loadProject, loadWikiPage
+from .tools.gitlabCache import (loadIssues, loadMilestones, loadProject,
+                                loadWikiPage)
 from .tools.templateHelper import template
 from .tools.viewsHelper import getProject
-from .models import *
 
 
 def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
@@ -85,6 +83,9 @@ def overview(request: WSGIRequest) -> HttpResponse:
 def project(request, slug, id):
     
     glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
+
     firstMilestoneStart = None
     lastMilestoneEnd = None
 
@@ -112,6 +113,9 @@ def issueList(request, slug, id):
     """
 
     glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
+
     glProject['issues'] = loadIssues(glProject['localProject'], glProject['remoteProject'], page=request.GET.get('page', 1))
 
     return HttpResponse(template('issueList').render(glProject, request))
@@ -125,6 +129,8 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
     """
 
     glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
 
     if request.POST.get('title'):
         body = {'title': request.POST['title'], 'description': request.POST['description']}
@@ -146,6 +152,8 @@ def issue(request: WSGIRequest, slug: str, id: int, issue: int) -> HttpResponse:
     """
 
     glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
 
     if request.POST.get('comment'):
         glProject['remoteProject'].issues.get(id=issue).notes.create({'body': '**'+request.user.first_name+' '+request.user.last_name+':**\n '+request.POST['comment']})
@@ -166,6 +174,9 @@ def milestones(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     """
 
     glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
+
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
@@ -179,6 +190,8 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid:int) -> HttpRes
     Get the information needed to display a board of issues in this milestone
     """
     glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
 
     if not glProject['localProject'].enableMilestones:
         return redirect('/')
@@ -211,6 +224,9 @@ def wiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRedirect
     """
 
     glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
+
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
@@ -226,6 +242,9 @@ def wikipage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
     """
 
     glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
+
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
@@ -244,6 +263,9 @@ def printWiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRed
     """
 
     glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
+
     projectIdentifier = glProject['localProject'].projectIdentifier
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
