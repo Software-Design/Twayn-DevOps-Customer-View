@@ -33,6 +33,7 @@
             {% for milestone in allMilestones %} 
               {% if milestone.state != 'active' and milestone.due_date or milestone.due_date and milestone.due_date|parse_date < now %}
                 {% include './partials/milestones.html' %}
+                <br>
               {% endif %}
             {% endfor %}
             </ul>
@@ -60,6 +61,7 @@
             {% for milestone in allMilestones %} 
               {% if milestone.state == 'active' and milestone.start_date and milestone.start_date|parse_date >= now %}
                 {% include './partials/milestones.html' %}
+                <br>
               {% endif %}
             {% endfor %}
             </ul>
