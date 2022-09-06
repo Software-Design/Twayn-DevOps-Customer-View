@@ -19,7 +19,8 @@
                     {% if not large %}<br>{% endif %}
                     {{ issue.title  }}
                 </strong><br>
-                <div class="text-muted {% if large %}float-start{% endif %}">
+                <div class="row">
+                <div class="text-muted {% if large %}col-6{% else %}col-12{% endif %}">
                     #{{ issue.iid }} - 
                     {% if issue.state == 'opened' %}
                         <i class="far fa-folder-open"></i> {% trans 'Open' %}, {% trans 'updated' %}
@@ -29,15 +30,15 @@
                         {{ issue.closed_at|parse_iso|date:settings.DATE_FORMAT }}
                     {% endif %}
                     {% if issue.milestone and milestones != False and localProject.enableMilestones == True %}
-                        - <i class="far fa-clipboard-list"></i> {{ issue.milestone.title }}
+                    {% if large %}<br>{% else %} - {% endif %}<i class="fa far fa-tasks"></i> {{ issue.milestone.title }}
                     {% endif %}
                 </div>
-                <div class="text-muted {% if large %}float-end{% endif %}">
+                <div class="text-muted text-end {% if large %}col-6{% else %}col-12{% endif %}">
                     {% for label in issue.labels %}
                         <span class="badge bg-{% if issue.state != 'closed' %}primary{% else %}secondary{% endif %}">{{ label }}</span> 
                     {% endfor %}
                 </div>
-                {% if large %}<br>{% endif %}
+                </div>
             </li>
         </a> 
     {% endif %}

@@ -3,11 +3,16 @@
 <div class="row">
     {% if employee.avatar %}
     <div class="col-3 text-end">
-        <img src="{{ employee.avatar.url }}" width="75">
+        {% if employee.homepage %}<a href="{{ employee.homepage }}" target="_blank">{% endif %}
+            <img src="{{ employee.avatar.url }}" width="75">
+        {% if employee.homepage %}</a>{% endif %}
     </div>
     {% endif %}
     <div class="col-9">
-        <strong>{% if employee %}{{ employee.name }}{% else %}{{ user.name }}{% endif %}</strong><br>
+        {% if employee.homepage %}<a href="{{ employee.homepage }}" target="_blank" class="text-decoration-none text-secondary nolink">{% endif %}
+        <strong class="nolink">{% if employee %}{{ employee.name }}{% else %}{{ user.name }}{% endif %} {% if employee.homepage %}&raquo;{% endif %}</strong><br>
+        {% if employee.homepage %}</a>{% endif %}
+
         {% if employee.email %}
             <i class="fa far fa-envelope"></i> <a href="mailto:{{ employee.email }}">{{ employee.email }}</a><br>
         {% endif %}
