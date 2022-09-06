@@ -16,7 +16,8 @@ def loadProject(projectObject: Project, accessToken: str) -> dict:
 
     @return:
         dict:
-            { 'remoteProject': GitLabProjectObject, 'localProject': Project, 'allMilestones': list or False, 'mostRecentIssues': list[:5], 'wikiPages': list or False, 'projectLabels':  }
+            Either { 'remoteProject': GitLabProjectObject, 'localProject': Project, 'allMilestones': list or False, 'mostRecentIssues': list[:5], 'wikiPages': list or False, 'projectLabels':  }
+            or { 'localProject': { 'name': 'projectName' }, 'error': 'An error occured: SomeException' }
     """
 
     id = f'glp_{projectObject.projectIdentifier}'
@@ -48,6 +49,10 @@ def loadProject(projectObject: Project, accessToken: str) -> dict:
 def loadWikiPage(projectObject: Project, tokenOrInstance, slug: str=None) -> Union[ProjectWiki, list]:
     """
     Loads a project wiki page or all wiki pages object from gitlab using the project identifier and slug
+
+    @params:
+        tokenOrInstance:
+            Is either a string (token) or a gitlab.v4.objects.projects.Project instance
 
     @return:
         Either a single wiki page if slug is set or all pages of the project in a list
@@ -95,9 +100,13 @@ def getInstance(projectObject: Project, tokenOrInstance):
     return project
 
 
-def loadLabels(projectObject: Project, tokenOrInstance: str) -> list:
+def loadLabels(projectObject: Project, tokenOrInstance) -> list:
     """
     Loads the labels from gitlab for the given project object
+
+    @params:
+        tokenOrInstance:
+            Is either a string (token) or a gitlab.v4.objects.projects.Project instance
 
     @return:
         list:
