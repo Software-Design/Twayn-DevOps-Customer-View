@@ -125,7 +125,7 @@
           {% for assignee in issue.data.assignees%}
             {% with employee=assignee.username|getTeamMember %}
               {% with t='partials/employee'|template %}
-                {% include t with employee=employee with employee=employee user=assignee %}
+                {% include t with employee=employee user=assignee %}
               {% endwith %}
             {% endwith %}
           {% endfor %}
