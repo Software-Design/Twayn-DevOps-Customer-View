@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load markdown %}
+{% load template %}
 
 {% block content %}
 
@@ -15,7 +16,9 @@
     <br><br><br>
   </div>
   <div class="col-4">
-    {% include './partials/tableofcontents.html' %}
+    {% with t='partials/tableofcontents'|template %}
+      {% include t %}
+    {% endwith %}
   </div>
   <div class="col-8 px-3">
     <h2 class="text-capitalize">{{ page.title }}</h2>

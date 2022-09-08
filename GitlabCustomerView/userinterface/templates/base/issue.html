@@ -5,8 +5,9 @@
 {% load numbers %}
 {% load markdown %}
 {% load prettify %}
-{% block content %}
+{% load template %}
 
+{% block content %}
   <div class="btn-group float-end" role="group">
     {% if localProject.enableTicketCreation %}
     <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
@@ -111,7 +112,9 @@
       <tr>
         <th>{% trans 'Author' %}</th>
         <td>
-          {% include './partials/employee.html' with employee=employee user=issue.data.author %}
+          {% with t='partials/employee'|template %}
+            {% include t with employee=employee user=issue.data.author %}
+          {% endwith %}
         </td>
       </tr>
       {% endwith %} 
@@ -121,7 +124,9 @@
         <td>
           {% for assignee in issue.data.assignees%}
             {% with employee=assignee.username|getTeamMember %}
-              {% include './partials/employee.html' with employee=employee user=assignee %}
+              {% with t='partials/employee'|template %}
+                {% include t with employee=employee with employee=employee user=assignee %}
+              {% endwith %}
             {% endwith %}
           {% endfor %}
         </td>

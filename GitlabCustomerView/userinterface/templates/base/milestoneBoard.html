@@ -3,6 +3,7 @@
 {% load static %}
 {% load dates %}
 {% load numbers %}
+{% load template %}
 
 {% block content %}
 
@@ -88,7 +89,9 @@
             <h4>{% trans 'Open Issues' %} ({{ issues.open|length }})</h4>
             <hr>
             <ul class="list-group">
-            {% include './partials/issues.html' with issues=issues.open milestones=False %}
+              {% with t='partials/issues'|template %}
+                {% include t with issues=issues.open milestones=False %}
+              {% endwith %}
             </ul>
             <br />
           </div>
@@ -96,7 +99,9 @@
             <h4>{% trans 'Assigned Issues' %} ({{ issues.assigned|length }})</h4>
             <hr>
             <ul class="list-group">
-            {% include './partials/issues.html' with issues=issues.assigned milestones=False %}
+              {% with t='partials/issues'|template %}
+                {% include t with issues=issues.assigned milestones=False %}
+              {% endwith %}
           </ul>
             <br />
           </div>
@@ -104,7 +109,9 @@
             <h4>{% trans 'Closed Issues' %} ({{ issues.closed|length }})</h4>
             <hr>
             <ul class="list-group">
-            {% include './partials/issues.html' with issues=issues.closed milestones=False %}
+              {% with t='partials/issues'|template %}
+                {% include t with issues=issues.closed milestones=False %}
+              {% endwith %}
           </ul>
             <br />
           </div>

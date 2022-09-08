@@ -1,5 +1,7 @@
 {% load i18n %}
 {% load markdown %}
+{% load template %}
+
 <html>
   <head>
     <link rel="stylesheet" href="{{ settings.INTERFACE_URL }}/static/cdn/css/bootstrap.min.css">
@@ -15,7 +17,9 @@
         <h1>{% trans "Documentation" %}</h1>
         <br><br>
         <div style="line-height: 1.3em;">
-            {% include '../partials/tableofcontents.html' with links=False %}
+            {% with t='partials/tableofcontents'|template %}
+              {% include t with links=False %}
+            {% endwith %}
         </div>
         <br />
       </div>

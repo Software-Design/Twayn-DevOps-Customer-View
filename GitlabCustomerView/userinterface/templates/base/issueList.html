@@ -2,9 +2,9 @@
 {% load i18n %}
 {% load static %}
 {% load dates %}
+{% load template %}
 
 {% block content %}
-
 <div class="btn-group float-end" role="group">
   {% if localProject.enableTicketCreation %}
   <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
@@ -26,7 +26,9 @@
   <div class="row">
       <div class="col-12">
               <ul class="list-group">
-              {% include './partials/issues.html' with issues=issues large=True %}
+              {% with t='partials/issues'|template %}
+                {% include t with issues=issues large=True %}
+              {% endwith %}
                 </ul><br><br>
       </div>
         <div class="col-4">

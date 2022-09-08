@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load dates %}
-
+{% load template %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'vendor/frappe-gantt/frappe-gantt.css' %}">
@@ -93,7 +93,9 @@
       <br>
       <h4>{% trans "Last updated issues" %}</h4><br>
       <ul class="list-group">
-        {% include './partials/issues.html' with issues=mostRecentIssues large=True %}
+        {% with t='partials/issues'|template %}
+          {% include t with issues=mostRecentIssues milestones=True %}
+        {% endwith %}
       </ul>
       <br>
       <div class="btn-group float-end" role="group">
@@ -107,7 +109,9 @@
       <div class="row">
         {% for assignee in localProject.assignees.all %}
           <div class="col-md-12 pb-3">
-            {% include './partials/employee.html' with employee=assignee %}
+            {% with t='partials/employee'|template %}
+              {% include t with employee=assignee %}
+            {% endwith %}
           </div>
         {% endfor %}
       </div>

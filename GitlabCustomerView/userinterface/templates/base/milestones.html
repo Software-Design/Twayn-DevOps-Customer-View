@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load dates %}
+{% load template %}
 
 {% block content %}
 
@@ -32,7 +33,9 @@
             <ul class="list-group">
             {% for milestone in allMilestones %} 
               {% if milestone.state != 'active' and milestone.due_date or milestone.due_date and milestone.due_date|parse_date < now %}
-                {% include './partials/milestones.html' %}
+                {% with t='partials/milestones'|template %}
+                  {% include t %}
+                {% endwith %}
                 <br>
               {% endif %}
             {% endfor %}
@@ -46,7 +49,9 @@
             {% for milestone in allMilestones %} 
               {% if milestone.state == 'active' %}
                 {% if not milestone.start_date or milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
-                {% include './partials/milestones.html' %}
+                  {% with t='partials/milestones'|template %}
+                    {% include t %}
+                  {% endwith %}
                 <br>
                 {% endif %}
               {% endif %}
@@ -60,7 +65,9 @@
             <ul class="list-group">
             {% for milestone in allMilestones %} 
               {% if milestone.state == 'active' and milestone.start_date and milestone.start_date|parse_date >= now %}
-                {% include './partials/milestones.html' %}
+                {% with t='partials/milestones'|template %}
+                  {% include t %}
+                {% endwith %}
                 <br>
               {% endif %}
             {% endfor %}

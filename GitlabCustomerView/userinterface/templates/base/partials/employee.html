@@ -14,10 +14,10 @@
         {% if employee.homepage %}</a>{% endif %}
 
         {% if employee.email %}
-            <i class="fa far fa-envelope"></i> <a href="mailto:{{ employee.email }}">{{ employee.email }}</a><br>
+            <i class="fa far fa-envelope"></i> &nbsp;<a href="mailto:{{ employee.email }}">{{ employee.email }}</a><br>
         {% endif %}
         {% if employee.phone %}
-            <i class="fa far fa-phone"></i> <a href="tel:{{ employee.phone }}">{{ employee.phone }}</a>
+            <i class="fa far fa-phone"></i> &nbsp;<a href="tel:{{ employee.phone }}">{{ employee.phone }}</a>
         {% endif %}
         {% if not employee.phone and not employee.email %}
             @{{ user.username }}<br>
