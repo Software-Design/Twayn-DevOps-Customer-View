@@ -16,11 +16,14 @@ customTranslations = {
     "\[ \]": '<input type="checkbox" disabled>',
     "\[x\]": '<input type="checkbox" checked disabled>',
     '<ul>': '<ul class="list-group">',
-    '<li>': '<li class="list-group-item">'
+    '<li>': '<li class="list-group-item">',
 }
 
 @register.filter()
 def markdown(value):
+
+    value = re.sub(r'```\n<','```<',value)
+
     text = md.markdown(value)
     
     for key,value in customTranslations.items():
