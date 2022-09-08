@@ -79,7 +79,8 @@
           {{ issue.data.due_date|parse_iso|date:settings.DATETIME_FORMAT }}
         </td>
       </tr>
-      {% endif %} {% if issue.data.labels|length > 0 %}
+      {% endif %}
+      {% if issue.data.labels|length > 0 %}
       <tr>
         <th>{% trans 'Labels' %}</th>
         <td>
