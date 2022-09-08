@@ -16,12 +16,14 @@
             <h5 class="card-title">{{ p.remoteProject.name }}</h5>
             <p class="card-text">{{ p.remoteProject.description }}{{ p.error }}
               <br><br>
-              <strong>{% trans "Current Milestone(s)" %}:</strong><br>
-              {% for milestone in p.allMilestones %} 
-                {% if milestone.state == 'active' and milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
-                  &raquo; {{ milestone.title }}<br>
-                {% endif %}
-              {% endfor %} <br />
+              {% if p.localProject.enableMilestones %}
+                <strong>{% trans "Current Milestone(s)" %}:</strong><br>
+                {% for milestone in p.allMilestones %} 
+                  {% if milestone.state == 'active' and milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
+                    &raquo; {{ milestone.title }}<br>
+                  {% endif %}
+                {% endfor %} <br />
+              {% endif %}
             </p>
             {% if p.remoteProject.path %}
             <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="btn btn-primary">{% trans "Go to project" %} &raquo;</a>

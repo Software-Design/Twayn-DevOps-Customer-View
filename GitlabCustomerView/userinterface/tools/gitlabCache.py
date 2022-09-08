@@ -157,7 +157,7 @@ def loadMilestones(projectObject: Project, tokenOrInstance, iid:int=None) -> Uni
             milestones = project.milestones.get(iid)
         else:
             milestones = project.milestones.list()
-        cache.set(id,milestones,settings.CACHE_PROJECTS)
+        cache.set(id,milestones,settings.CACHE_MILESTONES)
 
     return milestones
 
@@ -200,6 +200,6 @@ def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int
             issue = project.milestones.get(milestone).issues(confidential=False, order_by='updated_at', sort='desc', page=page)
         else:
             issue = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page)
-        cache.set(id,issue,settings.CACHE_PROJECTS)
+        cache.set(id,issue,settings.CACHE_ISSUES)
 
     return issue
