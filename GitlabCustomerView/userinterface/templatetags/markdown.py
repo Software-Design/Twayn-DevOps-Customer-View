@@ -22,7 +22,7 @@ customTranslations = {
 @register.filter()
 def markdown(text):
         
-    text = md.markdown(text,extensions=['fenced_code'])
+    text = md.markdown(text,extensions=['fenced_code', 'nl2br'])
     
     for key,value in customTranslations.items():
         text = re.sub(key,value,text)
