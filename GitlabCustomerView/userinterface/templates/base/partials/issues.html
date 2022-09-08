@@ -38,9 +38,7 @@
                 <div class="text-muted text-end {% if large %}col-6{% else %}col-12{% endif %}">
                     {% for label in issue.labels %}
                         {% with names=label|split:"::" %}
-                            {% if names|length > 1 %}
-                                <span class="badge bg-{% if issue.state != 'closed' %}primary{% else %}secondary{% endif %}">{{ names.0|capfirst }}: {{ names.1|capfirst }}{% else %}{{ names.0|capfirst }}</span> 
-                            {% endif %}
+                                <span class="badge bg-{% if issue.state != 'closed' %}primary{% else %}secondary{% endif %}">{% if names|length > 1 %}{{ names.0|capfirst }}: {{ names.1|capfirst }}{% else %}{{ names.0|capfirst }}{% endif %}</span> 
                         {% endwith %}    
                     {% endfor %}
                 </div>
