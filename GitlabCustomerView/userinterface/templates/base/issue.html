@@ -84,7 +84,11 @@
         <th>{% trans 'Labels' %}</th>
         <td>
           {% for label in issue.data.labels %}
-            <span class="badge bg-primary">{{ label }}</span>
+            {% with names=label.name|split:"::" %}
+              {% if names|length > 1 %}
+                <span class="badge bg-primary">{{ names.0|capfirst }}: {{ names.1|capfirst }}{% else %}{{ names.0|capfirst }}</span>
+              {% endif %}
+            {% endwith %}
           {% endfor %}
         </td>
       </tr>
