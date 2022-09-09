@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-05 19:07+0000\n"
-"PO-Revision-Date: 2022-09-05 21:13+0200\n"
+"POT-Creation-Date: 2022-09-09 04:54+0000\n"
+"PO-Revision-Date: 2022-09-09 06:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -17,6 +17,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.1.1\n"
+
+#: userinterface/templates/base/404.html:6
+msgid "Page not found"
+msgstr "Seite nicht gefunden"
+
+#: userinterface/templates/base/404.html:7
+#: userinterface/templates/base/defaultErrorPage.html:10
+msgid "Please return to the <a href=\"/\">overview</a> and try again."
+msgstr ""
+"Bitte kehren Sie zur <a href=„/„>Übersicht</a> zurück und versuchen Sie "
+"es erneut."
 
 #: userinterface/templates/base/base.html:40
 msgid "All Projects"
@@ -37,14 +48,15 @@ msgstr "Alle Tickets durchsuchen"
 #: userinterface/templates/base/base.html:64
 #: userinterface/templates/base/base.html:70
 #: userinterface/templates/base/issueList.html:16
-#: userinterface/templates/base/milestones.html:19
+#: userinterface/templates/base/milestones.html:20
 #: userinterface/templates/base/partials/tableofcontents.html:6
-#: userinterface/templates/base/print/wiki.html:15
-#: userinterface/templates/base/print/wiki.html:32
+#: userinterface/templates/base/print/wiki.html:17
+#: userinterface/templates/base/print/wiki.html:36
 #: userinterface/templates/base/project.html:68
-#: userinterface/templates/base/wiki.html:23
-#: userinterface/templates/base/wiki.html:25
-#: userinterface/templates/software-design/base.html:167
+#: userinterface/templates/base/wiki.html:24
+#: userinterface/templates/base/wiki.html:26
+#: userinterface/templates/software-design/base.html:172
+#: userinterface/templates/software-design/project.html:69
 msgid "Documentation"
 msgstr "Dokumentation"
 
@@ -65,127 +77,132 @@ msgstr "Cache leeren"
 msgid "Warmup cache"
 msgstr "Cache aufwärmen"
 
-#: userinterface/templates/base/issue.html:12
+#: userinterface/templates/base/defaultErrorPage.html:6
+msgid "An error occured handling the request:"
+msgstr "Beim Bearbeiten Ihrer Anfrage trat ein Fehler auf:"
+
+#: userinterface/templates/base/issue.html:13
 #: userinterface/templates/base/issueList.html:10
-#: userinterface/templates/base/milestoneBoard.html:14
-#: userinterface/templates/base/milestones.html:13
+#: userinterface/templates/base/milestoneBoard.html:15
+#: userinterface/templates/base/milestones.html:14
 #: userinterface/templates/base/project.html:62
+#: userinterface/templates/software-design/project.html:63
 msgid "Create Ticket"
 msgstr "Ticket erstellen"
 
-#: userinterface/templates/base/issue.html:31
+#: userinterface/templates/base/issue.html:32
 msgid "State"
 msgstr "Status"
 
-#: userinterface/templates/base/issue.html:34
-#: userinterface/templates/base/partials/issues.html:26
+#: userinterface/templates/base/issue.html:35
+#: userinterface/templates/base/partials/issues.html:28
 msgid "Open"
 msgstr "Offen"
 
-#: userinterface/templates/base/issue.html:36
+#: userinterface/templates/base/issue.html:37
 msgid "Closed on"
 msgstr "Geschlossen am"
 
-#: userinterface/templates/base/issue.html:43
+#: userinterface/templates/base/issue.html:44
 #: userinterface/templates/base/issueCreate.html:37
 #: userinterface/templates/base/issueCreate.html:47
 msgid "Milestone"
 msgstr "Projektphase"
 
-#: userinterface/templates/base/issue.html:63
+#: userinterface/templates/base/issue.html:64
 msgid "Created"
 msgstr "Erstellt"
 
-#: userinterface/templates/base/issue.html:69
+#: userinterface/templates/base/issue.html:70
 msgid "Updated"
 msgstr "Aktualisiert"
 
-#: userinterface/templates/base/issue.html:76
+#: userinterface/templates/base/issue.html:77
 msgid "Due Date"
 msgstr "Fälligkeitsdatum"
 
-#: userinterface/templates/base/issue.html:83
+#: userinterface/templates/base/issue.html:85
 msgid "Labels"
 msgstr "Labels"
 
-#: userinterface/templates/base/issue.html:93
+#: userinterface/templates/base/issue.html:99
 msgid "Merge Requests"
 msgstr "Code Änderungen"
 
-#: userinterface/templates/base/issue.html:99
+#: userinterface/templates/base/issue.html:105
 msgid "Last updated"
 msgstr "Zuletzt aktualisiert am"
 
-#: userinterface/templates/base/issue.html:101
+#: userinterface/templates/base/issue.html:107
 msgid "WIP"
 msgstr "In Arbeit"
 
-#: userinterface/templates/base/issue.html:102
+#: userinterface/templates/base/issue.html:108
 msgid "Draft"
 msgstr "Entwurf"
 
-#: userinterface/templates/base/issue.html:103
-#: userinterface/templates/base/partials/issues.html:29
+#: userinterface/templates/base/issue.html:109
+#: userinterface/templates/base/partials/issues.html:31
 msgid "Closed"
 msgstr "Geschlossen"
 
-#: userinterface/templates/base/issue.html:112
+#: userinterface/templates/base/issue.html:118
 msgid "Author"
 msgstr "Autor"
 
-#: userinterface/templates/base/issue.html:120
+#: userinterface/templates/base/issue.html:128
 msgid "Assigned"
 msgstr "Zugewiesen"
 
-#: userinterface/templates/base/issue.html:153
-#: userinterface/templates/base/milestoneBoard.html:39
-#: userinterface/templates/base/partials/issues.html:14
+#: userinterface/templates/base/issue.html:163
+#: userinterface/templates/base/milestoneBoard.html:40
+#: userinterface/templates/base/partials/issues.html:16
 msgid "spent"
 msgstr "aufgewendet"
 
-#: userinterface/templates/base/issue.html:155
+#: userinterface/templates/base/issue.html:165
 msgid "No time spent"
 msgstr "Kein Aufwand erfasst"
 
-#: userinterface/templates/base/issue.html:163
+#: userinterface/templates/base/issue.html:173
 msgid "No time"
 msgstr "Kein Aufwand"
 
-#: userinterface/templates/base/issue.html:165
-#: userinterface/templates/base/milestoneBoard.html:44
-#: userinterface/templates/base/partials/issues.html:10
+#: userinterface/templates/base/issue.html:175
+#: userinterface/templates/base/milestoneBoard.html:45
+#: userinterface/templates/base/partials/issues.html:12
 msgid "planned"
 msgstr "geplant"
 
-#: userinterface/templates/base/issue.html:177
+#: userinterface/templates/base/issue.html:187
 msgid "Create Comment"
 msgstr "Kommentar erstellen"
 
-#: userinterface/templates/base/issue.html:180
+#: userinterface/templates/base/issue.html:190
 msgid "Show"
 msgstr "Zeige"
 
-#: userinterface/templates/base/issue.html:180
+#: userinterface/templates/base/issue.html:190
 msgid "notes"
 msgstr "Meldungen"
 
-#: userinterface/templates/base/issue.html:184
+#: userinterface/templates/base/issue.html:194
 msgid "Progress"
-msgstr "Fortschritt"
+msgstr "Aktualisierungen"
 
-#: userinterface/templates/base/issue.html:188
+#: userinterface/templates/base/issue.html:198
 msgid "Add new comment"
 msgstr "Neuen Kommentar hinzufügen"
 
-#: userinterface/templates/base/issue.html:191
+#: userinterface/templates/base/issue.html:201
 msgid "You comment here..."
 msgstr "Ihr Kommentar hier…"
 
-#: userinterface/templates/base/issue.html:192
+#: userinterface/templates/base/issue.html:202
 msgid "Save"
 msgstr "Anlegen"
 
-#: userinterface/templates/base/issue.html:231
+#: userinterface/templates/base/issue.html:241
 msgid "wrote on"
 msgstr "schrieb am"
 
@@ -209,7 +226,7 @@ msgstr "Titel des Tickets"
 
 #: userinterface/templates/base/issueCreate.html:39
 msgid "Don't assign a milestone"
-msgstr ""
+msgstr "Keinem Meilenstein zuordnen"
 
 #: userinterface/templates/base/issueCreate.html:41
 msgid "Until"
@@ -222,23 +239,24 @@ msgstr "Label"
 
 #: userinterface/templates/base/issueCreate.html:54
 msgid "Don't assign a label"
-msgstr ""
+msgstr "Kein Label zuordnen"
 
 #: userinterface/templates/base/issueList.html:13
-#: userinterface/templates/base/milestones.html:16
+#: userinterface/templates/base/milestones.html:17
 #: userinterface/templates/base/project.html:65
+#: userinterface/templates/software-design/project.html:66
 msgid "Milestones"
 msgstr "Projektphasen"
 
-#: userinterface/templates/base/issueList.html:34
+#: userinterface/templates/base/issueList.html:36
 msgid "Previous Page"
 msgstr "Vorherige Seite"
 
-#: userinterface/templates/base/issueList.html:38
+#: userinterface/templates/base/issueList.html:40
 msgid "Page"
 msgstr "Seite"
 
-#: userinterface/templates/base/issueList.html:42
+#: userinterface/templates/base/issueList.html:44
 msgid "Next Page"
 msgstr "Nächste Seite"
 
@@ -281,40 +299,40 @@ msgstr ""
 "Anmeldedaten zusenden, sobald Ihnen das erste Projekt in unserem Tool "
 "zugewiesen wurde."
 
-#: userinterface/templates/base/milestoneBoard.html:88
+#: userinterface/templates/base/milestoneBoard.html:89
 msgid "Open Issues"
 msgstr "Offene Tickets"
 
-#: userinterface/templates/base/milestoneBoard.html:96
+#: userinterface/templates/base/milestoneBoard.html:99
 msgid "Assigned Issues"
 msgstr "Zugewiesene Tickets"
 
-#: userinterface/templates/base/milestoneBoard.html:104
+#: userinterface/templates/base/milestoneBoard.html:109
 msgid "Closed Issues"
 msgstr "Geschlossene Tickets"
 
-#: userinterface/templates/base/milestones.html:30
+#: userinterface/templates/base/milestones.html:31
 msgid "Expired Milestones"
 msgstr "Abgelaufene Projektphasen"
 
-#: userinterface/templates/base/milestones.html:42
+#: userinterface/templates/base/milestones.html:46
 msgid "Current Milestones"
 msgstr "Aktuelle Projektphasen"
 
-#: userinterface/templates/base/milestones.html:55
+#: userinterface/templates/base/milestones.html:63
 msgid "Upcomming Milestones"
 msgstr "Kommende Projektphasen"
 
 #: userinterface/templates/base/overview.html:6
-#: userinterface/templates/software-design/overview.html:6
+#: userinterface/templates/software-design/overview.html:7
 msgid "All your projects with us"
 msgstr "Alle Ihre Projekte"
 
-#: userinterface/templates/base/overview.html:19
+#: userinterface/templates/base/overview.html:20
 msgid "Current Milestone(s)"
 msgstr "Aktuelle Projektphase(n)"
 
-#: userinterface/templates/base/overview.html:27
+#: userinterface/templates/base/overview.html:29
 msgid "Go to project"
 msgstr "Weiter zum Projekt"
 
@@ -322,11 +340,11 @@ msgstr "Weiter zum Projekt"
 msgid "GitLab Profile"
 msgstr "GitLab Profil"
 
-#: userinterface/templates/base/partials/issues.html:26
+#: userinterface/templates/base/partials/issues.html:28
 msgid "updated"
 msgstr "aktualisiert am"
 
-#: userinterface/templates/base/partials/issues.html:29
+#: userinterface/templates/base/partials/issues.html:31
 msgid "on"
 msgstr "am"
 
@@ -335,22 +353,24 @@ msgid "No specified time range"
 msgstr "Keine angegebene Zeitspanne"
 
 #: userinterface/templates/base/project.html:94
+#: userinterface/templates/software-design/project.html:95
 msgid "Last updated issues"
 msgstr "Zuletzt aktualisierte Tickets"
 
-#: userinterface/templates/base/project.html:100
+#: userinterface/templates/base/project.html:102
+#: userinterface/templates/software-design/project.html:103
 msgid "All issues"
 msgstr "Alle Tickets"
 
-#: userinterface/templates/base/project.html:106
+#: userinterface/templates/base/project.html:108
 msgid "Person in charge"
 msgstr "Ihre Ansprechpartner"
 
-#: userinterface/templates/base/wiki.html:25
+#: userinterface/templates/base/wiki.html:26
 msgid "Chapter"
 msgstr "Kapitel"
 
-#: userinterface/templates/software-design/overview.html:42
+#: userinterface/templates/software-design/overview.html:46
 msgid "Go to project &raquo;"
 msgstr "Weiter zum Projekt &raquo;"
 
@@ -358,11 +378,11 @@ msgstr "Weiter zum Projekt &raquo;"
 msgid "Customer"
 msgstr "Kunde"
 
-#: userinterface/tools/gitlabCache.py:32
+#: userinterface/tools/gitlabCache.py:33
 msgid "An error occurred"
 msgstr "Ein Fehler ist aufgetreten"
 
-#: userinterface/views.py:250
+#: userinterface/views.py:275
 msgid "of"
 msgstr "von"
 
