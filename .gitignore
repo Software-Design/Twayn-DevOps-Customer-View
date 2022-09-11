@@ -8,3 +8,4 @@ GitlabCustomerView/userinterface/templates/software-design
 .gitmodules
 uploads/
 .coverage
+coverage.xml
