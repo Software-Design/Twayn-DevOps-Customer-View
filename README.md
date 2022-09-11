@@ -77,6 +77,8 @@ We kindly ask you to send merge requests to our public repo in case you are addi
 We are happy to review your merge requests when you feel that you can contribute to, extend, or improved the software in any way.
 Please make sure that you make use of our approach to allow custom themes and modifications as described within the [custom themes](#custom-themes) section of this page and the following principles.
 
+**Although this project is published on GitLab and GitHub we maintain the official project on [GitLab](https://gitlab.com/software-design-public/twayn-devops-customer-view)**
+
 #### 📋 Notes on basic principles and design choices
 1. Respect the API Terms (see [GitLab Terms](https://about.gitlab.com/handbook/legal/api-terms/))
 There are terms and conditions when using APIs - respect them.
