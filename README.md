@@ -2,12 +2,14 @@
 
 Our "DevOps Customer View" is a simple web portal that collects information from DevOps tools like GitHub and GitLab (_more to follow_) and provides a quick overview of progress, status, tickets, and milestones as well as the documentation for projects managed within these tools.
 
-### The problem with DevOp tools
+--- 
+
+#### The problem with DevOp tools
 DevOp tools are (obviously) built for developers, engineers, product owner, admins or other people working in "tech". Often they are too complex and powerful for "non-techies" to understand and work with. They often do not provide views oder interfaces for customers as they are not the intended users group - but they are loved by developers for their comprehensive features.
 
 _Note: Some DevOps tools actually do provied features like the [GitLab Service Desk](https://docs.gitlab.com/ee/user/project/service_desk.html) but they are very limited in the functionality_
 
-### The problem with Management tools
+#### The problem with Management tools
 Management tools that project managers, business economists, sales teams or customers/consumers prefer are more focused on visualizing information, progress, relations, numbers and charts. Details of technical processes, the implementation or the actual work that is done in the hidden usually cannot be fully represented.
 
 When the management or the customers require developers to use these tools in order to be able to view and interact with the progress and processes this ofteam means that they have to maintain or track information different tools or transfer information.
