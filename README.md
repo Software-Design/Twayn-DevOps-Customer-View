@@ -1,3 +1,6 @@
+
+![Twayn](https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=32 "Twayn")
+
 # Twayn - The DevOps Customer View
 
 Our "DevOps Customer View" is a simple web portal that collects information from DevOps tools like GitHub and GitLab (_more to follow_) and provides a quick overview of progress, status, tickets, and milestones as well as the documentation for projects managed within these tools.
