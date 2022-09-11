@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=72" width="100">
+    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=72" width="100"><br>
     <a href="http://twayn.com">🌐 twayn.com</a>
 </div>
 
