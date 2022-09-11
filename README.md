@@ -1,5 +1,6 @@
 <div align="center">
-    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=72" width="100"><br>
+    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=100" width="100"><br>
+    <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/pipeline.svg"> <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/coverage.svg"><br>
     <a href="http://twayn.com">🌐 Web</a> &nbsp; &nbsp; <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/wikis/">📖 Wiki</a> &nbsp; &nbsp; <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/issues">📑 Issues</a>
 </div>
 
@@ -9,12 +10,12 @@ Our "DevOps Customer View" is a simple web portal that collects information from
 
 --- 
 
-#### 🧑‍💻 🖥️ The problem with DevOp tools
+##### 🧑‍💻 🖥️ The problem with DevOp tools
 DevOps tools are (obviously) built for developers, engineers, product owners, admins, or other people working in "tech". Often they are too complex and powerful for "non-techies" to understand and work with. They often do not provide views or interfaces for customers as they are not the intended target audience - but they are loved by developers for their comprehensive features.
 
 _Note: Some DevOps tools provide features like the [GitLab Service Desk](https://docs.gitlab.com/ee/user/project/service_desk.html) but they are very limited in functionality_
 
-####  👩‍💼 📈 The problem with Management tools
+#####  👩‍💼 📈 The problem with Management tools
 Management tools that project managers, business economists, sales teams, or customers/consumers prefer are more focused on visualizing information, progress, relations, numbers, and charts. Details of technical processes, the implementation, or the actual work that is done in the hidden usually cannot be fully represented.
 
 When the management or the customers require developers to use these tools in order to be able to view and interact with the progress and processes this often means that they have to maintain or track information with different tools or transfer information.
@@ -23,7 +24,7 @@ The other way round explaining to customers or managers how to properly use DevO
 
 ---
 
-**Our goal is to allow developers to continue using their most beloved DevOps tools and generated a simple interface that provides customers and other people with no technical perspective on the project with information on the progress.**
+**⚽ Our goal is to allow developers to continue using their most beloved DevOps tools and generated a simple interface that provides customers and other people with no technical perspective on the project with information on the progress.**
 
 
 Given a Project ID and an Acces Token this UI provides authenticated users a couple of views and functions to view and create tickets (issues) and track the current project status (using GitLab, GitHub *following soon*). Furthermore, it provides readable access to the time tracking feature of those tools and the project documentation hosted inside the corresponding wiki. The Web interface itself is designed to store as little information as possible inside its own database but uses APIs and caching infrastructure to provide the information given.
@@ -40,12 +41,12 @@ You may change the CACHE setting to use Redis, Memcached, or any other caching b
 
 1. [Create a superuser](https://docs.djangoproject.com/en/4.1/ref/django-admin/#createsuperuser), start your server and log in to the Django admin panel.
 2. Add a `User` with a valid email address using the Django admin panel.
-3. Create a new `Project` and assign it to the user. Add the project ID - for GitLab you find the project ID within the "Settings > General" section.
+3. Create a new `Project` and assign it to the user. Add the project ID - for GitLab you find the ID within the "Settings > General" section.
 4. Create a project access token (*[GitLab Help](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html)*). See additional notes below.
 5. Create an `UserProjectAssignment` and chose the already created `User` and `Project`. Add the access token created in step 4.
 6. Save and log in by entering the email address and password of your user.
 
-#### 🔐 **Some notes on GitLab access tokens:**
+##### 🔐 **Some notes on GitLab access tokens:**
 If you are on a trial plan or any tier below "Premium" you may have to use the personal access token instead. 
 
 Please note that the name of the access token is used and shown as author/editor in comments or logs. So if you create a project's access it should have your customer's/manager's name.
