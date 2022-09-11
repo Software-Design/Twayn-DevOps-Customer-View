@@ -1,5 +1,5 @@
 <div align="center">
-![Twayn](https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=72 "Twayn")
+    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=72" width="100">
 </div>
 
 # Twayn - The DevOps Customer View
