@@ -8,16 +8,12 @@ Our "DevOps Customer View" is a simple web portal that collects information from
 
 --- 
 
-### The problem with DevOp tools
+### 🧑‍💻 🖥️ The problem with DevOp tools
 DevOps tools are (obviously) built for developers, engineers, product owners, admins, or other people working in "tech". Often they are too complex and powerful for "non-techies" to understand and work with. They often do not provide views or interfaces for customers as they are not the intended target audience - but they are loved by developers for their comprehensive features.
-
-
-#### The problem with DevOp tools
-DevOp tools are (obviously) built for developers, engineers, product owner, admins or other people working in "tech". Often they are too complex and powerful for "non-techies" to understand and work with. They often do not provide views oder interfaces for customers as they are not the intended users group - but they are loved by developers for their comprehensive features.
 
 _Note: Some DevOps tools provide features like the [GitLab Service Desk](https://docs.gitlab.com/ee/user/project/service_desk.html) but they are very limited in functionality_
 
-### The problem with Management tools
+###  👩‍💼 📈 The problem with Management tools
 Management tools that project managers, business economists, sales teams, or customers/consumers prefer are more focused on visualizing information, progress, relations, numbers, and charts. Details of technical processes, the implementation, or the actual work that is done in the hidden usually cannot be fully represented.
 
 When the management or the customers require developers to use these tools in order to be able to view and interact with the progress and processes this often means that they have to maintain or track information with different tools or transfer information.
@@ -31,7 +27,7 @@ The other way round explaining to customers or managers how to properly use DevO
 
 Given a Project ID and an Acces Token this UI provides authenticated users a couple of views and functions to view and create tickets (issues) and track the current project status (using GitLab, GitHub *following soon*). Furthermore, it provides readable access to the time tracking feature of those tools and the project documentation hosted inside the corresponding wiki. The Web interface itself is designed to store as little information as possible inside its own database but uses APIs and caching infrastructure to provide the information given.
 
-## Getting started
+## 🏁 Getting started
 
 Follow the [Django Setup Guide](https://docs.djangoproject.com/en/4.1/intro/tutorial01/) to prepare your environment. We recommend using a virtual environment to install the dependencies from our `requirements.txt`.
 
@@ -39,7 +35,7 @@ After installing Django do the migrations and remove the `.example` ending from 
 
 You may change the CACHE setting to use Redis, Memcached, or any other caching backend. By default the database cache is activated - you need to run `python manage.py createcachetable` to create and use the caching table if you want to stay with database caching.
 
-### Create the first project
+### 🎬 Create the first project
 
 1. [Create a superuser](https://docs.djangoproject.com/en/4.1/ref/django-admin/#createsuperuser), start your server and log in to the Django admin panel.
 2. Add a `User` with a valid email address using the Django admin panel.
@@ -48,7 +44,7 @@ You may change the CACHE setting to use Redis, Memcached, or any other caching b
 5. Create an `UserProjectAssignment` and chose the already created `User` and `Project`. Add the access token created in step 4.
 6. Save and log in by entering the email address and password of your user.
 
-#### **Some notes on GitLab access tokens:**
+#### 🔐 **Some notes on GitLab access tokens:**
 If you are on a trial plan or any tier below "Premium" you may have to use the personal access token instead. 
 
 Please note that the name of the access token is used and shown as author/editor in comments or logs. So if you create a project's access it should have your customer's/manager's name.
@@ -56,7 +52,7 @@ Please note that the name of the access token is used and shown as author/editor
 Assign the role "reporter" to your access token and allow access to "api".
 No other permissions are needed. 
 
-## Custom themes
+## 🖌️ Custom themes
 Please do not add custom themes/designs/templates to this repository! 
 
 Create your own repo and add your own `base.html` (you might want to copy and modify or preferably [extend](https://docs.djangoproject.com/en/4.0/ref/templates/language/) `/userinterface/templates/base/base.html`).
@@ -68,15 +64,15 @@ Whenever you want to overwrite a template or a block inside a template create a 
 
 Whenever a template file is not present in your individual theme the default from the base theme is being used.
 
-## Author
+## 👥 Author
 This project is maintained by the [SD Software-Design GmbH](https://software-design.de) - a software development company based in Freiburg, Germany.
 Any other authors, contributors, and volunteers are welcome.
 
-## License 
+## ⚖️ License 
 This software is provided and maintained under the [MIT License](/LICENSE).
 We kindly ask you to send merge requests to our public repo in case you are adding features to your invdividual copy of this software.
 
-## Contribution
+## ⌨️ Contribution
 We are happy to review your merge requests when you feel that you can contribute to, extend, or improved the software in any way.
 Please make sure that you make use of our approach to allow custom themes and modifications as described within the [custom themes](#custom-themes) section of this page and the following principles.
 
