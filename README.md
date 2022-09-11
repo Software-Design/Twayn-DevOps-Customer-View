@@ -1,5 +1,6 @@
-
-![Twayn](https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=32 "Twayn")
+<div align="center">
+![Twayn](https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=72 "Twayn")
+</div>
 
 # Twayn - The DevOps Customer View
 
@@ -43,7 +44,7 @@ You may change the CACHE setting to use Redis, Memcached, or any other caching b
 1. [Create a superuser](https://docs.djangoproject.com/en/4.1/ref/django-admin/#createsuperuser), start your server and log in to the Django admin panel.
 2. Add a `User` with a valid email address using the Django admin panel.
 3. Create a new `Project` and assign it to the user. Add the project ID - for GitLab you find the project ID within the "Settings > General" section.
-4. Create a project access token (*[GitLab Help](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html)). See additional notes below.
+4. Create a project access token (*[GitLab Help](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html)*). See additional notes below.
 5. Create an `UserProjectAssignment` and chose the already created `User` and `Project`. Add the access token created in step 4.
 6. Save and log in by entering the email address and password of your user.
 
