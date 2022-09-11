@@ -1,6 +1,6 @@
 <div align="center">
     <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=72" width="100"><br>
-    <a href="http://twayn.com">🌐 twayn.com</a>
+    <a href="http://twayn.com">🌐 Twayn.com</a> | <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/wikis/">📖 Wiki</a>
 </div>
 
 # Twayn - The DevOps Customer View
@@ -77,7 +77,7 @@ We kindly ask you to send merge requests to our public repo in case you are addi
 We are happy to review your merge requests when you feel that you can contribute to, extend, or improved the software in any way.
 Please make sure that you make use of our approach to allow custom themes and modifications as described within the [custom themes](#custom-themes) section of this page and the following principles.
 
-#### Notes on basic principles and design choices
+#### 📋 Notes on basic principles and design choices
 1. Respect the API Terms (see [GitLab Terms](https://about.gitlab.com/handbook/legal/api-terms/))
 There are terms and conditions when using APIs - respect them.
 2. Store / manage as little data as possible.
