@@ -9,3 +9,4 @@ python-gitlab
 markdown
 Pillow
 pdfkit
+pytest-django

@@ -7,3 +7,4 @@ GitlabCustomerView/userinterface/templates/software-design
 .DS_Store
 .gitmodules
 uploads/
+.coverage
