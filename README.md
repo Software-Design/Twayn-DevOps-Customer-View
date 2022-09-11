@@ -56,7 +56,7 @@ No other permissions are needed.
 Please do not add custom themes/designs/templates to this repository! 
 
 Create your own repo and add your own `base.html` (you might want to copy and modify or preferably [extend](https://docs.djangoproject.com/en/4.0/ref/templates/language/) `/userinterface/templates/base/base.html`).
-Go to the project root of your Twayn instance and load your custom theme as a submodule with `git submodule add -f {url} ./GitlabCustomerView/userinterface/templates/{theme-name}`.
+Go to the project root of your Twayn instance and load your custom theme as a submodule with `git submodule add -f {url} ./DevOpsCustomerView/userinterface/templates/{theme-name}`.
 
 Go to local.py and change the name of the active theme to the `{theme-name}`.
 
