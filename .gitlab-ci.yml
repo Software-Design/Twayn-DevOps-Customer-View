@@ -11,7 +11,7 @@ run tests:
   stage: test
   image: python:3
   script:
-    - pip install pytest pytest-cov pytest-django
+    - pip install django pytest pytest-cov pytest-django
     - coverage run -m pytest --cov DevOpsCustomerView/ DevOpsCustomerView/userinterface/tests
     - coverage report
     - coverage xml
