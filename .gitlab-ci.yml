@@ -12,7 +12,7 @@ run tests:
   image: python:3
   script:
     - pip install django pytest pytest-cov pytest-django
-    - coverage run -m pytest --cov DevOpsCustomerView/ DevOpsCustomerView/userinterface/tests
+    - pytest --cov DevOpsCustomerView/ DevOpsCustomerView/userinterface/tests
     - coverage report
     - coverage xml
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'

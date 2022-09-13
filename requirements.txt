@@ -10,3 +10,4 @@ markdown
 Pillow
 pdfkit
 pytest-django
+pytest-cov
