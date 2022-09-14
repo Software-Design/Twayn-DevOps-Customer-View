@@ -18,8 +18,10 @@
   <br>
   <div class="row">
     <div class="col-5">
-      <div style="height: 200px; width: 90%; background-image: url('{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
-      <br>
+      <div class="h-25">
+        <img class="h-100 w-100" src="{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}" alt="{% trans "No image found" %}">
+      </div>
+        <br>
       <table class="table table-striped">
         <tr><th>{% trans 'Project' %}</th><td>{{ remoteProject.name }}</td></tr>
         <tr><th>{% trans 'Description' %}</th><td>{{ remoteProject.description }}</td></tr>
@@ -61,7 +63,7 @@
         <br>
         {% endif %}
         <div class="form-floating">
-          <textarea class="form-control" placeholder="{% trans "Description" %}" name="description" style="height: 300px"></textarea>
+          <textarea class="form-control" placeholder="{% trans "Description" %}" name="description"></textarea>
         </div>
         <br>
         <input type="submit" class="btn btn-primary float-end">

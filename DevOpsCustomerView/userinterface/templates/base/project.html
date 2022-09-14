@@ -10,8 +10,8 @@
 
 {% block extra_js %}
   {% if allMilestones %}
-    <script src="{% static 'vendor/frappe-gantt/frappe-gantt.js' %}"></script>
-    <script>
+    <script nonce="{{ request.csp_nonce }}" src="{% static 'vendor/frappe-gantt/frappe-gantt.js' %}"></script>
+    <script nonce="{{ request.csp_nonce }}">
       var tasks = [
       {% for milestone in allMilestones %} 
         
@@ -79,7 +79,8 @@
   <br><br>
   <div class="row">
     <div class="col-3">
-      <div style="height: 200px; width: 90%; background-image: url('{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>
+      <img class="h-100 w-100" src="{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}" alt="{% trans "No image found" %}">
+      <!--<div style="height: 200px; width: 90%; background-image: url('{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}'); background-size: contain; background-position: center; background-repeat: no-repeat; margin: 5% 5%;"></div>-->
     </div>
     <div class="col-9">
       {% if not allMilestones %}
