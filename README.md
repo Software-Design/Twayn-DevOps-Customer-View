@@ -30,6 +30,16 @@ The other way round explaining to customers or managers how to properly use DevO
 
 Given a Project ID and an Acces Token this UI provides authenticated users a couple of views and functions to view and create tickets (issues) and track the current project status (using GitLab, GitHub *following soon*). Furthermore, it provides readable access to the time tracking feature of those tools and the project documentation hosted inside the corresponding wiki. The Web interface itself is designed to store as little information as possible inside its own database but uses APIs and caching infrastructure to provide the information given.
 
+
+<img src="/uploads/a842aff052c3b6355a2fafb86de2d826/screen1.jpeg" width="24%" padding="3%">
+
+<img src="/uploads/6e088ac3330d4533638486c573ff6997/screen2.jpeg" width="24%" padding="3%">
+
+<img src="/uploads/67934b35d935eb32c15335ca0c7c46bd/screen3.jpeg" width="24%" padding="3%">
+
+<img src="/uploads/85aa72b1ddba82c399a74111f293e85a/screen4.jpeg" width="24%" padding="3%">
+
+
 ## 🏁 Getting started
 
 Follow the [Django Setup Guide](https://docs.djangoproject.com/en/4.1/intro/tutorial01/) to prepare your environment. We recommend using a virtual environment to install the dependencies from our `requirements.txt`.
