@@ -1,7 +1,8 @@
 <div align="center">
-    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=100" width="100"><br>
-    <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/pipeline.svg"> <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/coverage.svg"><br>
+    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=100" width="100"><br><br>
+    <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/pipeline.svg"> <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/coverage.svg"><br><br>
     <a href="http://twayn.com">🌐 Web</a> &nbsp; &nbsp; <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/wikis/">📖 Wiki</a> &nbsp; &nbsp; <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/issues">📑 Issues</a>
+    <hr>
 </div>
 
 # Twayn - The DevOps Customer View

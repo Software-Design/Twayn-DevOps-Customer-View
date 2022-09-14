@@ -48,7 +48,7 @@ def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     return HttpResponse(template('login').render({}, request))
 
 
-def logginout(request: WSGIRequest) -> HttpResponseRedirect:
+def loggingout(request: WSGIRequest) -> HttpResponseRedirect:
     """
     Handles the requests for /logout
     Logging out the user and redirects him to the index page

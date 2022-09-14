@@ -11,10 +11,10 @@ register = Library()
 
 customTranslations = {
     "(^<p>|</p>$)": "",
-    "\[ \] -": '<input type="checkbox" disabled>',
-    "\[x\] -": '<input type="checkbox" checked disabled>',
-    "\[ \]": '<input type="checkbox" disabled>',
-    "\[x\]": '<input type="checkbox" checked disabled>',
+    r"\[ \] -": '<input type="checkbox" disabled>',
+    r"\[x\] -": '<input type="checkbox" checked disabled>',
+    r"\[ \]": '<input type="checkbox" disabled>',
+    r"\[x\]": '<input type="checkbox" checked disabled>',
     '<ul>': '<ul class="list-group">',
     '<li>': '<li class="list-group-item">',
 }
@@ -29,6 +29,7 @@ def markdown(text):
 
     for employee in TeamMember.objects.all():
         text = text.replace('@'+employee.username,'%s').replace('%s',employee.name)
+        text = text.replace(employee.username,'%s').replace('%s',employee.name)
 
     return text
 

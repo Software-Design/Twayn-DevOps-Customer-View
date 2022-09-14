@@ -11,3 +11,4 @@ Pillow
 pdfkit
 pytest-django
 django-csp==3.7
+pytest-cov
