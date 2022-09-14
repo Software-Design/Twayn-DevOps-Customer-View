@@ -20,6 +20,7 @@
       <link rel="stylesheet" href="/static/cdn/css/bootstrap.min.css">
       <link rel="stylesheet" href="/static/cdn/css/font-awesome-all.min.css" />
       <link rel="stylesheet" href="/static/vendor/simplemde/simplemde.min.css" />
+      <link rel="stylesheet" href="/static/customCss/base.css" />
     {% endblock %}
     {% block extra_css %}{% endblock %}
 
@@ -112,13 +113,13 @@
     {% endblock %}
 
     {% block base_js %}
-      <script src="/static/cdn/js/bootstrap.bundle.min.js"></script>
-      <script src="/static/vendor/simplemde/simplemde.min.js"></script>
+      <script nonce="{{ request.csp_nonce }}" src="/static/cdn/js/bootstrap.bundle.min.js"></script>
+      <script nonce="{{ request.csp_nonce }}" src="/static/vendor/simplemde/simplemde.min.js"></script>
     {% endblock %}
     {% block extra_js %}
-    <script>
-      var simplemde = new SimpleMDE();
-    </script>
+      <script nonce="{{ request.csp_nonce }}">
+        var simplemde = new SimpleMDE();
+      </script>
     {% endblock %}
   </body>
 </html>

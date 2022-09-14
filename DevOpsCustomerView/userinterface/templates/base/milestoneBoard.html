@@ -7,116 +7,132 @@
 
 {% block content %}
 
-  <div class="row">
-    <div class="col-12">
+	<div class="row">
+		<div class="col-12">
 
-      <div class="btn-group float-end" role="group">
-        {% if localProject.enableTicketCreation %}
-        <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
-        {% endif %}
-        {% if request.user.is_superuser %}
-        <a href="{{ remoteProject.web_url }}/-/milestones" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
-        {% endif %}
-      </div>
-      
-        <h1>{{ milestone.title }}</h1>
-        <h3><i class="fa far fa-archive"></i> {{ remoteProject.name }}
-          <span class="float-end">
-            {% if milestone.start_date or milestone.due_date %}
-            <i class="far fa-calendar-alt"></i> <small>{{ milestone.start_date|parse_date|date:settings.DATE_FORMAT }} bis {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
-        {% endif %}</span>
-        </h3>
+			<div class="btn-group float-end" role="group">
+				{% if localProject.enableTicketCreation %}
+				<a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
+				{% endif %}
+				{% if request.user.is_superuser %}
+				<a href="{{ remoteProject.web_url }}/-/milestones" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
+				{% endif %}
+			</div>
+			
+				<h1>{{ milestone.title }}</h1>
+				<h3><i class="fa far fa-archive"></i> {{ remoteProject.name }}
+					<span class="float-end">
+						{% if milestone.start_date or milestone.due_date %}
+						<i class="far fa-calendar-alt"></i> <small>{{ milestone.start_date|parse_date|date:settings.DATE_FORMAT }} bis {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+				{% endif %}</span>
+				</h3>
 
-        <br>
-        <div class="row">
-          <div class="col-md-6">
-            {{ milestone.description }}
-            <br><br>
-          </div>
-          <div class="col-md-6">
-            <div class="btn-group w-100" role="group">
-              <button type="button" class="btn btn-outline-primary">
-                <i class="far fa fa-clock"></i>
-                  {{ issues.timeSpent|intval|humanizeTime }} {% trans 'spent' %}
-              </button>
-              <button type="button" class="btn btn-outline-primary">
-                <i class="far fa fa-history"></i> 
-                {{ issues.timeEstimated|intval|humanizeTime }}
-                {% trans 'planned' %}
-              </button>
-            </div>
-            <br><br>
-          </div>
-          <div class="col-md-6">
-            <div class="progress" style="height: 20px;">
-              <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio issues.closed|length total 100 %}%;" aria-valuenow="{% widthratio issues.closed|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.closed|length total 100 %}% closed</div>
-              <div class="progress-bar bg-primary" role="progressbar" style="width: {% widthratio issues.assigned|length total 100 %}%;" aria-valuenow="{% widthratio issues.assigned|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.assigned|length total 100 %}% assigned</div>
-              <div class="progress-bar bg-danger" role="progressbar" style="width: {% widthratio issues.open|length total 100 %}%;" aria-valuenow="{% widthratio issues.open|length total 100 %}" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.open|length total 100 %}% open</div>
-            </div>
-          </div>
-          <div class="col-md-6">
-              <div class="progress" style="height: 20px">
-                {% if issues.timeEstimated|intval != 0 %}
-                  <div
-                    class="progress-bar bg-primary"
-                    role="progressbar"
-                    style="width: {% widthratio issues.timeSpent issues.timeEstimated 100 %}%;"
-                    aria-valuenow="{% widthratio issues.timeSpent issues.timeEstimated 100 %}"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                  >
-                  {% widthratio issues.timeEstimated issues.timeEstimated 100 %} % time spent
-                  </div>
-                {% else %}
-                  <div
-                    class="progress-bar bg-primary"
-                    role="progressbar"
-                    style="width: 100%;"
-                    aria-valuenow="100"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                  >
-                  100% time spent
-                  </div>
-                {% endif %}
-              </div>
-              <br />
-          </div>
-        </div>
-        <br><br><br>
-        <div class="row">
-          <div class="col-md-4">
-            <h4>{% trans 'Open Issues' %} ({{ issues.open|length }})</h4>
-            <hr>
-            <ul class="list-group">
-              {% with t='partials/issues'|template %}
-                {% include t with issues=issues.open milestones=False %}
-              {% endwith %}
-            </ul>
-            <br />
-          </div>
-          <div class="col-md-4">
-            <h4>{% trans 'Assigned Issues' %} ({{ issues.assigned|length }})</h4>
-            <hr>
-            <ul class="list-group">
-              {% with t='partials/issues'|template %}
-                {% include t with issues=issues.assigned milestones=False %}
-              {% endwith %}
-          </ul>
-            <br />
-          </div>
-          <div class="col-md-4">
-            <h4>{% trans 'Closed Issues' %} ({{ issues.closed|length }})</h4>
-            <hr>
-            <ul class="list-group">
-              {% with t='partials/issues'|template %}
-                {% include t with issues=issues.closed milestones=False %}
-              {% endwith %}
-          </ul>
-            <br />
-          </div>
-        </div>
-    </div>
-  </div>
-  
+				<br>
+				<div class="row">
+					<div class="col-md-6">
+						{{ milestone.description }}
+						<br><br>
+					</div>
+					<div class="col-md-6">
+						<div class="btn-group w-100" role="group">
+							<button type="button" class="btn btn-outline-primary">
+								<i class="far fa fa-clock"></i>
+									{{ issues.timeSpent|intval|humanizeTime }} {% trans 'spent' %}
+							</button>
+							<button type="button" class="btn btn-outline-primary">
+								<i class="far fa fa-history"></i> 
+								{{ issues.timeEstimated|intval|humanizeTime }}
+								{% trans 'planned' %}
+							</button>
+						</div>
+						<br><br>
+					</div>
+					<div class="col-md-6">
+						<div class="progress">
+							<div id="closedIssues" class="progress-bar bg-success" aria-valuenow="{% widthratio issues.closed|length total 100 %}" role="progressbar" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.closed|length total 100 %}% closed</div>
+							<div id="assignedIssues" class="progress-bar bg-primary" aria-valuenow="{% widthratio issues.assigned|length total 100 %}" role="progressbar" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.assigned|length total 100 %}% assigned</div>
+							<div id="openIssues" class="progress-bar bg-danger" aria-valuenow="{% widthratio issues.open|length total 100 %}" role="progressbar" aria-valuemin="0" aria-valuemax="100">{% widthratio issues.open|length total 100 %}% open</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+							<div class="progress">
+								{% if issues.timeEstimated|intval != 0 %}
+									<div
+										id="timeEstimated"
+										class="progress-bar bg-primary"
+										role="progressbar"
+										aria-valuenow="{% widthratio issues.timeSpent issues.timeEstimated 100 %}"
+										aria-valuemin="0"
+										aria-valuemax="100"
+									>
+									{% widthratio issues.timeEstimated issues.timeEstimated 100 %} % time spent
+									</div>
+								{% else %}
+									<div
+										class="progress-bar bg-primary w-100 fs-6"
+										role="progressbar"
+										aria-valuenow="100"
+										aria-valuemin="0"
+										aria-valuemax="100"
+									>
+									100% time spent
+									</div>
+								{% endif %}
+							</div>
+							<br />
+					</div>
+				</div>
+				<br><br><br>
+				<div class="row">
+					<div class="col-md-4">
+						<h4>{% trans 'Open Issues' %} ({{ issues.open|length }})</h4>
+						<hr>
+						<ul class="list-group">
+							{% with t='partials/issues'|template %}
+								{% include t with issues=issues.open milestones=False %}
+							{% endwith %}
+						</ul>
+						<br />
+					</div>
+					<div class="col-md-4">
+						<h4>{% trans 'Assigned Issues' %} ({{ issues.assigned|length }})</h4>
+						<hr>
+						<ul class="list-group">
+							{% with t='partials/issues'|template %}
+								{% include t with issues=issues.assigned milestones=False %}
+							{% endwith %}
+					</ul>
+						<br />
+					</div>
+					<div class="col-md-4">
+						<h4>{% trans 'Closed Issues' %} ({{ issues.closed|length }})</h4>
+						<hr>
+						<ul class="list-group">
+							{% with t='partials/issues'|template %}
+								{% include t with issues=issues.closed milestones=False %}
+							{% endwith %}
+					</ul>
+						<br />
+					</div>
+				</div>
+		</div>
+	</div>
+	
 {% endblock %}
+
+{% block extra_js %}
+	<script nonce="{{ request.csp_nonce }}">
+
+		/**
+		* Setup the page in JS (init all that is needed for the page to work)
+		*/
+		function setup () {
+			document.querySelector('#closedIssues').style.width = '{% widthratio issues.closed|length total 100 %}%'
+			document.querySelector('#assignedIssues').style.width = '{% widthratio issues.assigned|length total 100 %}%'
+			document.querySelector('#openIssues').style.width = '{% widthratio issues.open|length total 100 %}%'
+			if (document.querySelector('#timeEstimated')) document.querySelector('#timeEstimated').style.width = '{% widthratio issues.timeSpent issues.timeEstimated 100 %}%'
+		}
+
+		window.onload = setup()
+	</script>
+{% endblock extra_js %}

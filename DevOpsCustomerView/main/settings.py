@@ -45,6 +45,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware'
 ]
 
 ROOT_URLCONF = 'main.urls'
@@ -124,6 +125,20 @@ LOGIN_URL = '/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Content Security Policy (CSP)
+# https://django-csp.readthedocs.io/en/latest/configuration.html
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
+
+CSP_DEFAULT_SRC = "'none'"
+CSP_STYLE_SRC = "'self'"
+CSP_SCRIPT_SRC = "'self'"
+CSP_FONT_SRC = "'self'"
+CSP_IMG_SRC = "data: 'self' https://gitlab.com"
+CSP_OBJECT_SRC = "blob: data: 'self'"
+CSP_BASE_URI = "'none'"
+CSP_INCLUDE_NONCE_IN = ['script-src']
 
 
 """
