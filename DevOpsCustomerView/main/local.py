@@ -5,7 +5,7 @@ DEBUG = True
 INTERFACE_NAME = 'Software-Design Projects'
 
 # Add the hosts name you want to server your project from
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 INTERFACE_URL = 'http://localhost:8000'
 
 
@@ -13,7 +13,7 @@ INTERFACE_URL = 'http://localhost:8000'
 GITLAB_URL = "https://gitlab.com"
 
 # define your custom theme path
-TEMPLATE = 'software-design'
+TEMPLATE = 'base'
 
 LANGUAGE_CODE = 'de'
 
