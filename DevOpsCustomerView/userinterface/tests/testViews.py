@@ -127,12 +127,15 @@ class TestViews(TestCase):
 
         anonymusGetRequest = fake_request()
         authorizedGetRequest = fake_request('get', '/', True)
-        loginFailedPostRequest = fake_request('post', data={'email': self.user.email, 'password': 'd5f4g5ds45'})
-        loginSuccessPostRequest1 = fake_request('post', data={'email': self.user.email, 'password': 'test123'})
-        loginSuccessPostRequest2 = fake_request('post', data={'email': self.user.username, 'password': 'test123'})
+
+        # login attempts
+        loginFailedPostRequest = fake_request('post', data={'email': self.user.email, 'password': 'd5f4g5ds45'}) # invalid
+        loginSuccessPostRequest1 = fake_request('post', data={'email': self.user.email, 'password': 'test123'}) # valid with email
+        loginSuccessPostRequest2 = fake_request('post', data={'email': self.user.username, 'password': 'test123'}) # valid with username
 
         anonymusGetResponse = index(anonymusGetRequest)
         authorizedGetResponse = index(authorizedGetRequest)
+
         loginFailedPostResponse = index(loginFailedPostRequest)
         loginSuccessPostResponse1 = index(loginSuccessPostRequest1)
         loginSuccessPostResponse2 = index(loginSuccessPostRequest2)
