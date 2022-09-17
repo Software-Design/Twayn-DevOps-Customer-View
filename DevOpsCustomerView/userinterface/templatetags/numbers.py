@@ -5,7 +5,10 @@ register = Library()
 
 @register.filter()
 def intval(value):
-    return int(re.findall(r'\d+', str(value))[0])
+    search = re.findall(r'\d+', str(value))
+    if len(search) == 0:
+        return 0
+    return int(search[0])
 
 @register.filter()
 def humanizeTime(time):

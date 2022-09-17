@@ -71,6 +71,8 @@ class TestTemplateTags(TestCase):
         assert intval('1') == 1
         assert intval('h1') == 1
         assert intval('1.1') == 1
+        assert intval('') == 0
+        assert intval(None) == 0
     
         assert humanizeTime(100) == '1m'
         assert humanizeTime(2*60) == '2m'

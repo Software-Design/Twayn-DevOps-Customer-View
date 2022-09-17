@@ -1,3 +1,7 @@
 .progress {
     height: 2rem;
 }
+
+.nolink {
+    text-decoration: none !important;
+}
