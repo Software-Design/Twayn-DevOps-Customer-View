@@ -162,7 +162,7 @@ def loadMilestones(projectObject: Project, tokenOrInstance, iid:int=None) -> Uni
     return milestones
 
 
-def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int=1, milestone:int=None) -> Union[list, dict, None]:
+def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int=1, milestone:int=None, label:str=None, status:str=None) -> Union[list, dict, None]:
     """
     Loads an issue or the issues from gitlab for the given project object
 
@@ -182,6 +182,12 @@ def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int
         id = f'{id}_{str(iid)}'
     elif milestone:
         id = f'{id}_m{str(milestone)}'
+    elif label and status:
+        id = f'{id}_ls{str(status)}_{str(label)}'
+    elif label:
+        id = f'{id}_l{str(label)}'
+    elif status:
+        id = f'{id}_s{str(status)}'
     id = f'{id}_p{str(page)}'
 
     issue = cache.get(id)
@@ -198,6 +204,13 @@ def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int
                 }
         elif milestone:
             issue = project.milestones.get(milestone).issues(confidential=False, order_by='updated_at', sort='desc', page=page)
+        elif label and status:
+            issue = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page, labels=label, state=status)
+        elif label:
+            issue = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page, labels=label)
+        elif status:
+            print(status)
+            issue = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page, state=status)
         else:
             issue = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page)
         cache.set(id,issue,settings.CACHE_ISSUES)

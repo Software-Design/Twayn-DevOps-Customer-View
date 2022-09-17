@@ -23,13 +23,32 @@
 <h1>{{ remoteProject.name }}</h1>
 {{ remoteProject.description }}
   <br><br>
+  <strong>{% trans "Filter" %}:</strong><br>
+  <div class="btn-group" role="group">
+    <a href="?" class="btn btn-outline-primary"> {% trans "All" %}</a>
+    <a href="?status=opened{% if request.GET.label %}&label={{ request.GET.label }}{% endif %}" class="btn btn-outline-primary"><i class="fa far fa-folder"></i> {% trans "Open" %}</a>
+    <a href="?status=closed{% if request.GET.label %}&label={{ request.GET.label }}{% endif %}" class="btn btn-outline-primary"><i class="fa far fa-folder-open"></i> {% trans "Closed" %}</a>
+  </div>
+  <div class="dropdown float-end">
+    <a class="btn btn-outline-primary dropdown-toggle" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/" id="labelDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="fa fa-tags"></i> {% if request.GET.label %}{% trans "Label" %} "{{ request.GET.label }}"{% else %}{% trans "Filter by label" %}{% endif %}
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="labelDropdown">
+
+      <a href="?" class="dropdown-item"> {% trans "All" %}</a>
+      {% for label in projectLabels %}
+        <a class="dropdown-item" href="?label={{ label.name }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"> {{ label.name }}</a>
+      {% endfor %}
+    </ul>
+  </div>
+  <br><br>
   <div class="row">
       <div class="col-12">
-              <ul class="list-group">
-              {% with t='partials/issues'|template %}
-                {% include t with issues=issues large=True %}
-              {% endwith %}
-                </ul><br><br>
+        <ul class="list-group">
+        {% with t='partials/issues'|template %}
+          {% include t with issues=issues large=True %}
+        {% endwith %}
+          </ul>
       </div>
         <div class="col-4">
           {% if request.GET.page|add:0 > 1 %}

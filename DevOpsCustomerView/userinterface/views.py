@@ -113,7 +113,7 @@ def issueList(request, slug, id):
     if isinstance(glProject, HttpResponse):
         return glProject
 
-    glProject['issues'] = loadIssues(glProject['localProject'], glProject['remoteProject'], page=request.GET.get('page', 1))
+    glProject['issues'] = loadIssues(glProject['localProject'], glProject['remoteProject'], page=request.GET.get('page', 1), status=request.GET.get('status',None), label=request.GET.get('label',None))
 
     return HttpResponse(template('issueList').render(glProject, request))
 
