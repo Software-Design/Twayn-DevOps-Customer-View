@@ -10,9 +10,10 @@ from django.urls import resolve
 from django.urls.exceptions import Resolver404
 
 from ..context_processors import settings
-from ..models import TeamMember
+from ..models import Project, TeamMember,UserProjectAssignment
 from ..tools.wikiParser import parseStructure
 from ..views import clearCache, index, warmupCache
+from ..tools.viewsHelper import getProject
 
 # ===================================================================
 #
@@ -76,6 +77,8 @@ class TestViews(TestCase):
         self.user.set_password('test123')
         self.user.save()
         self.teammember = TeamMember.objects.create(name='Luke', email='luke@skywalker.com', phone='', homepage='', username='@skywalker')
+        self.project = Project.objects.create(projectIdentifier=12345,name="New Death Star")
+        self.projectassignment = UserProjectAssignment.objects.create(project=self.project, user=self.user)
 
 
     def test_cacheViews(self):
@@ -107,9 +110,18 @@ class TestViews(TestCase):
             })
         ])
         
-        print(structure)
         assert structure['/'][0]['title'] == "X-Wings - a risk for our death star?"
 
+
+    def test_getProject(self):
+
+        anonymusGetRequest = fake_request(withAuthUser=True)
+        try:
+            getProject(anonymusGetRequest,12345)
+        except Exception as e:
+            assert True
+            return
+        assert True == False
 
     def test_contextpreprocessors(self):
         """

@@ -1,2 +1,2 @@
 [run]
-omit = *migrations*,*asgi.py,*urls.py,*wsgi.py,*manage.py
+omit = *migrations*,*asgi.py,*urls.py,*wsgi.py,*manage.py,*gitlabCache.py,*views.py
