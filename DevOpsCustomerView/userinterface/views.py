@@ -4,8 +4,9 @@ from typing import Union
 
 import pdfkit
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseRedirect
@@ -27,24 +28,20 @@ def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     """
 
     if request.POST.get('email'):
-        UserModel = get_user_model()
-        user = UserModel.objects.filter(email=request.POST['email']).first()
-        if not user:
-            user = authenticate(request, username=request.POST['email'], password=request.POST['password'])
-        elif not user:
-            user = authenticate(request, username=getattr(
-                user, 'username', None), password=request.POST['password'])
-        if user is not None:
+        # It is allowed to login with both: email or username
+        requestingUser = User.objects.filter(email=request.POST['email']).first()
+        username = getattr(requestingUser, 'username', request.POST['email'])
+        user = authenticate(request, username=username, password=request.POST['password'])
+
+        if user:
             login(request, user)
-            if(request.GET.get('next') and request.GET['next'].startswith('/')):
-                return redirect(request.GET['next'])
+            urlNextAttr = request.GET.get('next')
+            if(urlNextAttr and urlNextAttr.startswith('/')):
+                return redirect(urlNextAttr)
             return redirect('/overview/')
-        else:
-            return redirect('/?error=invalid')
-
-    if request.user.is_authenticated:
-        return redirect('/overview/')
-
+        
+        return redirect('/?error=invalid')
+    
     return HttpResponse(template('login').render({}, request))
 
 
