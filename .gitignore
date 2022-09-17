@@ -9,3 +9,4 @@ DevOpsCustomerView/userinterface/templates/software-design
 uploads/
 .coverage
 coverage.xml
+DevOpsCustomerView/db.sqlite3
