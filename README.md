@@ -1,6 +1,13 @@
 <div align="center">
-    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=100" width="100"><br><br>
-    <img src="https://badgen.net/gitlab/license/software-design-public/twayn-devops-customer-view"> <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/pipeline.svg"> <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/coverage.svg"> <img src="https://badgen.net/gitlab/open-issues/software-design-public/twayn-devops-customer-view"> <img src="https://badgen.net/gitlab/closed-issues/software-design-public/twayn-devops-customer-view"> <img src="https://badgen.net/gitlab/last-commit/software-design-public/twayn-devops-customer-view"><br><br>
+    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=200" width="125"><br>
+    <strong>powered by <a href="https://software-design.de">SD Software-Design GmbH</a></strong><br><br>
+    <img src="https://badgen.net/gitlab/license/software-design-public/twayn-devops-customer-view">
+    <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/pipeline.svg">
+    <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/coverage.svg">
+    <img src="https://badgen.net/gitlab/open-issues/software-design-public/twayn-devops-customer-view">
+    <img src="https://badgen.net/gitlab/closed-issues/software-design-public/twayn-devops-customer-view">
+    <img src="https://badgen.net/gitlab/last-commit/software-design-public/twayn-devops-customer-view"><br><br>
+    <hr>
     <a href="http://twayn.com">🌐 Website</a> &nbsp; &nbsp; <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/wikis/">📖 Wiki</a> &nbsp; &nbsp; <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/issues">📑 Issues</a> &nbsp; &nbsp; <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/wikis/">📖 Documentation</a> &nbsp; &nbsp;<a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/blob/main/CONTRIBUTING.md">✏️ Contributing</a> 
     <hr>
 </div>
