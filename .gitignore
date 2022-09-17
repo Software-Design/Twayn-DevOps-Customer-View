@@ -1,11 +1,11 @@
 venv/
 *.pyc
 .gitmodules
-DevOpsCustomerView/userinterface/templates/software-design
 .DS_Store
 .gitmodules
 uploads/
 .coverage
 coverage.xml
+DevOpsCustomerView/userinterface/templates/*
 DevOpsCustomerView/db.sqlite3
 DevOpsCustomerView/main/local.py

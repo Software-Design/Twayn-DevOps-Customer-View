@@ -18,8 +18,8 @@
   <br>
   <div class="row">
     <div class="col-5">
-      <div class="h-25">
-        <img class="h-100 w-100" src="{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}" alt="{% trans "No image found" %}">
+      <div class="text-center">
+        <img class="w-100" src="{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}" alt="{% trans "No image found" %}">
       </div>
         <br>
       <table class="table table-striped">
