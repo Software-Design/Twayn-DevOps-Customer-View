@@ -1,5 +1,3 @@
-DevOpsCustomerView/db.sqlite3
-DevOpsCustomerView/main/local.py
 venv/
 *.pyc
 .gitmodules
@@ -10,3 +8,4 @@ uploads/
 .coverage
 coverage.xml
 DevOpsCustomerView/db.sqlite3
+DevOpsCustomerView/main/local.py
