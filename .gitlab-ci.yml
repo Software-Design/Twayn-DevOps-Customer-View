@@ -1,14 +1,17 @@
 stages:
-- test
+- gitlab-testing
+- custom-testing
+
 sast:
-  stage: test
+  stage: gitlab-testing
 include:
-- template: Security/SAST.gitlab-ci.yml
-- template: Security/Dependency-Scanning.gitlab-ci.yml
-- template: Security/Secret-Detection.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+  - template: DAST.gitlab-ci.yml
 
 run tests:
-  stage: test
+  stage: custom-testing
   image: python:3
   script:
     - pip install -r requirements.txt
