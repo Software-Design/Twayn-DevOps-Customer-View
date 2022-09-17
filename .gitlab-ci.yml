@@ -12,12 +12,14 @@ run tests:
   image: python:3
   script:
     - pip install -r requirements.txt
-    - pytest --cov DevOpsCustomerView/ DevOpsCustomerView/userinterface/tests
+    - pytest --cov DevOpsCustomerView/ DevOpsCustomerView/userinterface/tests --junitxml=report.xml
     - coverage report
     - coverage xml
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
+    when: always
     reports:
+      junit: report.xml
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
