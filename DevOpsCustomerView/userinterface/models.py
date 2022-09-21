@@ -14,7 +14,7 @@ class TeamMember(models.Model):
     avatar = models.ImageField(blank=True)
     email = models.CharField(max_length=200)
     phone = models.CharField(max_length=200)
-    homepage = models.CharField(max_length=1000)
+    homepage = models.CharField(max_length=1000,null=True,blank=True)
     username = models.CharField(max_length=200)
 
 class Project(models.Model):

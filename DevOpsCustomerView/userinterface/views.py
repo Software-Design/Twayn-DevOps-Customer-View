@@ -27,6 +27,9 @@ def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     Provites the login mechanism to authenticate users
     """
 
+    if request.user.is_authenticated:
+        return redirect('/overview/')
+        
     if request.POST.get('email'):
         # It is allowed to login with both: email or username
         requestingUser = User.objects.filter(email=request.POST['email']).first()
