@@ -2,7 +2,7 @@
 DEBUG = True
 
 # Name of the project
-INTERFACE_NAME = 'Gitlab Customer View'
+INTERFACE_NAME = 'Twayn DevOps Customer View'
 
 # URL of the project
 INTERFACE_URL = 'http://localhost:8000'
