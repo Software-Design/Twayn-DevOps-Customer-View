@@ -38,8 +38,7 @@
 					{% if issue.data.state == 'opened' %}
 						{% trans "Open" %}
 					{% else %}
-						{% trans "Closed on" %} {{ issue.data.closed_at|parse_iso|date:settings.DATETIME_FORMAT }} 
-						{{ issue.data.closed_as_duplicate_of }}h
+						{% trans "Closed on" %} {{ issue.data.closed_at|parse_iso|date:settings.DATE_FORMAT }} 
 					{% endif %}
 				</td>
 			</tr>
@@ -67,20 +66,20 @@
 			<tr>
 				<th>{% trans 'Created' %}</th>
 				<td>
-					{{ issue.data.created_at|parse_iso|date:settings.DATETIME_FORMAT }}h
+					{{ issue.data.created_at|parse_iso|date:settings.DATE_FORMAT }}
 				</td>
 			</tr>
 			<tr>
 				<th>{% trans 'Updated' %}</th>
 				<td>
-					{{ issue.data.updated_at|parse_iso|date:settings.DATETIME_FORMAT }}h
+					{{ issue.data.updated_at|parse_iso|date:settings.DATE_FORMAT }}
 				</td>
 			</tr>
 			{% if issue.data.due_date %}
 			<tr>
 				<th>{% trans 'Due Date' %}</th>
 				<td>
-					{{ issue.data.due_date|parse_iso|date:settings.DATETIME_FORMAT }}
+					{{ issue.data.due_date|parse_iso|date:settings.DATE_FORMAT }}
 				</td>
 			</tr>
 			{% endif %}
