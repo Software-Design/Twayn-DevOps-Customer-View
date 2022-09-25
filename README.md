@@ -38,13 +38,13 @@ The other way round explaining to customers or managers how to properly use DevO
 Given a Project ID and an Acces Token this UI provides authenticated users a couple of views and functions to view and create tickets (issues) and track the current project status (using GitLab, GitHub *following soon*). Furthermore, it provides readable access to the time tracking feature of those tools and the project documentation hosted inside the corresponding wiki. The Web interface itself is designed to store as little information as possible inside its own database but uses APIs and caching infrastructure to provide the information given.
 
 
-<img src="/uploads/a842aff052c3b6355a2fafb86de2d826/screen1.jpeg" width="24%" padding="3%">
+<img src="https://software-design.de/static/img/references/twayn/screen1.jpg" width="24%" padding="3%">
 
-<img src="/uploads/6e088ac3330d4533638486c573ff6997/screen2.jpeg" width="24%" padding="3%">
+<img src="https://software-design.de/static/img/references/twayn/screen2.jpg" width="24%" padding="3%">
 
-<img src="/uploads/67934b35d935eb32c15335ca0c7c46bd/screen3.jpeg" width="24%" padding="3%">
+<img src="https://software-design.de/static/img/references/twayn/screen3.jpg" width="24%" padding="3%">
 
-<img src="/uploads/85aa72b1ddba82c399a74111f293e85a/screen4.jpeg" width="24%" padding="3%">
+<img src="https://software-design.de/static/img/references/twayn/screen4.jpg" width="24%" padding="3%">
 
 
 ## 🏁 Getting started
@@ -84,6 +84,10 @@ Whenever you want to overwrite a template or a block inside a template create a 
 
 Whenever a template file is not present in your individual theme the default from the base theme is being used.
 
+See an example below:
+
+<img src="https://software-design.de/static/img/references/twayn/screen5.jpg" width="24%" padding="3%">
+
 ## 👥 Author
 This project is maintained by the [SD Software-Design GmbH](https://software-design.de) - a software development company based in Freiburg, Germany.
 Any other authors, contributors, and volunteers are welcome.
@@ -99,7 +103,7 @@ Please make sure that you make use of our approach to allow custom themes and mo
 **Although this project is published on GitLab and GitHub we maintain the official project on [GitLab](https://gitlab.com/software-design-public/twayn-devops-customer-view)**
 
 #### 📋 Notes on basic principles and design choices
-1. Respect the API Terms (see [GitLab Terms](https://about.gitlab.com/handbook/legal/api-terms/))
+1. Respect the API Terms (see [GitLab Terms](https://about.gitlab.com/handbook/legal/api-terms/) and [GitHub Terms](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service#h-api-terms))
 There are terms and conditions when using APIs - respect them.
 2. Store / manage as little data as possible.
 Since this project is meant to be an interface it should mainly use the DevOp tools as a data source and store as little information as poissible within its own database.
