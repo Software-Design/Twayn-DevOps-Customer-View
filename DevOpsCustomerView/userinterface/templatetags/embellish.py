@@ -13,7 +13,7 @@ def getTeamMember(value):
         member = TeamMember.objects.filter(username='@'+value).first()
     if not member:
         if re.match('@?project_(.*)_bot', value) != None:
-            member = {'name': _('Customer'), 'avatar': {'url': '*'}}
+            member = {'name': _('Customer')}
     return member
 
 @register.filter('startswith')

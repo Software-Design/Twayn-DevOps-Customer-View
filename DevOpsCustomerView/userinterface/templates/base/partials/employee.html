@@ -1,7 +1,7 @@
 {% load embellish %}
 {% load i18n %}
 <div class="row">
-    {% if employee.avatar %}
+    {% if employee.avatar.url %}
     <div class="col-3 text-end">
         {% if employee.homepage %}<a href="{{ employee.homepage }}" target="_blank">{% endif %}
             <img src="{{ employee.avatar.url }}" width="75">
@@ -19,7 +19,7 @@
         {% if employee.phone %}
             <i class="fa far fa-phone"></i> &nbsp;<a href="tel:{{ employee.phone }}">{{ employee.phone }}</a>
         {% endif %}
-        {% if not employee.phone and not employee.email %}
+        {% if not employee %}
             @{{ user.username }}<br>
             <a href="{{ user.web_url }}" target="_blank"><i class="fab fa-gitlab"></i> {% trans "GitLab Profile" %}</a>
         {% endif %}
