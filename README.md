@@ -8,6 +8,8 @@
     <img src="https://badgen.net/gitlab/closed-issues/software-design-public/twayn-devops-customer-view">
     <img src="https://badgen.net/gitlab/last-commit/software-design-public/twayn-devops-customer-view"><br><br>
     <hr>
+    <small>You can find this project on <a href="https://github.com/Software-Design/Twayn-DevOps-Customer-View">GitHub</a>, but we actively develop it on <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view">GitLab</a>.</small>
+    <hr>
     <a href="http://twayn.com">🌐 Website</a> &nbsp; &nbsp; <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/wikis/">📖 Wiki</a> &nbsp; &nbsp; <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/issues">📑 Issues</a> &nbsp; &nbsp; <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/wikis/">📖 Documentation</a> &nbsp; &nbsp;<a href="https://gitlab.com/software-design-public/twayn-devops-customer-view/-/blob/main/CONTRIBUTING.md">✏️ Contributing</a> 
     <hr>
 </div>
@@ -37,15 +39,7 @@ The other way round explaining to customers or managers how to properly use DevO
 
 Given a Project ID and an Acces Token this UI provides authenticated users a couple of views and functions to view and create tickets (issues) and track the current project status (using GitLab, GitHub *following soon*). Furthermore, it provides readable access to the time tracking feature of those tools and the project documentation hosted inside the corresponding wiki. The Web interface itself is designed to store as little information as possible inside its own database but uses APIs and caching infrastructure to provide the information given.
 
-
-<img src="https://software-design.de/static/img/references/twayn/screen1.jpg" width="24%" padding="3%">
-
-<img src="https://software-design.de/static/img/references/twayn/screen2.jpg" width="24%" padding="3%">
-
-<img src="https://software-design.de/static/img/references/twayn/screen3.jpg" width="24%" padding="3%">
-
-<img src="https://software-design.de/static/img/references/twayn/screen4.jpg" width="24%" padding="3%">
-
+<img src="https://software-design.de/static/img/references/twayn/screen1.jpg" width="24%" padding="3%"> <img src="https://software-design.de/static/img/references/twayn/screen2.jpg" width="24%" padding="3%"> <img src="https://software-design.de/static/img/references/twayn/screen3.jpg" width="24%" padding="3%"> <img src="https://software-design.de/static/img/references/twayn/screen4.jpg" width="24%" padding="3%">
 
 ## 🏁 Getting started
 
