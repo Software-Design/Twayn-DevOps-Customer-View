@@ -235,7 +235,7 @@ def wiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRedirect
 
 
 @login_required
-def wikipage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpResponseRedirect, HttpResponse]:
+def wikiPage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpResponseRedirect, HttpResponse]:
     """
     Handles the requests for /project/<slug:slug>/<int:id>/documentation/<path:page>
     Get the information needed to display a single documentation page of the project specified with the id
@@ -252,7 +252,7 @@ def wikipage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
     glProject['page'] = loadWikiPage(
         glProject['localProject'], glProject['remoteProject'], page)
 
-    return HttpResponse(template('wikipage').render(glProject, request))
+    return HttpResponse(template('wikiPage').render(glProject, request))
 
 
 @login_required

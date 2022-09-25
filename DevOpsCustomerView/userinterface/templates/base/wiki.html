@@ -26,7 +26,7 @@
       {% else %}
         <h3>{% trans "Chapter" %}{% if request.GET.category != '/' %} "{{ request.GET.category }}"{% else %} "{% trans 'Documentation' %}"{% endif %}</h3>
       {% endif %}
-      {% with t='partials/tableofcontents'|template %}
+      {% with t='partials/tableOfContents'|template %}
         {% include t %}
       {% endwith %}
           <br />

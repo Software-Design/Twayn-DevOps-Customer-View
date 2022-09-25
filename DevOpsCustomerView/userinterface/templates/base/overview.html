@@ -4,35 +4,30 @@
 
 {% block content %}
 <h1>{% trans "All your projects with us" %}</h1>
-  <br>
-  <div class="row">
   {% for p in projects %}
-    <div class="col-3">
-      <div class="card">
-          <div class="card-img-top">
+    <div class="row pt-5 mb-5">
+        <div class="col-md-3">
             <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}">
               <img class="h-100 w-100" src="{% if p.localProject.image %}{{ p.localProject.image.url }}{% else %}{{ p.remoteProject.avatar_url }}{% endif %}" alt="{% trans "No image found" %}">
             </a>
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">{{ p.remoteProject.name }}</h5>
-            <p class="card-text">{{ p.remoteProject.description }}{{ p.error }}
-              <br><br>
-              {% if p.localProject.enableMilestones %}
-                <strong>{% trans "Current Milestone(s)" %}:</strong><br>
-                {% for milestone in p.allMilestones %} 
-                  {% if milestone.state == 'active' and milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
-                    &raquo; {{ milestone.title }}<br>
-                  {% endif %}
-                {% endfor %} <br />
-              {% endif %}
-            </p>
-            {% if p.remoteProject.path %}
-            <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="btn btn-primary">{% trans "Go to project" %} &raquo;</a>
+        </div>
+        <div class="col-md-9">
+          <h5 class="card-title">{{ p.remoteProject.name }}</h5>
+          <p class="card-text">{{ p.remoteProject.description }}{{ p.error }}
+            <br><br>
+            {% if p.localProject.enableMilestones %}
+              <strong>{% trans "Current Milestone(s)" %}:</strong><br>
+              {% for milestone in p.allMilestones %} 
+                {% if milestone.state == 'active' and milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
+                  &raquo; {{ milestone.title }}<br>
+                {% endif %}
+              {% endfor %} <br />
             {% endif %}
-          </div>
+          </p>
+          {% if p.remoteProject.path %}
+          <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="btn btn-primary">{% trans "Go to project" %} &raquo;</a>
+          {% endif %}
         </div>
       </div>
     {% endfor %}
-  </div>
 {% endblock %}
