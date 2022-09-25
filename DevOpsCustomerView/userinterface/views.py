@@ -12,6 +12,8 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.encoding import iri_to_uri
 
 from .models import *
 from .templatetags.dates import parse_date
@@ -38,9 +40,10 @@ def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
 
         if user:
             login(request, user)
-            urlNextAttr = request.GET.get('next')
-            if(urlNextAttr and urlNextAttr.startswith('/')):
-                return redirect(urlNextAttr)
+
+            redirectUrl = request.GET.get('next')
+            if(url_has_allowed_host_and_scheme(redirectUrl, None)):
+                return redirect(iri_to_uri(redirectUrl))
             return redirect('/overview/')
         
         return redirect('/?error=invalid')
@@ -297,7 +300,11 @@ def clearCache(request: WSGIRequest) -> HttpResponseRedirect:
     """
 
     cache.clear()
-    return redirect(request.GET.get('redirect', '/'))
+
+    redirectUrl = request.GET.get('redirect')
+    if(url_has_allowed_host_and_scheme(redirectUrl, None)):
+        return redirect(iri_to_uri(redirectUrl))
+    return redirect('/')
 
 
 @login_required
@@ -313,4 +320,8 @@ def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
             loadProject(project, project.userprojectassignment_set.all()[
                         0].accessToken)
 
-    return redirect(request.GET.get('redirect', '/'))
+    
+    redirectUrl = request.GET.get('redirect')
+    if(url_has_allowed_host_and_scheme(redirectUrl, None)):
+        return redirect(iri_to_uri(redirectUrl))
+    return redirect('/')
