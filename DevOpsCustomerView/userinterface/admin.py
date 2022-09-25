@@ -1,16 +1,17 @@
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 from .models import UserProjectAssignment, TeamMember, Project
 
-class PeopleAdmin(admin.ModelAdmin):
+class PeopleAdmin(ImportExportModelAdmin):
     list_display = ('name','email')
 
-class AssignmentAdmin(admin.ModelAdmin):
+class AssignmentAdmin(ImportExportModelAdmin):
     list_display = ('userName','project')
 
     def userName(self,assigment):
         return '{} {}'.format(assigment.user.first_name,assigment.user.last_name)
 
-class ProjectAdmin(admin.ModelAdmin):
+class ProjectAdmin(ImportExportModelAdmin):
     list_display = ('name', 'assigneesNames', 'projectIdentifier')
 
     def assigneesNames(self,project):
