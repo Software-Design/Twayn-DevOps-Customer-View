@@ -153,7 +153,7 @@ class TestViews(TestCase):
         loginSuccessPostResponse2 = index(loginSuccessPostRequest2)
 
         for response in [anonymusGetResponse, authorizedGetResponse]:
-            assert type(response) == HttpResponse and response.status_code == 200
+            assert (type(response) == HttpResponse and response.status_code == 200 or type(response) == HttpResponseRedirect and response.status_code == 302)
 
         for i, response in enumerate([loginFailedPostResponse, loginSuccessPostResponse1, loginSuccessPostResponse2]):
             if response.status_code != 302: print(response, i) # debug
