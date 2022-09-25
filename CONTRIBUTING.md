@@ -1,6 +1,6 @@
-# Code style guid
+# Code style guide
 
-We use lowerCamelCase to name files, functions and variables and UpperCamelCase for classes.
+We use "lowerCamelCase" to name files, functions and variables and UpperCamelCase for classes.
 
 To avoid confusion or misleading code structures we split out code into functions that should satisfy only one purpose.
 This functions should have type hints and docstrings that descripes what the function is doing. If the type hints are not
