@@ -6,7 +6,6 @@ venv/
 uploads/
 .coverage
 coverage.xml
-DevOpsCustomerView/userinterface/templates/*
 DevOpsCustomerView/db.sqlite3
 DevOpsCustomerView/main/local.py
 report.xml

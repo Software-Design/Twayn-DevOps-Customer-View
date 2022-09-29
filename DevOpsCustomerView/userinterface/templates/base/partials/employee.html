@@ -1,7 +1,7 @@
 {% load embellish %}
 {% load i18n %}
 <div class="row">
-    {% if employee.avatar.url %}
+    {% if employee.avatar and employee.avatar.url %}
     <div class="col-3 text-end">
         {% if employee.homepage %}<a href="{{ employee.homepage }}" target="_blank">{% endif %}
             <img src="{{ employee.avatar.url }}" width="75">

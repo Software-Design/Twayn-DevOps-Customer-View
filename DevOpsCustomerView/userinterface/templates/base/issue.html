@@ -266,7 +266,8 @@
 		* @param {string} selector - The selector of the elements to remove their 
 		*/
 		function removeDNone (element, selector) {
-			document.querySelectorAll('.system.d-none').forEach((dnone) => { dnone.classList.remove('d-none') })
+			document.querySelectorAll(selector).forEach((dnone) => { dnone.classList.remove('d-none') })
+			console.log(element);
 			element.style.display = 'none'
 		}
 
@@ -274,7 +275,7 @@
 		* Sets the event listener for this page after the DOM load
 		*/
 		function initEventListener () {
-			document.querySelector('#addComment')?.addEventListener('click', (link) => { removeDNone(link, '.alert.d-none') })
+			document.querySelector('#addComment')?.addEventListener('click', (link) => { removeDNone(link, '.alert.d-none'); initEditor(); consolel.log(link); })
 			document.querySelector('#systemNotes')?.addEventListener('click', (link) => { removeDNone(link, '.system.d-none') })
 		}
 

@@ -119,9 +119,12 @@
     {% endblock %}
     {% block extra_js %}
       <script nonce="{{ request.csp_nonce }}">
-        try {
-          var simplemde = new SimpleMDE();
-        } catch {}
+        function initEditor(){
+          try {
+            var simplemde = new SimpleMDE();
+          } catch {}
+        }
+        initEditor();
       </script>
     {% endblock %}
   </body>
