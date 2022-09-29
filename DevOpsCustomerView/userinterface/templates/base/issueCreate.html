@@ -37,8 +37,8 @@
         <br>
         <div class="form-floating">
           <select class="form-select" name="milestone" aria-label="{% trans "Milestone" %}">
+            <option value="">-- {% trans "Don't assign a milestone" %} --</option>
             {% for milestone in allMilestones %}
-                <option value="">-- {% trans "Don't assign a milestone" %} --</option>
                 {% if milestone.state == 'active' %}
                 <optgroup label="{% trans "Until" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}">
                   <option value="{{ milestone.id }}">{{ milestone.title }}</option>
