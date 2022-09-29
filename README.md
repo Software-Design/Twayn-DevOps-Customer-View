@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Untitled.png?width=200" width="125"><br>
+    <img src="https://gitlab.com/uploads/-/system/project/avatar/38322393/Twayn-Logo.png?width=200" width="125"><br>
     <strong>powered by <a href="https://software-design.de">SD Software-Design GmbH</a></strong><br><br>
     <img src="https://badgen.net/gitlab/license/software-design-public/twayn-devops-customer-view">
     <img src="https://gitlab.com/software-design-public/twayn-devops-customer-view/badges/main/pipeline.svg">
