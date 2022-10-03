@@ -77,7 +77,7 @@ class TestTemplateTags(TestCase):
         assert humanizeTime(100) == '1m'
         assert humanizeTime(2*60) == '2m'
         assert humanizeTime(2*60*60) == '2h 0m'
-        assert humanizeTime(2*60*60*24) == '2d 0h 0m'
+        assert humanizeTime(2*60*60*24, 24) == '2d 0h 0m'
 
         assert humanizeTime(2*60*60*24, 8) == '6d 0h 0m'
         assert humanizeTime(2*60*60*24, False) == '48h 0m'
