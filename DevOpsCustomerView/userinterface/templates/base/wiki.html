@@ -13,7 +13,7 @@
 
 <h1>{{ remoteProject.name }}</h1>
   {{ remoteProject.description }}
-  <br>
+  <br><br>
   <div class="row">
     <div class="col-3">
       <img class="h-100 w-100" src="{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}" alt="{% trans "No image found" %}">
