@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-29 12:41+0000\n"
-"PO-Revision-Date: 2022-09-29 14:42+0200\n"
+"POT-Creation-Date: 2022-10-03 15:55+0000\n"
+"PO-Revision-Date: 2022-10-03 17:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -47,9 +47,9 @@ msgstr "Alle Tickets durchsuchen"
 
 #: userinterface/templates/base/base.html:66
 #: userinterface/templates/base/base.html:72
-#: userinterface/templates/base/issueList.html:16
+#: userinterface/templates/base/issueList.html:21
 #: userinterface/templates/base/milestones.html:20
-#: userinterface/templates/base/partials/tableofcontents.html:6
+#: userinterface/templates/base/partials/tableOfContents.html:6
 #: userinterface/templates/base/print/wiki.html:17
 #: userinterface/templates/base/print/wiki.html:36
 #: userinterface/templates/base/project.html:68
@@ -82,7 +82,16 @@ msgid "An error occured handling the request:"
 msgstr "Beim Bearbeiten Ihrer Anfrage trat ein Fehler auf:"
 
 #: userinterface/templates/base/issue.html:17
-#: userinterface/templates/base/issueList.html:10
+#, fuzzy
+msgid ""
+"An error occurred while trying to save your comment. Please contact system "
+"administrator."
+msgstr ""
+"Beim Versuch, Ihren Kommentar zu speichern, ist ein Fehler aufgetreten. "
+"Bitte kontaktieren Sie den Systemadministrator."
+
+#: userinterface/templates/base/issue.html:22
+#: userinterface/templates/base/issueList.html:15
 #: userinterface/templates/base/milestoneBoard.html:15
 #: userinterface/templates/base/milestones.html:14
 #: userinterface/templates/base/project.html:62
@@ -90,121 +99,121 @@ msgstr "Beim Bearbeiten Ihrer Anfrage trat ein Fehler auf:"
 msgid "Create Ticket"
 msgstr "Ticket erstellen"
 
-#: userinterface/templates/base/issue.html:36
+#: userinterface/templates/base/issue.html:41
 msgid "State"
 msgstr "Status"
 
-#: userinterface/templates/base/issue.html:39
-#: userinterface/templates/base/issueList.html:29
+#: userinterface/templates/base/issue.html:44
+#: userinterface/templates/base/issueList.html:34
 #: userinterface/templates/base/partials/issues.html:28
 msgid "Open"
 msgstr "Offen"
 
-#: userinterface/templates/base/issue.html:41
+#: userinterface/templates/base/issue.html:46
 msgid "Closed on"
 msgstr "Geschlossen am"
 
-#: userinterface/templates/base/issue.html:47
+#: userinterface/templates/base/issue.html:52
 #: userinterface/templates/base/issueCreate.html:39
 #: userinterface/templates/base/issueCreate.html:49
 msgid "Milestone"
 msgstr "Projektphase"
 
-#: userinterface/templates/base/issue.html:67
+#: userinterface/templates/base/issue.html:72
 msgid "Created"
 msgstr "Erstellt"
 
-#: userinterface/templates/base/issue.html:73
+#: userinterface/templates/base/issue.html:78
 msgid "Updated"
 msgstr "Aktualisiert"
 
-#: userinterface/templates/base/issue.html:80
+#: userinterface/templates/base/issue.html:85
 msgid "Due Date"
 msgstr "Fälligkeitsdatum"
 
-#: userinterface/templates/base/issue.html:88
+#: userinterface/templates/base/issue.html:93
 msgid "Labels"
 msgstr "Labels"
 
-#: userinterface/templates/base/issue.html:102
+#: userinterface/templates/base/issue.html:107
 msgid "Merge Requests"
 msgstr "Code Änderungen"
 
-#: userinterface/templates/base/issue.html:108
+#: userinterface/templates/base/issue.html:113
 msgid "Last updated"
 msgstr "Zuletzt aktualisiert am"
 
-#: userinterface/templates/base/issue.html:110
+#: userinterface/templates/base/issue.html:115
 msgid "WIP"
 msgstr "In Arbeit"
 
-#: userinterface/templates/base/issue.html:111
+#: userinterface/templates/base/issue.html:116
 msgid "Draft"
 msgstr "Entwurf"
 
-#: userinterface/templates/base/issue.html:112
-#: userinterface/templates/base/issueList.html:30
+#: userinterface/templates/base/issue.html:117
+#: userinterface/templates/base/issueList.html:35
 #: userinterface/templates/base/partials/issues.html:31
 msgid "Closed"
 msgstr "Geschlossen"
 
-#: userinterface/templates/base/issue.html:121
+#: userinterface/templates/base/issue.html:126
 msgid "Author"
 msgstr "Autor"
 
-#: userinterface/templates/base/issue.html:131
+#: userinterface/templates/base/issue.html:136
 msgid "Assigned"
 msgstr "Zugewiesen"
 
-#: userinterface/templates/base/issue.html:165
+#: userinterface/templates/base/issue.html:170
 #: userinterface/templates/base/milestoneBoard.html:40
 #: userinterface/templates/base/partials/issues.html:16
 msgid "spent"
 msgstr "aufgewendet"
 
-#: userinterface/templates/base/issue.html:167
+#: userinterface/templates/base/issue.html:172
 msgid "No time spent"
 msgstr "Kein Aufwand erfasst"
 
-#: userinterface/templates/base/issue.html:175
+#: userinterface/templates/base/issue.html:180
 msgid "No time"
 msgstr "Kein Aufwand"
 
-#: userinterface/templates/base/issue.html:177
+#: userinterface/templates/base/issue.html:182
 #: userinterface/templates/base/milestoneBoard.html:45
 #: userinterface/templates/base/partials/issues.html:12
 msgid "planned"
 msgstr "geplant"
 
-#: userinterface/templates/base/issue.html:189
+#: userinterface/templates/base/issue.html:194
 msgid "Create Comment"
 msgstr "Kommentar erstellen"
 
-#: userinterface/templates/base/issue.html:192
+#: userinterface/templates/base/issue.html:197
 msgid "Show"
 msgstr "Zeige"
 
-#: userinterface/templates/base/issue.html:192
+#: userinterface/templates/base/issue.html:197
 msgid "notes"
 msgstr "Meldungen"
 
-#: userinterface/templates/base/issue.html:196
+#: userinterface/templates/base/issue.html:201
 msgid "Progress"
 msgstr "Aktualisierungen"
 
-#: userinterface/templates/base/issue.html:200
+#: userinterface/templates/base/issue.html:205
 msgid "Add new comment"
 msgstr "Neuen Kommentar hinzufügen"
 
-#: userinterface/templates/base/issue.html:203
+#: userinterface/templates/base/issue.html:208
 msgid "You comment here..."
 msgstr "Ihr Kommentar hier…"
 
-#: userinterface/templates/base/issue.html:204
+#: userinterface/templates/base/issue.html:209
 msgid "Save"
 msgstr "Anlegen"
 
-#: userinterface/templates/base/issue.html:243
+#: userinterface/templates/base/issue.html:248
 msgid "wrote on"
 msgstr "schrieb am"
 
@@ -243,7 +252,7 @@ msgstr "Bis"
 
 #: userinterface/templates/base/issueCreate.html:55
 #: userinterface/templates/base/issueCreate.html:61
-#: userinterface/templates/base/issueList.html:34
+#: userinterface/templates/base/issueList.html:39
 msgid "Label"
 msgstr "Label"
 
@@ -251,35 +260,44 @@ msgstr "Label"
 msgid "Don't assign a label"
 msgstr "Kein Label zuordnen"
 
-#: userinterface/templates/base/issueList.html:13
+#: userinterface/templates/base/issueList.html:10
+#, fuzzy
+msgid ""
+"An error occurred while trying to save your issue. Please contact system "
+"administrator."
+msgstr ""
+"Beim Versuch, Ihre Ausgabe zu speichern, ist ein Fehler aufgetreten. Bitte "
+"wenden Sie sich an den Systemadministrator."
+
+#: userinterface/templates/base/issueList.html:18
 #: userinterface/templates/base/milestones.html:17
 #: userinterface/templates/base/project.html:65
 #: userinterface/templates/software-design/project.html:66
 msgid "Milestones"
 msgstr "Projektphasen"
 
-#: userinterface/templates/base/issueList.html:26
+#: userinterface/templates/base/issueList.html:31
 msgid "Filter"
 msgstr "Filter"
 
-#: userinterface/templates/base/issueList.html:28
-#: userinterface/templates/base/issueList.html:38
+#: userinterface/templates/base/issueList.html:33
+#: userinterface/templates/base/issueList.html:43
 msgid "All"
 msgstr "Alle"
 
-#: userinterface/templates/base/issueList.html:34
+#: userinterface/templates/base/issueList.html:39
 msgid "Filter by label"
 msgstr "Filtern nach Label"
 
-#: userinterface/templates/base/issueList.html:55
+#: userinterface/templates/base/issueList.html:60
 msgid "Previous Page"
 msgstr "Vorherige Seite"
 
-#: userinterface/templates/base/issueList.html:59
+#: userinterface/templates/base/issueList.html:64
 msgid "Page"
 msgstr "Seite"
 
-#: userinterface/templates/base/issueList.html:63
+#: userinterface/templates/base/issueList.html:68
 msgid "Next Page"
 msgstr "Nächste Seite"
 
@@ -413,7 +431,7 @@ msgstr "Kunde"
 msgid "An error occurred"
 msgstr "Ein Fehler ist aufgetreten"
 
-#: userinterface/views.py:278
+#: userinterface/views.py:285
 msgid "of"
 msgstr "von"
 
