@@ -141,9 +141,13 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
             body['labels'] = request.POST['label']
         if request.POST.get('label','') != '':
             body['milestone_id'] = request.POST['milestone']
-        issue = glProject['remoteProject'].issues.create(body)
-        cache.delete('glp_'+glProject['localProject'].projectIdentifier+'issues_'+str(issue.iid))
-        return redirect('/project/'+glProject['remoteProject'].path+'/'+str(glProject['remoteProject'].id)+'/issues/')
+        url = '/project/'+glProject['remoteProject'].path+'/'+str(glProject['remoteProject'].id)+'/issues/'
+        try:
+            issue = glProject['remoteProject'].issues.create(body)
+            cache.delete('glp_'+glProject['localProject'].projectIdentifier+'issues_'+str(issue.iid))
+        except:
+            return redirect(url+'?error=invalid')
+        return redirect(url)
 
     return HttpResponse(template('issueCreate').render(glProject, request))
 
@@ -160,9 +164,12 @@ def issue(request: WSGIRequest, slug: str, id: int, issue: int) -> HttpResponse:
         return glProject
 
     if request.POST.get('comment'):
-        glProject['remoteProject'].issues.get(id=issue).notes.create({'body': '**'+request.user.first_name+' '+request.user.last_name+':**\n '+request.POST['comment']})
-        id = 'glp_'+glProject['localProject'].projectIdentifier+'_issues_'+str(issue)
-        cache.delete(id)
+        try:
+            glProject['remoteProject'].issues.get(id=issue).notes.create({'body': '**'+request.user.first_name+' '+request.user.last_name+':**\n '+request.POST['comment']})
+            id = 'glp_'+glProject['localProject'].projectIdentifier+'_issues_'+str(issue)
+            cache.delete(id)
+        except:
+            return redirect('/project/'+glProject['remoteProject'].path+'/'+str(glProject['remoteProject'].id)+'/issues/'+str(issue)+'?error=invalid')
 
     glProject['issue'] = loadIssues(
         glProject['localProject'], glProject['remoteProject'], iid=issue)

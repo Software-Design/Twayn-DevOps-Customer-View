@@ -12,6 +12,11 @@
 {% endblock %}
 
 {% block content %}
+	{% if request.GET.error %}
+		<div class="alert alert-danger" role="alert">
+			{% trans "An error occurred while trying to save your comment. Please contact system administrator." %}
+		</div>
+	{% endif %}
 	<div class="btn-group float-end" role="group">
 		{% if localProject.enableTicketCreation %}
 		<a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
