@@ -281,13 +281,13 @@ def printWiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRed
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
-    pdfkit.from_string(template('print/wiki').render(glProject, request), projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
+    pdfkit.from_string(template('print/wiki').render(glProject, request), '/tmp/'+projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
         'of')+' [topage]', '--footer-left': settings.INTERFACE_NAME, '--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
 
-    with open(projectIdentifier+'.pdf', 'rb') as f:
+    with open('/tmp/'+projectIdentifier+'.pdf', 'rb') as f:
         file_data = f.read()
 
-    os.remove(projectIdentifier+'.pdf')
+    os.remove('/tmp/'+projectIdentifier+'.pdf')
 
     response = HttpResponse(file_data, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="documentation.pdf"'
@@ -306,13 +306,13 @@ def printOverview(request: WSGIRequest, slug: str, id:  int, date: str):
         return glProject
 
     projectIdentifier = glProject['localProject'].projectIdentifier
-    pdfkit.from_string(template('print/overview').render(glProject|{'issues': glProject['remoteProject'].issues.list(updated_after=datetime.datetime.strptime(date,'%Y-%m-%d'))}, request), projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
+    pdfkit.from_string(template('print/overview').render(glProject|{'issues': glProject['remoteProject'].issues.list(updated_after=datetime.datetime.strptime(date,'%Y-%m-%d'))}, request), '/tmp/'+projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
         'of')+' [topage]', '--footer-left': settings.INTERFACE_NAME, '--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
 
-    with open(projectIdentifier+'.pdf', 'rb') as f:
+    with open('/tmp/'+projectIdentifier+'.pdf', 'rb') as f:
         file_data = f.read()
 
-    os.remove(projectIdentifier+'.pdf')
+    os.remove('/tmp/'+projectIdentifier+'.pdf')
 
     response = HttpResponse(file_data, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="overview.pdf"'
