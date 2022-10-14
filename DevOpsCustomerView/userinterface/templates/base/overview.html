@@ -3,7 +3,9 @@
 {% load dates %}
 
 {% block content %}
+<input type="text" id="searchInput" class="form-control float-end w-25 mt-1" placeholder="Search projects" onkeyup="searchProjects()">
 <h1>{% trans "All your projects with us" %}</h1>
+<div id="projectsHolder">
   {% for p in projects %}
     <div class="row pt-5 mb-5">
         <div class="col-md-3">
@@ -32,4 +34,5 @@
         </div>
       </div>
     {% endfor %}
+    </div>
 {% endblock %}

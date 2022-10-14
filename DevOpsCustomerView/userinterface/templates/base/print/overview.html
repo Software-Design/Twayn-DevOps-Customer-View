@@ -1,0 +1,44 @@
+{% load i18n %}
+{% load markdown %}
+{% load template %}
+
+<html>
+  <head>
+    <link rel="stylesheet" href="{{ settings.INTERFACE_URL }}/static/cdn/css/bootstrap.min.css">
+    <style>
+        body { 
+            font-size: 20px;
+            font-family: 'Helvetica';
+        }
+    </style>
+  </head>
+  <body class="p-5">
+      <div style="width: 80%; float: left;">
+        <h1>{% trans "Projectoverview" %}</h1>
+        <br><br>
+        <div style="line-height: 1.3em;">
+            {% markdown project.description %}
+        </div>
+        <br />
+      </div>
+      <div style="width: 20%; float: right;">
+        {% if localProject.image %}
+          <img src="{{ settings.INTERFACE_URL }}{{ localProject.image.url }}" class="float-end" width="200">
+        {% endif %}
+      </div>
+    <div class="row">
+    {% for issue in issues %}
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ issue.title }}</h5>
+            <p class="card-text">
+              {% markdown issue.body %}
+            </p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+      </div>
+  </body>
+</html>

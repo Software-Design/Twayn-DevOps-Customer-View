@@ -294,6 +294,32 @@ def printWiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRed
 
     return response
 
+@login_required
+def printOverview(request: WSGIRequest, slug: str, id:  int, date: str):
+    """
+    Handles the requests for /project/<slug:slug>/<int:id>/print/<str:date>
+    Renders a pdf of the project overview to enable downloading it
+    """
+
+    glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
+
+    projectIdentifier = glProject['localProject'].projectIdentifier
+    pdfkit.from_string(template('print/overview').render({'glProject': glProject, 'issues': glProject['remoteProject'].issues.list(updated_after=datetime.datetime.strptime(date,'%Y-%m-%d'))}, request), projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
+        'of')+' [topage]', '--footer-left': settings.INTERFACE_NAME, '--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
+
+    with open(projectIdentifier+'.pdf', 'rb') as f:
+        file_data = f.read()
+
+    os.remove(projectIdentifier+'.pdf')
+
+    response = HttpResponse(file_data, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="overview.pdf"'
+
+    return response
+
+
 #
 # Caching helpers
 #
