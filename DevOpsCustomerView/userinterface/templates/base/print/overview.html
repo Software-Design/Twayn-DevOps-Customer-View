@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load markdown %}
 {% load template %}
+{% load dates %}
 
 <html>
   <head>
@@ -13,11 +14,11 @@
     </style>
   </head>
   <body class="p-5">
-      <div style="width: 80%; float: left;">
-        <h1>{% trans "Projectoverview" %}</h1>
+      <div>
+        <h1>{% trans "Overview" %}: {{ localProject.name }}</h1>
         <br><br>
         <div style="line-height: 1.3em;">
-            {% markdown project.description %}
+          {{ remoteProject.description|markdown }}
         </div>
         <br />
       </div>
@@ -26,19 +27,29 @@
           <img src="{{ settings.INTERFACE_URL }}{{ localProject.image.url }}" class="float-end" width="200">
         {% endif %}
       </div>
-    <div class="row">
+    <table class="w-100 table">
+      <tr>
+        <th>{% trans "Issue" %}</th>
+        <th>{% trans "Title" %}</th>
+        <th>{% trans "Last updated" %}</th>
+        <th>{% trans "Total time spent" %}</th>
+      </tr>
     {% for issue in issues %}
-      <div class="col-md-6">
-        <div class="card mb-3">
-          <div class="card-body">
-            <h5 class="card-title">{{ issue.title }}</h5>
-            <p class="card-text">
-              {% markdown issue.body %}
-            </p>
-          </div>
-        </div>
-      </div>
+      <tr>
+        <td>
+          #{{ issue.iid }}
+        </td>
+        <td>
+          {{ issue.title }}
+        </td>
+        <td>
+          {{ issue.updated_at|parse_iso|date:settings.DATE_FORMAT }}
+        </td>
+        <td>
+          {{ issue.time_stats.human_total_time_spent }}
+        </td>
+      </tr>
     {% endfor %}
-      </div>
+    </table>
   </body>
 </html>

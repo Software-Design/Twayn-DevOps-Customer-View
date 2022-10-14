@@ -76,9 +76,9 @@
               {% endif %}
             </ul>
             <ul class="navbar-nav float-end mb-2 mb-lg-0">
-              {% if request.user.is_staff %}
+              {% if request.user.is_staff and localProject %}
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#" data-toggle="modal" data-target="#exportModal">{% trans "Export" %}</a>
+                <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#exportModal"><i class="fa fa-download"></i> {% trans "Export" %}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link disabled" aria-current="page" href="/overview/">|</a>
@@ -126,16 +126,17 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">{% trans "Export overview" %}</h5>
+                <h5 class="modal-title">{% trans "Export project overview" %}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                <input type="date" id="exportDate" class="form-control" value="{{ today }}">
+                {% trans "This export will generate an overview of all issues updated since the date you chose below and the sum of time spent since this day." %}<br><br>
+                <input type="date" id="exportDate" class="form-control" value="{{ now|date:"Y-m-d" }}" onchange="document.getElementById('exportButton').href = '/project/{{ remoteProject.path }}/{{ remoteProject.id }}/print/'+this.value; ">
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary">{% trans "Export" %}</button>
+                <a class="btn btn-primary" id="exportButton" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/print/{{ now|date:"Y-m-d" }}">{% trans "Export" %}</a>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Close" %}</button>
               </div>
             </div>
