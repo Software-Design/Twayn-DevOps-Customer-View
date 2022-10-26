@@ -5,7 +5,7 @@
 {% load template %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'vendor/frappe-gantt/frappe-gantt.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/frappe-gantt/frappe-gantt.min.css' %}">
 {% endblock %}
 
 {% block extra_js %}
@@ -115,6 +115,15 @@
           </div>
         {% endfor %}
       </div>
+      {% if localProject.downloadablefile_set.count > 0 %}
+        <br>
+        <h4>{% trans "Documents & Downloads" %}</h4>
+        {% blocktrans with amount=localProject.downloadablefile_set.count %}
+        There are {{ amount }} file(s) attached to this project.
+        {% endblocktrans %}
+        <br><br>
+        <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/downloads/" class="btn btn-outline-primary"><i class="fa far fa-download"></i> {% trans "Documents & Downloads" %}</a>
+      {% endif %}
     </div>
   </div>
   

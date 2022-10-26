@@ -1,0 +1,39 @@
+{% extends base %}
+{% load i18n %}
+{% load static %}
+{% load template %}
+
+{% block content %}
+
+<h1>{{ remoteProject.name }}</h1>
+  {{ remoteProject.description }}
+  <br><br>
+  <div class="row">
+    <div class="col-3">
+      <img class="w-100" src="{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}" alt="{% trans "No image found" %}">
+    </div>
+    <div class="col-9">
+      <br>
+        <h3>{% trans "Documents & Downloads" %}</h3>
+        <br>
+        <div class="row">
+          {% for type in fileTypes %}
+            {% with relatedFiles=localProject.downloadablefile_set|in_category:type.0 %}
+              {% if relatedFiles|length > 0 %}
+              <div class="box">
+                <div class="col-12">
+                  <h4>{{ type.1 }}</h4>
+                  {% with t='partials/files'|template %}
+                    {% include t with files=relatedFiles%}
+                  {% endwith %}
+                </div>
+              </div>
+              {% endif %} 
+            {% endwith %}
+          {% endfor %}
+        </div>
+        <br />
+    </div>
+  </div>
+  
+{% endblock %}

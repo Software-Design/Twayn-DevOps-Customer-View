@@ -21,6 +21,7 @@ from .tools.gitlabCache import (loadIssues, loadMilestones, loadProject,
                                 loadWikiPage)
 from .tools.templateHelper import template
 from .tools.viewsHelper import getProject
+from .models import DOWNLOADABLE_FILE_TYPES
 
 
 def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
@@ -225,6 +226,21 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid:int) -> HttpRes
 
     return HttpResponse(template('milestoneBoard').render(glProject | {'issues': issues, 'milestone': milestone, 'total': len(issues['open'])+len(issues['assigned'])+len(issues['closed'])}, request))
 
+@login_required
+def downloadFiles(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
+    """
+    Handles the requests for /project/<slug:slug>/<int:id>/download
+    Get the information needed to display the files of the project specified with the id
+    """
+
+    glProject = getProject(request, id)
+    if isinstance(glProject, HttpResponse):
+        return glProject
+
+    if not glProject['localProject'].enableDocumentation:
+        return redirect('/')
+
+    return HttpResponse(template('downloadFiles').render(glProject | {'fileTypes': DOWNLOADABLE_FILE_TYPES}, request))
 
 @login_required
 def wiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRedirect, HttpResponse]:

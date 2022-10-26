@@ -1,6 +1,6 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
-from .models import UserProjectAssignment, TeamMember, Project
+from .models import UserProjectAssignment, TeamMember, Project, DownloadableFile
 
 class PeopleAdmin(ImportExportModelAdmin):
     list_display = ('name','email')
@@ -21,6 +21,11 @@ class ProjectAdmin(ImportExportModelAdmin):
 
         return assignees[:-2]
 
+class DownloadableFileAdmin(ImportExportModelAdmin):
+    list_display = ('name','project')
+
+
+admin.site.register(DownloadableFile, DownloadableFileAdmin)
 admin.site.register(Project,ProjectAdmin)
 admin.site.register(UserProjectAssignment,AssignmentAdmin)
 admin.site.register(TeamMember,PeopleAdmin)

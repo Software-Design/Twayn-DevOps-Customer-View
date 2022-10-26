@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext as _
+import os
 
 class TeamMember(models.Model):
     """Overwrite profile information of GitLab Users
@@ -55,3 +57,21 @@ class UserProjectAssignment(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE)
 
     accessToken = models.CharField(max_length=256)
+
+DOWNLOADABLE_FILE_TYPES = [('client',_('Customer data')),('offer',_('Offers')),('invoice',_('Invoices')),('contract',_('Contracts')),('privacy',_('Privacy')),('draft',_('Drafts')),('documentation',_('Documentation')),('other','Other')]
+
+class DownloadableFile(models.Model):
+    """Files related to a project that can be downloaded by authenticated users with project access"""
+
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.project.name)
+
+    name = models.CharField(max_length=200)
+    category = models.CharField(max_length=200, choices=DOWNLOADABLE_FILE_TYPES)
+    file = models.FileField()
+    date = models.DateField()
+    project = models.ForeignKey(Project,on_delete=models.CASCADE)
+
+    def extension(self):
+        name, extension = os.path.splitext(self.file.name)
+        return extension[1:].upper()
