@@ -3,7 +3,7 @@
 {% load embellish %}
 
 {% for file in files %} 
-    <a href="{{ file.file.url }}" class="text-decoration-none">
+    <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/download/{{ file.file.name }}" class="text-decoration-none">
         <li class="list-group-item">
             <small class="float-end">
                 <span class="badge bg-secondary rounded-pill">{% widthratio file.file.size 1000 1 %} Kb</span>
