@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-14 12:38+0000\n"
-"PO-Revision-Date: 2022-10-14 14:38+0200\n"
+"POT-Creation-Date: 2022-10-26 13:01+0000\n"
+"PO-Revision-Date: 2022-10-26 15:03+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -16,7 +16,46 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2\n"
+
+#: userinterface/models.py:61
+msgid "Customer data"
+msgstr "Kundendokumente"
+
+#: userinterface/models.py:61
+msgid "Offers"
+msgstr "Angebote"
+
+#: userinterface/models.py:61
+msgid "Invoices"
+msgstr "Rechnungen"
+
+#: userinterface/models.py:61
+msgid "Contracts"
+msgstr "Verträge"
+
+#: userinterface/models.py:61
+msgid "Privacy"
+msgstr "Datenschutz"
+
+#: userinterface/models.py:61
+msgid "Drafts"
+msgstr "Entwürfe"
+
+#: userinterface/models.py:61 userinterface/templates/base/base.html:71
+#: userinterface/templates/base/base.html:77
+#: userinterface/templates/base/issueList.html:21
+#: userinterface/templates/base/milestones.html:20
+#: userinterface/templates/base/partials/tableofcontents.html:6
+#: userinterface/templates/base/print/wiki.html:17
+#: userinterface/templates/base/print/wiki.html:36
+#: userinterface/templates/base/project.html:68
+#: userinterface/templates/base/wiki.html:24
+#: userinterface/templates/base/wiki.html:26
+#: userinterface/templates/software-design/base.html:182
+#: userinterface/templates/software-design/project.html:69
+msgid "Documentation"
+msgstr "Dokumentation"
 
 #: userinterface/templates/base/404.html:6
 msgid "Page not found"
@@ -46,48 +85,42 @@ msgstr "Projektphasen / Kanban-Board"
 msgid "Browse all Issues"
 msgstr "Alle Tickets durchsuchen"
 
-#: userinterface/templates/base/base.html:66
-#: userinterface/templates/base/base.html:72
-#: userinterface/templates/base/issueList.html:21
-#: userinterface/templates/base/milestones.html:20
-#: userinterface/templates/base/partials/tableofcontents.html:6
-#: userinterface/templates/base/print/wiki.html:17
-#: userinterface/templates/base/print/wiki.html:36
-#: userinterface/templates/base/project.html:68
-#: userinterface/templates/base/wiki.html:24
-#: userinterface/templates/base/wiki.html:26
-#: userinterface/templates/software-design/base.html:172
-#: userinterface/templates/software-design/project.html:69
-msgid "Documentation"
-msgstr "Dokumentation"
+#: userinterface/templates/base/base.html:61
+#: userinterface/templates/base/downloadFiles.html:17
+#: userinterface/templates/base/project.html:120
+#: userinterface/templates/base/project.html:125
+#: userinterface/templates/software-design/project.html:151
+#: userinterface/templates/software-design/project.html:157
+msgid "Documents & Downloads"
+msgstr "Dokumente & Downloads"
 
-#: userinterface/templates/base/base.html:69
+#: userinterface/templates/base/base.html:74
 msgid "Full Documentation"
 msgstr "Vollständige Dokumentation"
 
-#: userinterface/templates/base/base.html:81
-#: userinterface/templates/base/base.html:139
+#: userinterface/templates/base/base.html:86
+#: userinterface/templates/base/base.html:144
 msgid "Export"
 msgstr "Export"
 
-#: userinterface/templates/base/base.html:90
-#: userinterface/templates/base/base.html:93
+#: userinterface/templates/base/base.html:95
+#: userinterface/templates/base/base.html:98
 msgid "Administration"
 msgstr "Administration"
 
-#: userinterface/templates/base/base.html:94
+#: userinterface/templates/base/base.html:99
 msgid "Clear cache"
 msgstr "Cache leeren"
 
-#: userinterface/templates/base/base.html:95
+#: userinterface/templates/base/base.html:100
 msgid "Warmup cache"
 msgstr "Cache aufwärmen"
 
-#: userinterface/templates/base/base.html:129
+#: userinterface/templates/base/base.html:134
 msgid "Export project overview"
 msgstr "Projektübersicht exportieren"
 
-#: userinterface/templates/base/base.html:135
+#: userinterface/templates/base/base.html:140
 msgid ""
 "This export will generate an overview of all issues updated since the date "
 "you chose below and the sum of time spent since this day."
@@ -95,13 +128,21 @@ msgstr ""
 "Dieser Export erzeugt eine Übersicht über alle Tickets, die seit dem "
 "eingetragenen Datum (unten) aktualisiert wurde."
 
-#: userinterface/templates/base/base.html:140
+#: userinterface/templates/base/base.html:145
 msgid "Close"
 msgstr "Schließen"
 
 #: userinterface/templates/base/defaultErrorPage.html:6
 msgid "An error occured handling the request:"
 msgstr "Beim Bearbeiten Ihrer Anfrage trat ein Fehler auf:"
+
+#: userinterface/templates/base/downloadFiles.html:13
+#: userinterface/templates/base/issueCreate.html:22
+#: userinterface/templates/base/overview.html:13
+#: userinterface/templates/base/project.html:82
+#: userinterface/templates/base/wiki.html:19
+msgid "No image found"
+msgstr "Kein Bild gefunden"
 
 #: userinterface/templates/base/issue.html:17
 msgid ""
@@ -242,13 +283,6 @@ msgstr "schrieb am"
 #: userinterface/templates/base/issueCreate.html:11
 msgid "All Issues"
 msgstr "Alle Tickets"
-
-#: userinterface/templates/base/issueCreate.html:22
-#: userinterface/templates/base/overview.html:13
-#: userinterface/templates/base/project.html:82
-#: userinterface/templates/base/wiki.html:19
-msgid "No image found"
-msgstr "Kein Bild gefunden"
 
 #: userinterface/templates/base/issueCreate.html:26
 msgid "Project"
@@ -406,6 +440,10 @@ msgstr "Weiter zum Projekt"
 msgid "GitLab Profile"
 msgstr "GitLab Profil"
 
+#: userinterface/templates/base/partials/files.html:19
+msgid "File"
+msgstr "Datei"
+
 #: userinterface/templates/base/partials/issues.html:28
 msgid "updated"
 msgstr "aktualisiert am"
@@ -444,6 +482,18 @@ msgstr "Alle Tickets"
 msgid "Person in charge"
 msgstr "Ihre Ansprechpartner"
 
+#: userinterface/templates/base/project.html:121
+#: userinterface/templates/software-design/project.html:152
+#, python-format
+msgid ""
+"\n"
+"        There are %(amount)s file(s) attached to this project.\n"
+"        "
+msgstr ""
+"\n"
+"        Es gibt %(amount)s Datei(en), die diesem Projekt angehängt sind.\n"
+"        "
+
 #: userinterface/templates/base/wiki.html:26
 msgid "Chapter"
 msgstr "Kapitel"
@@ -452,7 +502,11 @@ msgstr "Kapitel"
 msgid "Last activity: "
 msgstr "Letzte Aktivität: "
 
-#: userinterface/templates/software-design/overview.html:48
+#: userinterface/templates/software-design/overview.html:30
+msgid "file attached"
+msgstr "Dateien angehängt"
+
+#: userinterface/templates/software-design/overview.html:52
 msgid "Go to project &raquo;"
 msgstr "Weiter zum Projekt &raquo;"
 
@@ -464,7 +518,7 @@ msgstr "Kunde"
 msgid "An error occurred"
 msgstr "Ein Fehler ist aufgetreten"
 
-#: userinterface/views.py:285 userinterface/views.py:310
+#: userinterface/views.py:315 userinterface/views.py:340
 msgid "of"
 msgstr "von"
 
