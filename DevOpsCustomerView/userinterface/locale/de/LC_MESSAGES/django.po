@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-27 14:17+0000\n"
-"PO-Revision-Date: 2022-10-27 16:17+0200\n"
+"POT-Creation-Date: 2022-10-27 14:51+0000\n"
+"PO-Revision-Date: 2022-10-27 16:55+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -19,7 +19,6 @@ msgstr ""
 "X-Generator: Poedit 3.2\n"
 
 #: userinterface/models.py:78
-#: userinterface/templates/base/downloadFiles.html:25
 msgid "Customer data"
 msgstr "Kundendokumente"
 
@@ -27,21 +26,25 @@ msgstr "Kundendokumente"
 msgid "Offers"
 msgstr "Angebote"
 
-#: userinterface/models.py:80 userinterface/models.py:83
-msgid "Invoices"
-msgstr "Rechnungen"
+#: userinterface/models.py:80 userinterface/templates/base/issue.html:116
+msgid "Draft"
+msgstr "Entwurf"
 
 #: userinterface/models.py:81
 msgid "Orders"
-msgstr ""
+msgstr "Auftragsbestätigungen"
 
 #: userinterface/models.py:82
 msgid "Contracts"
 msgstr "Verträge"
 
-#: userinterface/models.py:84
+#: userinterface/models.py:83
 msgid "Privacy documents"
-msgstr ""
+msgstr "Dokumente zum Datenschutz"
+
+#: userinterface/models.py:84
+msgid "Invoices"
+msgstr "Rechnungen"
 
 #: userinterface/models.py:85 userinterface/templates/base/base.html:71
 #: userinterface/templates/base/base.html:77
@@ -60,7 +63,7 @@ msgstr "Dokumentation"
 
 #: userinterface/models.py:86
 msgid "Other"
-msgstr ""
+msgstr "Andere"
 
 #: userinterface/templates/base/404.html:6
 msgid "Page not found"
@@ -91,7 +94,7 @@ msgid "Browse all Issues"
 msgstr "Alle Tickets durchsuchen"
 
 #: userinterface/templates/base/base.html:61
-#: userinterface/templates/base/downloadFiles.html:17
+#: userinterface/templates/base/downloadFiles.html:18
 #: userinterface/templates/base/project.html:120
 #: userinterface/templates/base/project.html:125
 #: userinterface/templates/software-design/project.html:151
@@ -141,7 +144,7 @@ msgstr "Schließen"
 msgid "An error occured handling the request:"
 msgstr "Beim Bearbeiten Ihrer Anfrage trat ein Fehler auf:"
 
-#: userinterface/templates/base/downloadFiles.html:13
+#: userinterface/templates/base/downloadFiles.html:14
 #: userinterface/templates/base/issueCreate.html:22
 #: userinterface/templates/base/overview.html:13
 #: userinterface/templates/base/project.html:82
@@ -150,6 +153,14 @@ msgstr "Beim Bearbeiten Ihrer Anfrage trat ein Fehler auf:"
 #: userinterface/templates/software-design/publicOverview.html:83
 msgid "No image found"
 msgstr "Kein Bild gefunden"
+
+#: userinterface/templates/base/downloadFiles.html:22
+msgid "Releases"
+msgstr "Releases"
+
+#: userinterface/templates/base/downloadFiles.html:43
+msgid "Download Source"
+msgstr "Quelldatei herunterladen"
 
 #: userinterface/templates/base/issue.html:17
 msgid ""
@@ -216,10 +227,6 @@ msgstr "Zuletzt aktualisiert am"
 #: userinterface/templates/base/issue.html:115
 msgid "WIP"
 msgstr "In Arbeit"
-
-#: userinterface/templates/base/issue.html:116
-msgid "Draft"
-msgstr "Entwurf"
 
 #: userinterface/templates/base/issue.html:117
 #: userinterface/templates/base/issueList.html:35
@@ -494,17 +501,19 @@ msgstr "Ihre Ansprechpartner"
 #, python-format
 msgid ""
 "\n"
-"        There are %(amount)s file(s) attached to this project.\n"
+"        There are %(amountFiles)s file(s) and %(amountRelease)s release(s) "
+"attached to this project.\n"
 "        "
 msgstr ""
 "\n"
-"        Es gibt %(amount)s Datei(en), die diesem Projekt angehängt sind.\n"
+"        Es gibt %(amountFiles)s Datei(en) und %(amountRelease)s Release(s), "
+"die diesem Projekt angehängt sind.\n"
 "        "
 
 #: userinterface/templates/base/publicOverview.html:13
 #: userinterface/templates/software-design/publicOverview.html:62
 msgid "The passcode you entered was not correct."
-msgstr ""
+msgstr "Der Zugangscode, den Sie eingegeben haben, war leider nicht korrekt."
 
 #: userinterface/templates/base/publicOverview.html:17
 #: userinterface/templates/software-design/publicOverview.html:66
@@ -512,16 +521,18 @@ msgid ""
 "Login is required to access information on this dashboard. Please enter the "
 "passcode below to access this page."
 msgstr ""
+"Um die Informationen auf diesem Dashboard einsehen zu können benötigen Sie "
+"einen Zugangscode. BItte geben Sie den Zugangscode ein."
 
 #: userinterface/templates/base/publicOverview.html:24
 #: userinterface/templates/software-design/publicOverview.html:73
 msgid "Enter passcode"
-msgstr ""
+msgstr "Zugangscode eingeben"
 
 #: userinterface/templates/base/publicOverview.html:25
 #: userinterface/templates/software-design/publicOverview.html:74
 msgid "Request access"
-msgstr ""
+msgstr "Zugriff anfordern"
 
 #: userinterface/templates/base/wiki.html:26
 msgid "Chapter"
@@ -531,11 +542,15 @@ msgstr "Kapitel"
 msgid "Last activity: "
 msgstr "Letzte Aktivität: "
 
-#: userinterface/templates/software-design/overview.html:30
+#: userinterface/templates/software-design/overview.html:31
 msgid "file attached"
-msgstr "Dateien angehängt"
+msgstr "Datei(en) angehängt"
 
-#: userinterface/templates/software-design/overview.html:55
+#: userinterface/templates/software-design/overview.html:35
+msgid "releases attached"
+msgstr "Release(s) angehängt"
+
+#: userinterface/templates/software-design/overview.html:60
 msgid "Go to project &raquo;"
 msgstr "Weiter zum Projekt &raquo;"
 

@@ -115,11 +115,11 @@
           </div>
         {% endfor %}
       </div>
-      {% if localProject.downloadablefile_set.count > 0 %}
+      {% if localProject.downloadablefile_set.count > 0 or projectReleases|length > 0 %}
         <br>
         <h4>{% trans "Documents & Downloads" %}</h4>
-        {% blocktrans with amount=localProject.downloadablefile_set.count %}
-        There are {{ amount }} file(s) attached to this project.
+        {% blocktrans with amountFiles=localProject.downloadablefile_set.count amountRelease=projectReleases|length %}
+        There are {{ amountFiles }} file(s) and {{ amountRelease }} release(s) attached to this project.
         {% endblocktrans %}
         <br><br>
         <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/downloads/" class="btn btn-outline-primary"><i class="fa far fa-download"></i> {% trans "Documents & Downloads" %}</a>

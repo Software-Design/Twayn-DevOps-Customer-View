@@ -56,7 +56,7 @@
                   <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/">{% trans "Milestones / Kanban Board" %}</a></li>
                   {% endif %}
                   <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/">{% trans "Browse all Issues" %}</a></li>
-                  {% if localProject.downloadablefile_set.count > 0 %}
+                  {% if localProject.downloadablefile_set.count > 0 or projectReleases|length > 0 %}
                   <li>
                     <a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/downloads">{% trans "Documents & Downloads" %}</a>
                   </li>
