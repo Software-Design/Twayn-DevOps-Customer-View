@@ -1,0 +1,66 @@
+{% extends base %}
+{% load i18n %}
+{% load static %}
+{% load template %}
+
+{% block content %}
+
+  <h1>{{ remoteProject.name }}</h1>
+
+  {% if request.GET.error == 'invalid' or request.GET.error == 'loginrequired' %}
+    {% if request.GET.error == 'invalid' %}
+      <div class="alert alert-danger">
+        {% trans "The passcode you entered was not correct." %}
+      </div>
+      {% endif %}
+      <br><br>
+      {% trans "Login is required to access information on this dashboard. Please enter the passcode below to access this page." %}
+      <br><br>
+      <form method="POST" action="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/{{ localProject.publicAccessHash }}">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="input-group mb-3">
+                  <input type="text" name="password" class="form-control form-control-lg" placeholder="{% trans "Enter passcode" %}" aria-label="{% trans "Enter passcode" %}" aria-describedby="button-addon2">
+                  <input class="btn btn-outline-secondary" type="submit" id="button-addon2" value="{% trans "Request access" %}">
+            </div>
+          </div>
+        </div> 
+      </form>
+  {% else %}
+  <br>
+  <div class="row">
+    <div class="col-2">
+      <img class="w-100" src="{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}" alt="{% trans "No image found" %}">
+    </div>
+    <div class="col-6">
+      {% if localProject.publicOverviewText %}
+        {{ localProject.publicOverviewText|safe }}
+      {% else %}
+        {{ remoteProject.description }}
+      {% endif %}
+    </div>
+    <div class="col-4">
+      <br>
+        <div class="row">
+          {% for type, label in fileTypes.DownloadableFileTypes.choices %}
+            {% with relatedFiles=localProject.downloadablefile_set|in_category:type %}
+              {% if relatedFiles|length > 0 %}
+              <div class="box">
+                <div class="col-12">
+                  <h4>{{ label }}</h4>
+                  {% with t='partials/files'|template %}
+                    {% include t with files=relatedFiles%}
+                  {% endwith %}
+                </div>
+              </div>
+              {% endif %} 
+            {% endwith %}
+          {% endfor %}
+        </div>
+        <br />
+    </div>
+  </div>
+  {% endif %}
+  
+{% endblock %}

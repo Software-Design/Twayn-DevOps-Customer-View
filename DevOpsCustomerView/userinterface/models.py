@@ -1,7 +1,10 @@
 from django.db import models
+from ckeditor.fields import RichTextField
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
-import os
+from django.utils.translation import gettext_lazy
+import os, hashlib, datetime
 
 class TeamMember(models.Model):
     """Overwrite profile information of GitLab Users
@@ -27,9 +30,18 @@ class Project(models.Model):
     def __str__(self):
         return '{} ({})'.format(self.name, self.projectIdentifier)
 
+    def publicAccessHash(self):
+        if not self.privateUrlHash:
+            self.privateUrlHash = hashlib.md5((settings.SECRET_KEY+self.projectIdentifier+datetime.datetime.now().strftime(settings.DATETIME_FORMAT)).encode('utf-8')).hexdigest()
+            self.save()
+        return self.privateUrlHash
+
     assignees = models.ManyToManyField(TeamMember, blank=True)
     name = models.CharField(max_length=500)
     image = models.ImageField(blank=True)
+
+    publicOverviewPassword = models.CharField(max_length=64,default="",help_text="If no password is set, the public overview page is not accessible")
+    publicOverviewText = RichTextField()
 
     enableDocumentation = models.BooleanField(default=True,help_text="Make the documentation accessible for users")
     enableMilestones = models.BooleanField(default=True,help_text="Visualize milestones and create a gantt chart")
@@ -44,6 +56,7 @@ class Project(models.Model):
     # ... add more settings here
 
     projectIdentifier = models.CharField(max_length=200)
+    privateUrlHash = models.CharField(max_length=256, null=True)
 
 class UserProjectAssignment(models.Model):
     """Assignment between users and projects
@@ -58,16 +71,25 @@ class UserProjectAssignment(models.Model):
 
     accessToken = models.CharField(max_length=256)
 
-DOWNLOADABLE_FILE_TYPES = [('client',_('Customer data')),('offer',_('Offers')),('invoice',_('Invoices')),('contract',_('Contracts')),('privacy',_('Privacy')),('draft',_('Drafts')),('documentation',_('Documentation')),('other','Other')]
-
 class DownloadableFile(models.Model):
     """Files related to a project that can be downloaded by authenticated users with project access"""
+
+    class DownloadableFileTypes(models.IntegerChoices):
+            CLIENT = 0, gettext_lazy('Customer data')
+            OFFER = 10, gettext_lazy('Offers')
+            DRAFT = 20, gettext_lazy('Draft')
+            ORDER = 30, gettext_lazy('Orders')
+            CONTRACT = 40, gettext_lazy('Contracts')
+            PRIVACY = 50, gettext_lazy('Privacy documents')
+            INVOICE = 60, gettext_lazy('Invoices')
+            DOCUMENTATION = 70, gettext_lazy('Documentation')
+            OTHER = 80, gettext_lazy('Other')
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.project.name)
 
     name = models.CharField(max_length=200)
-    category = models.CharField(max_length=200, choices=DOWNLOADABLE_FILE_TYPES)
+    category = models.IntegerField(max_length=200, choices=DownloadableFileTypes.choices)
     file = models.FileField()
     date = models.DateField()
     project = models.ForeignKey(Project,on_delete=models.CASCADE)

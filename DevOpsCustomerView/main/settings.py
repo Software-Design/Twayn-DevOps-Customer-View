@@ -17,13 +17,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ALLOWED_HOSTS = ['localhost']
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6=opw0jnwm)-itjhp)a)uz-)hbqp25j)&=y-f30o4ompz)i-o_'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
@@ -37,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'userinterface',
+    'ckeditor',
     'import_export',
 ]
 

@@ -39,7 +39,8 @@ def loadProject(projectObject: Project, accessToken: str) -> dict:
                 'allMilestones': loadMilestones(projectObject, glProject),
                 'mostRecentIssues': loadIssues(projectObject, glProject, page=1)[:5],
                 'wikiPages': parseStructure(loadWikiPage(projectObject, glProject)),
-                'projectLabels': loadLabels(projectObject, glProject)
+                'projectLabels': loadLabels(projectObject, glProject),
+                'projectReleases': loadReleases(projectObject, glProject),
             }
         cache.set(id,project,settings.CACHE_PROJECTS)
 
@@ -129,6 +130,31 @@ def loadLabels(projectObject: Project, tokenOrInstance) -> list:
 
     return labels
 
+
+def loadReleases(projectObject: Project, tokenOrInstance) -> list:
+    """
+    Loads the releases from gitlab for the given project object
+
+    @params:
+        tokenOrInstance:
+            Is either a string (token) or a gitlab.v4.objects.projects.Project instance
+
+    @return:
+        list:
+            A list containing ProjectRelease objects
+            [ gitlab.v4.objects.labels.ProjectRelease, ... ]
+    """
+    
+    project = getInstance(projectObject, tokenOrInstance)
+    id = f'glp_{projectObject.projectIdentifier}_releases'
+
+    labels = cache.get(id)
+    if not labels:
+        glReleases = project.releases.list()
+            
+        cache.set(id,glReleases,settings.CACHE_PROJECTS)
+
+    return glReleases
 
 def loadMilestones(projectObject: Project, tokenOrInstance, iid:int=None) -> Union[list,dict]:
     """

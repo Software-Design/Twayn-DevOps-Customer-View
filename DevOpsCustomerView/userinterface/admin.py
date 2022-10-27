@@ -13,6 +13,7 @@ class AssignmentAdmin(ImportExportModelAdmin):
 
 class ProjectAdmin(ImportExportModelAdmin):
     list_display = ('name', 'assigneesNames', 'projectIdentifier')
+    exclude = ('privateUrlHash',)
 
     def assigneesNames(self,project):
         assignees = ""

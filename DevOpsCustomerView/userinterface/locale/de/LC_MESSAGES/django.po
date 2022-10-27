@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-26 13:01+0000\n"
-"PO-Revision-Date: 2022-10-26 15:03+0200\n"
+"POT-Creation-Date: 2022-10-27 14:17+0000\n"
+"PO-Revision-Date: 2022-10-27 16:17+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -18,31 +18,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.2\n"
 
-#: userinterface/models.py:61
+#: userinterface/models.py:78
+#: userinterface/templates/base/downloadFiles.html:25
 msgid "Customer data"
 msgstr "Kundendokumente"
 
-#: userinterface/models.py:61
+#: userinterface/models.py:79
 msgid "Offers"
 msgstr "Angebote"
 
-#: userinterface/models.py:61
+#: userinterface/models.py:80 userinterface/models.py:83
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#: userinterface/models.py:61
+#: userinterface/models.py:81
+msgid "Orders"
+msgstr ""
+
+#: userinterface/models.py:82
 msgid "Contracts"
 msgstr "Verträge"
 
-#: userinterface/models.py:61
-msgid "Privacy"
-msgstr "Datenschutz"
+#: userinterface/models.py:84
+msgid "Privacy documents"
+msgstr ""
 
-#: userinterface/models.py:61
-msgid "Drafts"
-msgstr "Entwürfe"
-
-#: userinterface/models.py:61 userinterface/templates/base/base.html:71
+#: userinterface/models.py:85 userinterface/templates/base/base.html:71
 #: userinterface/templates/base/base.html:77
 #: userinterface/templates/base/issueList.html:21
 #: userinterface/templates/base/milestones.html:20
@@ -56,6 +57,10 @@ msgstr "Entwürfe"
 #: userinterface/templates/software-design/project.html:69
 msgid "Documentation"
 msgstr "Dokumentation"
+
+#: userinterface/models.py:86
+msgid "Other"
+msgstr ""
 
 #: userinterface/templates/base/404.html:6
 msgid "Page not found"
@@ -140,7 +145,9 @@ msgstr "Beim Bearbeiten Ihrer Anfrage trat ein Fehler auf:"
 #: userinterface/templates/base/issueCreate.html:22
 #: userinterface/templates/base/overview.html:13
 #: userinterface/templates/base/project.html:82
+#: userinterface/templates/base/publicOverview.html:34
 #: userinterface/templates/base/wiki.html:19
+#: userinterface/templates/software-design/publicOverview.html:83
 msgid "No image found"
 msgstr "Kein Bild gefunden"
 
@@ -494,6 +501,28 @@ msgstr ""
 "        Es gibt %(amount)s Datei(en), die diesem Projekt angehängt sind.\n"
 "        "
 
+#: userinterface/templates/base/publicOverview.html:13
+#: userinterface/templates/software-design/publicOverview.html:62
+msgid "The passcode you entered was not correct."
+msgstr ""
+
+#: userinterface/templates/base/publicOverview.html:17
+#: userinterface/templates/software-design/publicOverview.html:66
+msgid ""
+"Login is required to access information on this dashboard. Please enter the "
+"passcode below to access this page."
+msgstr ""
+
+#: userinterface/templates/base/publicOverview.html:24
+#: userinterface/templates/software-design/publicOverview.html:73
+msgid "Enter passcode"
+msgstr ""
+
+#: userinterface/templates/base/publicOverview.html:25
+#: userinterface/templates/software-design/publicOverview.html:74
+msgid "Request access"
+msgstr ""
+
 #: userinterface/templates/base/wiki.html:26
 msgid "Chapter"
 msgstr "Kapitel"
@@ -506,7 +535,7 @@ msgstr "Letzte Aktivität: "
 msgid "file attached"
 msgstr "Dateien angehängt"
 
-#: userinterface/templates/software-design/overview.html:52
+#: userinterface/templates/software-design/overview.html:55
 msgid "Go to project &raquo;"
 msgstr "Weiter zum Projekt &raquo;"
 
@@ -518,9 +547,15 @@ msgstr "Kunde"
 msgid "An error occurred"
 msgstr "Ein Fehler ist aufgetreten"
 
-#: userinterface/views.py:315 userinterface/views.py:340
+#: userinterface/views.py:342 userinterface/views.py:367
 msgid "of"
 msgstr "von"
+
+#~ msgid "Privacy"
+#~ msgstr "Datenschutz"
+
+#~ msgid "Drafts"
+#~ msgstr "Entwürfe"
 
 #, fuzzy
 #~| msgid "Overview"

@@ -7,6 +7,7 @@ urlpatterns = [
     path('logout/', views.loggingout, name='logout'),
     path('overview/', views.overview, name='overview'),
     path('project/<slug:slug>/<int:id>', views.project, name='project'),
+    path('project/<slug:slug>/<int:id>/<str:hash>', views.publicOverview, name='publicOverview'),
     path('project/<slug:slug>/<int:id>/print/<str:date>', views.printOverview, name='printOverview'),
     path('project/<slug:slug>/<int:id>/documentation/', views.wiki, name='wiki'),
     path('project/<slug:slug>/<int:id>/downloads/', views.downloadFiles, name='downloads'),

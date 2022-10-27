@@ -21,7 +21,6 @@ from .tools.gitlabCache import (loadIssues, loadMilestones, loadProject,
                                 loadWikiPage)
 from .tools.templateHelper import template
 from .tools.viewsHelper import getProject
-from .models import DOWNLOADABLE_FILE_TYPES
 
 
 def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
@@ -83,8 +82,31 @@ def overview(request: WSGIRequest) -> HttpResponse:
     return HttpResponse(template('overview').render({'projects': projects}, request))
 
 
+def publicOverview(request: WSGIRequest, slug:str, id:int, hash:str) -> HttpResponse:
+    """
+    Generate an overview for a project that is accesible without having an account
+    """
+
+    assignment = UserProjectAssignment.objects.filter(project__projectIdentifier=id, project__privateUrlHash=hash).exclude(project__publicOverviewPassword__isnull=True,project__publicOverviewPassword__in=["", " ", None]).first()
+    glProject = loadProject(assignment.project, assignment.accessToken)
+
+    if request.POST.get('password'):
+        if request.POST['password'] == assignment.project.publicOverviewPassword:
+            request.session['password'] = request.POST.get('password')
+        else:
+            return redirect(f'/project/{slug}/{id}/{hash}?error=invalid')
+
+    if request.GET.get('error'):
+        return HttpResponse(template('publicOverview').render(glProject, request))
+
+    if not request.session.get('password') or request.session.get('password') != assignment.project.publicOverviewPassword:
+            return redirect(f'/project/{slug}/{id}/{hash}?error=loginrequired')
+
+    return HttpResponse(template('publicOverview').render(glProject | {'fileTypes': DownloadableFile}, request))
+
+
 @login_required
-def project(request, slug, id):
+def project(request, slug:str, id:int) -> HttpResponse:
     
     glProject = getProject(request, id)
     if isinstance(glProject, HttpResponse):
@@ -240,16 +262,21 @@ def downloadFiles(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
-    return HttpResponse(template('downloadFiles').render(glProject | {'fileTypes': DOWNLOADABLE_FILE_TYPES}, request))
+    return HttpResponse(template('downloadFiles').render(glProject | {'fileTypes': DownloadableFile}, request))
 
 @login_required
 def downloadFile(request: WSGIRequest, slug: str, id: int, file: str) -> HttpResponse:
     """
     Given a file name from the uploads folder, download the file
     """
-    glProject = getProject(request, id)
-    if isinstance(glProject, HttpResponse):
-        return glProject
+
+    assignment = UserProjectAssignment.objects.filter(project__projectIdentifier=id).exclude(project__publicOverviewPassword__isnull=True,project__publicOverviewPassword__in=["", " ", None]).first()
+    glProject = loadProject(assignment.project, assignment.accessToken)
+
+    if not request.session.get('password') or request.session.get('password') != assignment.project.publicOverviewPassword:
+        glProject = getProject(request, id)
+        if isinstance(glProject, HttpResponse):
+            return glProject
 
     if not os.path.exists('uploads/'+file):
         raise Http404
