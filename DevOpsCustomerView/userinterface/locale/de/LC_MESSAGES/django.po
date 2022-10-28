@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-27 14:51+0000\n"
-"PO-Revision-Date: 2022-10-27 16:55+0200\n"
+"POT-Creation-Date: 2022-10-28 10:20+0000\n"
+"PO-Revision-Date: 2022-10-28 12:21+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -94,11 +94,11 @@ msgid "Browse all Issues"
 msgstr "Alle Tickets durchsuchen"
 
 #: userinterface/templates/base/base.html:61
-#: userinterface/templates/base/downloadFiles.html:18
+#: userinterface/templates/base/downloadFiles.html:17
 #: userinterface/templates/base/project.html:120
 #: userinterface/templates/base/project.html:125
-#: userinterface/templates/software-design/project.html:151
-#: userinterface/templates/software-design/project.html:157
+#: userinterface/templates/software-design/project.html:150
+#: userinterface/templates/software-design/project.html:156
 msgid "Documents & Downloads"
 msgstr "Dokumente & Downloads"
 
@@ -154,11 +154,11 @@ msgstr "Beim Bearbeiten Ihrer Anfrage trat ein Fehler auf:"
 msgid "No image found"
 msgstr "Kein Bild gefunden"
 
-#: userinterface/templates/base/downloadFiles.html:22
+#: userinterface/templates/base/downloadFiles.html:21
 msgid "Releases"
 msgstr "Releases"
 
-#: userinterface/templates/base/downloadFiles.html:43
+#: userinterface/templates/base/downloadFiles.html:42
 msgid "Download Source"
 msgstr "Quelldatei herunterladen"
 
@@ -434,11 +434,12 @@ msgid "Upcomming Milestones"
 msgstr "Kommende Projektphasen"
 
 #: userinterface/templates/base/overview.html:7
-#: userinterface/templates/software-design/overview.html:7
+#: userinterface/templates/software-design/overview.html:9
 msgid "All your projects with us"
 msgstr "Alle Ihre Projekte"
 
 #: userinterface/templates/base/overview.html:19
+#: userinterface/templates/software-design/overview.html:24
 msgid "Last activity:"
 msgstr "Letzte Aktivität:"
 
@@ -466,6 +467,12 @@ msgstr "aktualisiert am"
 msgid "on"
 msgstr "am"
 
+#: userinterface/templates/base/partials/issues.html:53
+msgid "There are no issues - they will be added during the ongoing project."
+msgstr ""
+"Für dieses Projekt wurden noch keine Tickets angelegt. Diese folgen, wenn "
+"das Projekt voranschreitet."
+
 #: userinterface/templates/base/partials/milestones.html:13
 msgid "No specified time range"
 msgstr "Keine angegebene Zeitspanne"
@@ -483,12 +490,12 @@ msgid "Total time spent"
 msgstr "Gesamter Zeitaufwand"
 
 #: userinterface/templates/base/project.html:94
-#: userinterface/templates/software-design/project.html:95
+#: userinterface/templates/software-design/project.html:94
 msgid "Last updated issues"
 msgstr "Zuletzt aktualisierte Tickets"
 
 #: userinterface/templates/base/project.html:102
-#: userinterface/templates/software-design/project.html:103
+#: userinterface/templates/software-design/project.html:102
 msgid "All issues"
 msgstr "Alle Tickets"
 
@@ -497,7 +504,7 @@ msgid "Person in charge"
 msgstr "Ihre Ansprechpartner"
 
 #: userinterface/templates/base/project.html:121
-#: userinterface/templates/software-design/project.html:152
+#: userinterface/templates/software-design/project.html:151
 #, python-format
 msgid ""
 "\n"
@@ -538,19 +545,15 @@ msgstr "Zugriff anfordern"
 msgid "Chapter"
 msgstr "Kapitel"
 
-#: userinterface/templates/software-design/overview.html:26
-msgid "Last activity: "
-msgstr "Letzte Aktivität: "
-
-#: userinterface/templates/software-design/overview.html:31
+#: userinterface/templates/software-design/overview.html:29
 msgid "file attached"
 msgstr "Datei(en) angehängt"
 
-#: userinterface/templates/software-design/overview.html:35
+#: userinterface/templates/software-design/overview.html:33
 msgid "releases attached"
 msgstr "Release(s) angehängt"
 
-#: userinterface/templates/software-design/overview.html:60
+#: userinterface/templates/software-design/overview.html:58
 msgid "Go to project &raquo;"
 msgstr "Weiter zum Projekt &raquo;"
 
@@ -562,9 +565,12 @@ msgstr "Kunde"
 msgid "An error occurred"
 msgstr "Ein Fehler ist aufgetreten"
 
-#: userinterface/views.py:342 userinterface/views.py:367
+#: userinterface/views.py:361 userinterface/views.py:386
 msgid "of"
 msgstr "von"
+
+#~ msgid "Last activity: "
+#~ msgstr "Letzte Aktivität: "
 
 #~ msgid "Privacy"
 #~ msgstr "Datenschutz"

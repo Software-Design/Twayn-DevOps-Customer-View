@@ -47,3 +47,9 @@
         </a> 
     {% endif %}
 {% endfor %}
+
+{% if issues|length == 0 %}
+<br>
+    {% trans "There are no issues - they will be added during the ongoing project." %}
+<br>
+{% endif %}

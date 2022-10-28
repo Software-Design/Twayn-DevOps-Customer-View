@@ -1260,7 +1260,7 @@ var Gantt = (function () {
                 this.gantt_start = date_utils.add(this.gantt_start, -1, 'month');
                 this.gantt_end = date_utils.add(this.gantt_end, 3, 'month');
             } else if (this.view_is(VIEW_MODE.YEAR)) {
-                this.gantt_start = date_utils.add(this.gantt_start, -6, 'month');
+                this.gantt_start = date_utils.add(this.gantt_start, -1, 'month');
                 this.gantt_end = date_utils.add(this.gantt_end, 3, 'year');
             } else {
                 this.gantt_start = date_utils.add(this.gantt_start, -1, 'month');
