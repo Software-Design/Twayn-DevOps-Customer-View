@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse, HttpResponseRedirect, FileResponse
+from django.http import HttpResponse, HttpResponseRedirect, FileResponse, Http404
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -278,10 +278,10 @@ def downloadFile(request: WSGIRequest, slug: str, id: int, file: str) -> HttpRes
         if isinstance(glProject, HttpResponse):
             return glProject
 
-    if not os.path.exists('uploads/'+file):
+    if not os.path.exists(settings.MEDIA_ROOT+file):
         raise Http404
 
-    return FileResponse(open('uploads/'+file, 'rb'), as_attachment=True)
+    return FileResponse(open(settings.MEDIA_ROOT+file, 'rb'), as_attachment=True)
 
 @login_required
 def wiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRedirect, HttpResponse]:
