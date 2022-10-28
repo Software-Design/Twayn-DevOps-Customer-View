@@ -40,7 +40,7 @@ class Project(models.Model):
     name = models.CharField(max_length=500)
     image = models.ImageField(blank=True)
 
-    publicOverviewPassword = models.CharField(max_length=64,default="",help_text="If no password is set, the public overview page is not accessible")
+    publicOverviewPassword = models.CharField(max_length=64,default="",null=True,blank=True,help_text="If no password is set, the public overview page is not accessible")
     publicOverviewText = RichTextField()
 
     enableDocumentation = models.BooleanField(default=True,help_text="Make the documentation accessible for users")
