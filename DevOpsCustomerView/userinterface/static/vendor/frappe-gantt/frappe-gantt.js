@@ -1255,16 +1255,16 @@ var Gantt = (function () {
             // add date padding on both sides
             if (this.view_is([VIEW_MODE.QUARTER_DAY, VIEW_MODE.HALF_DAY])) {
                 this.gantt_start = date_utils.add(this.gantt_start, -7, 'day');
-                this.gantt_end = date_utils.add(this.gantt_end, 7, 'day');
+                this.gantt_end = date_utils.add(this.gantt_end, 14, 'day');
             } else if (this.view_is(VIEW_MODE.MONTH)) {
                 this.gantt_start = date_utils.add(this.gantt_start, -1, 'month');
-                this.gantt_end = date_utils.add(this.gantt_end, 1, 'month');
+                this.gantt_end = date_utils.add(this.gantt_end, 3, 'month');
             } else if (this.view_is(VIEW_MODE.YEAR)) {
-                this.gantt_start = date_utils.add(this.gantt_start, -3, 'year');
+                this.gantt_start = date_utils.add(this.gantt_start, -6, 'month');
                 this.gantt_end = date_utils.add(this.gantt_end, 3, 'year');
             } else {
                 this.gantt_start = date_utils.add(this.gantt_start, -1, 'month');
-                this.gantt_end = date_utils.add(this.gantt_end, 2, 'month');
+                this.gantt_end = date_utils.add(this.gantt_end, 3, 'month');
             }
         }
 
