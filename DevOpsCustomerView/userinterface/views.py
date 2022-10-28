@@ -69,7 +69,7 @@ def overview(request: WSGIRequest) -> HttpResponse:
     """
 
     if request.user.is_staff:
-        projectAssignments = UserProjectAssignment.objects.all()
+        projectAssignments = UserProjectAssignment.objects.order_by('project__name').all()
     else:
         projectAssignments = UserProjectAssignment.objects.filter(user=request.user)
 

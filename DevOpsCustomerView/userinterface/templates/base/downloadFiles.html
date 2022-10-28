@@ -6,15 +6,14 @@
 
 {% block content %}
 
-<h1>{{ remoteProject.name }}</h1>
+<h1>{{ localProject.name }}</h1>
   {{ remoteProject.description }}
-  <br><br>
+  <br><br><br>
   <div class="row">
     <div class="col-3">
       <img class="w-100" src="{% if localProject.image %}{{ localProject.image.url }}{% else %}{{ remoteProject.avatar_url }}{% endif %}" alt="{% trans "No image found" %}">
     </div>
     <div class="col-9">
-      <br>
         <h3>{% trans "Documents & Downloads" %}</h3>
         <br>
         <div class="row">
@@ -61,6 +60,7 @@
               {% if relatedFiles|length > 0 %}
               <div class="box">
                 <div class="col-12">
+                  <br>
                   <h4>{{ label }}</h4>
                   {% with t='partials/files'|template %}
                     {% include t with files=relatedFiles%}

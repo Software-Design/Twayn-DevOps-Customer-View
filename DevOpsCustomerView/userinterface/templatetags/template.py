@@ -9,6 +9,4 @@ def template(value):
 
 @register.filter
 def in_category(files, category):
-    print(files)
-    print(category)
-    return files.filter(category=category)
+    return files.filter(category=category).order_by('order')

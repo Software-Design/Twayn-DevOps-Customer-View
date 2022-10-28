@@ -89,6 +89,7 @@ class DownloadableFile(models.Model):
         return '{} ({})'.format(self.name, self.project.name)
 
     name = models.CharField(max_length=200)
+    order = models.IntegerField()
     category = models.IntegerField(max_length=200, choices=DownloadableFileTypes.choices)
     file = models.FileField()
     date = models.DateField()

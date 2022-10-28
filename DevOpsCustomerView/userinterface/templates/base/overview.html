@@ -14,7 +14,7 @@
             </a>
         </div>
         <div class="col-md-9">
-          <h5 class="card-title">{{ p.remoteProject.name }}</h5>
+          <h5 class="card-title">{{ p.localProject.name }}</h5>
           <p class="card-text">{{ p.remoteProject.description }}{{ p.error }}<br>
             <small><em>{% trans "Last activity:" %} {{ p.mostRecentIssues.0.updated_at|parse_iso }}</em></small>
 

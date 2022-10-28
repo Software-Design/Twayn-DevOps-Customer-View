@@ -1224,10 +1224,10 @@ var Gantt = (function () {
                 this.options.column_width = 140;
             } else if (view_mode === VIEW_MODE.MONTH) {
                 this.options.step = 24 * 30;
-                this.options.column_width = 120;
+                this.options.column_width = 130;
             } else if (view_mode === VIEW_MODE.YEAR) {
                 this.options.step = 24 * 365;
-                this.options.column_width = 120;
+                this.options.column_width = 150;
             }
         }
 
