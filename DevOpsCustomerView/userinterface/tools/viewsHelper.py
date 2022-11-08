@@ -22,6 +22,9 @@ def getProject(request: WSGIRequest, id: int) -> Union[dict, HttpResponse]:
 
     project = Project.objects.filter(projectIdentifier=id).first()
 
+    if not request.user.is_authenticated:
+        raise Http404
+
     if request.user.is_staff:
         assigment = UserProjectAssignment.objects.filter(project=project).first()
     else:

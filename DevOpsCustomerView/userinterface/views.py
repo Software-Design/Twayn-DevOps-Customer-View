@@ -283,7 +283,6 @@ def downloadFiles(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
 
     return HttpResponse(template('downloadFiles').render(glProject | {'fileTypes': DownloadableFile}, request))
 
-@login_required
 def downloadFile(request: WSGIRequest, slug: str, id: int, file: str) -> HttpResponse:
     """
     Given a file name from the uploads folder, download the file
@@ -292,7 +291,8 @@ def downloadFile(request: WSGIRequest, slug: str, id: int, file: str) -> HttpRes
     assignment = UserProjectAssignment.objects.filter(project__projectIdentifier=id).exclude(project__publicOverviewPassword__isnull=True,project__publicOverviewPassword__in=["", " ", None]).first()
     glProject = loadProject(assignment.project, assignment.accessToken)
 
-    if not request.session.get('password') or request.session.get('password') != assignment.project.publicOverviewPassword:
+    # Only bxpass the regular permission system if the project is public and the user has already authenticated himself with the public board password
+    if not request.session.get('password') or not assignment.project.publicOverviewPassword or request.session.get('password') != assignment.project.publicOverviewPassword:
         glProject = getProject(request, id)
         if isinstance(glProject, HttpResponse):
             return glProject
