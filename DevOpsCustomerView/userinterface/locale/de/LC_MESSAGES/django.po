@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-28 10:20+0000\n"
-"PO-Revision-Date: 2022-10-28 12:21+0200\n"
+"POT-Creation-Date: 2022-11-09 12:34+0000\n"
+"PO-Revision-Date: 2022-11-09 13:34+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -18,35 +18,47 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.2\n"
 
-#: userinterface/models.py:78
+#: userinterface/models.py:80
+msgid "Important Files & Links"
+msgstr "Wichtige Dokumente & Links"
+
+#: userinterface/models.py:81
 msgid "Customer data"
 msgstr "Kundendokumente"
 
-#: userinterface/models.py:79
+#: userinterface/models.py:82
 msgid "Offers"
 msgstr "Angebote"
 
-#: userinterface/models.py:80 userinterface/templates/base/issue.html:116
+#: userinterface/models.py:83 userinterface/templates/base/issue.html:116
 msgid "Draft"
 msgstr "Entwurf"
 
-#: userinterface/models.py:81
+#: userinterface/models.py:84
 msgid "Orders"
 msgstr "Auftragsbestätigungen"
 
-#: userinterface/models.py:82
+#: userinterface/models.py:85
 msgid "Contracts"
 msgstr "Verträge"
 
-#: userinterface/models.py:83
+#: userinterface/models.py:86
 msgid "Privacy documents"
 msgstr "Dokumente zum Datenschutz"
 
-#: userinterface/models.py:84
+#: userinterface/models.py:87
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#: userinterface/models.py:85 userinterface/templates/base/base.html:71
+#: userinterface/models.py:88
+msgid "Development"
+msgstr "Testdaten & Entwicklungsumgebung"
+
+#: userinterface/models.py:89
+msgid "Production"
+msgstr "Produktivsystem"
+
+#: userinterface/models.py:90 userinterface/templates/base/base.html:71
 #: userinterface/templates/base/base.html:77
 #: userinterface/templates/base/issueList.html:21
 #: userinterface/templates/base/milestones.html:20
@@ -61,7 +73,7 @@ msgstr "Rechnungen"
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: userinterface/models.py:86
+#: userinterface/models.py:91
 msgid "Other"
 msgstr "Andere"
 
@@ -97,6 +109,7 @@ msgstr "Alle Tickets durchsuchen"
 #: userinterface/templates/base/downloadFiles.html:17
 #: userinterface/templates/base/project.html:120
 #: userinterface/templates/base/project.html:125
+#: userinterface/templates/software-design/downloadFiles.html:23
 #: userinterface/templates/software-design/project.html:150
 #: userinterface/templates/software-design/project.html:156
 msgid "Documents & Downloads"
@@ -150,15 +163,18 @@ msgstr "Beim Bearbeiten Ihrer Anfrage trat ein Fehler auf:"
 #: userinterface/templates/base/project.html:82
 #: userinterface/templates/base/publicOverview.html:34
 #: userinterface/templates/base/wiki.html:19
+#: userinterface/templates/software-design/downloadFiles.html:14
 #: userinterface/templates/software-design/publicOverview.html:83
 msgid "No image found"
 msgstr "Kein Bild gefunden"
 
 #: userinterface/templates/base/downloadFiles.html:21
+#: userinterface/templates/software-design/downloadFiles.html:27
 msgid "Releases"
 msgstr "Releases"
 
 #: userinterface/templates/base/downloadFiles.html:42
+#: userinterface/templates/software-design/downloadFiles.html:48
 msgid "Download Source"
 msgstr "Quelldatei herunterladen"
 
@@ -455,7 +471,7 @@ msgstr "Weiter zum Projekt"
 msgid "GitLab Profile"
 msgstr "GitLab Profil"
 
-#: userinterface/templates/base/partials/files.html:19
+#: userinterface/templates/base/partials/files.html:28
 msgid "File"
 msgstr "Datei"
 
