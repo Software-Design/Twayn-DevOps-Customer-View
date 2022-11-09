@@ -16,7 +16,9 @@
         <div class="col-md-9">
           <h5 class="card-title">{{ p.localProject.name }}</h5>
           <p class="card-text">{{ p.remoteProject.description }}{{ p.error }}<br>
+            {% if p.mostRecentIssues.0.updated_at|parse_iso != '?' %}
             <small><em>{% trans "Last activity:" %} {{ p.mostRecentIssues.0.updated_at|parse_iso }}</em></small>
+            {% endif %}
 
             <br><br>
             {% if p.localProject.enableMilestones %}
