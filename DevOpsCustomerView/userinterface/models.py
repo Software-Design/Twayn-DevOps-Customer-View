@@ -77,6 +77,7 @@ class DownloadableFile(models.Model):
     """Files related to a project that can be downloaded by authenticated users with project access"""
 
     class DownloadableFileTypes(models.IntegerChoices):
+            IMPORTANT = -1, gettext_lazy('Important Files & Links')
             CLIENT = 0, gettext_lazy('Customer data')
             OFFER = 10, gettext_lazy('Offers')
             DRAFT = 20, gettext_lazy('Draft')
@@ -84,6 +85,8 @@ class DownloadableFile(models.Model):
             CONTRACT = 40, gettext_lazy('Contracts')
             PRIVACY = 50, gettext_lazy('Privacy documents')
             INVOICE = 60, gettext_lazy('Invoices')
+            DEVELOPMENT = 64, gettext_lazy('Development')
+            PRODUCTION = 65, gettext_lazy('Production')
             DOCUMENTATION = 70, gettext_lazy('Documentation')
             OTHER = 80, gettext_lazy('Other')
 
@@ -93,7 +96,8 @@ class DownloadableFile(models.Model):
     name = models.CharField(max_length=200)
     order = models.IntegerField()
     category = models.IntegerField(max_length=200, choices=DownloadableFileTypes.choices)
-    file = models.FileField()
+    file = models.FileField(help_text="A downloadable file - must not be added if a link is set", null=True, blank=True)
+    link = models.CharField(help_text="Link to a file or document - must not be set if a file is present", max_length=2000, null=True, blank=True)
     date = models.DateField()
     project = models.ForeignKey(Project,on_delete=models.CASCADE)
 

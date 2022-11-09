@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>{{ settings.INTERFACE_NAME }}</title>
+    <title>{% if localProject %}{{ localProject.name }} - {% endif %}{{ settings.INTERFACE_NAME }}</title>
     {% block metadata %}
       <meta name="description" content="{{ settings.INTERFACE_NAME }} allows access to projects and tickets managed within a GitLab instance." />
       <meta name="author" content="SD Software-Design GmbH" />
