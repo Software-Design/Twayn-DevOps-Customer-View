@@ -58,6 +58,8 @@ class Project(models.Model):
     projectIdentifier = models.CharField(max_length=200)
     privateUrlHash = models.CharField(max_length=256, null=True)
 
+    closed = models.BooleanField(default=False, help_text="If closed a project is no longer accessible or visible")
+
 class UserProjectAssignment(models.Model):
     """Assignment between users and projects
     

@@ -69,9 +69,9 @@ def overview(request: WSGIRequest) -> HttpResponse:
     """
 
     if request.user.is_staff:
-        projectAssignments = UserProjectAssignment.objects.order_by('project__name').all()
+        projectAssignments = UserProjectAssignment.objects.filter(project__closed=False).order_by('project__name').all()
     else:
-        projectAssignments = UserProjectAssignment.objects.filter(user=request.user)
+        projectAssignments = UserProjectAssignment.objects.filter(project__closed=False,user=request.user)
 
     projects = []
     for assignment in projectAssignments:
@@ -87,7 +87,7 @@ def publicOverview(request: WSGIRequest, slug:str, id:int, hash:str) -> HttpResp
     Generate an overview for a project that is accesible without having an account
     """
 
-    assignment = UserProjectAssignment.objects.filter(project__projectIdentifier=id, project__privateUrlHash=hash).exclude(project__publicOverviewPassword__isnull=True,project__publicOverviewPassword__in=["", " ", None]).first()
+    assignment = UserProjectAssignment.objects.filter(project__closed=False, project__projectIdentifier=id, project__privateUrlHash=hash).exclude(project__publicOverviewPassword__isnull=True,project__publicOverviewPassword__in=["", " ", None]).first()
     glProject = loadProject(assignment.project, assignment.accessToken)
 
     if request.POST.get('password'):
@@ -288,7 +288,7 @@ def downloadFile(request: WSGIRequest, slug: str, id: int, file: str) -> HttpRes
     Given a file name from the uploads folder, download the file
     """
 
-    assignment = UserProjectAssignment.objects.filter(project__projectIdentifier=id).exclude(project__publicOverviewPassword__isnull=True,project__publicOverviewPassword__in=["", " ", None]).first()
+    assignment = UserProjectAssignment.objects.filter(project__projectIdentifier=id,project__closed=False).exclude(project__publicOverviewPassword__isnull=True,project__publicOverviewPassword__in=["", " ", None]).first()
     glProject = loadProject(assignment.project, assignment.accessToken)
 
     # Only bxpass the regular permission system if the project is public and the user has already authenticated himself with the public board password
@@ -297,7 +297,7 @@ def downloadFile(request: WSGIRequest, slug: str, id: int, file: str) -> HttpRes
         if isinstance(glProject, HttpResponse):
             return glProject
 
-    if not os.path.exists(settings.MEDIA_ROOT+file):
+    if not os.path.exists(settings.MEDIA_ROOT+file) or not glProject:
         raise Http404
 
     return FileResponse(open(settings.MEDIA_ROOT+file, 'rb'), as_attachment=True)

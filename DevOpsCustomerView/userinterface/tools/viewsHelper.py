@@ -20,9 +20,9 @@ def getProject(request: WSGIRequest, id: int) -> Union[dict, HttpResponse]:
             If the requested project does not exist or is not linked to the requesting user
     """
 
-    project = Project.objects.filter(projectIdentifier=id).first()
+    project = Project.objects.filter(projectIdentifier=id,closed=False).first()
 
-    if not request.user.is_authenticated:
+    if not request.user.is_authenticated or not project:
         raise Http404
 
     if request.user.is_staff:
