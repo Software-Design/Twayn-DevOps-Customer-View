@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load dates %}
+{% load template %}
+
+<div class="row pt-5 mb-5">
+    <div class="col-md-3">
+        <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}">
+            <img class="w-100" src="{% if p.localProject.image %}{{ p.localProject.image.url }}{% else %}{{ p.remoteProject.avatar_url }}{% endif %}" alt="{% trans "No image found" %}">
+        </a>
+    </div>
+    <div class="col-md-9">
+        <h5 class="card-title">{{ p.localProject.name }}</h5>
+        <p class="card-text">{{ p.remoteProject.description }}{{ p.error }}<br>
+        {% if p.mostRecentIssues.0.updated_at|parse_iso != '?' %}
+        <small><em>{% trans "Last activity:" %} {{ p.mostRecentIssues.0.updated_at|parse_iso }}</em></small>
+        {% endif %}
+
+        <br><br>
+        {% if p.localProject.enableMilestones and not p.localProject.inactive %}
+            <strong>{% trans "Current Milestone(s)" %}:</strong><br>
+            {% for milestone in p.allMilestones %} 
+            {% if milestone.state == 'active' and milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
+                &raquo; {{ milestone.title }}<br>
+            {% endif %}
+            {% endfor %} <br />
+        {% endif %}
+        </p>
+        {% if p.remoteProject.path and not p.localProject.inactive %}
+        <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="btn btn-primary">{% trans "Go to project" %} &raquo;</a>
+        {% endif %}
+    </div>
+    </div>

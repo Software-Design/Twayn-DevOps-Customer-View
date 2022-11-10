@@ -37,6 +37,7 @@ class Project(models.Model):
         return self.privateUrlHash
 
     assignees = models.ManyToManyField(TeamMember, blank=True)
+
     name = models.CharField(max_length=500)
     image = models.ImageField(blank=True)
 
@@ -58,6 +59,7 @@ class Project(models.Model):
     projectIdentifier = models.CharField(max_length=200)
     privateUrlHash = models.CharField(max_length=256, null=True)
 
+    inactive = models.BooleanField(default=False, help_text="Inatvie project are marked as inactive and not shown in the overview")
     closed = models.BooleanField(default=False, help_text="If closed a project is no longer accessible or visible")
 
 class UserProjectAssignment(models.Model):

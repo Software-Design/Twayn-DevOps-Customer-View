@@ -73,13 +73,17 @@ def overview(request: WSGIRequest) -> HttpResponse:
     else:
         projectAssignments = UserProjectAssignment.objects.filter(project__closed=False,user=request.user)
 
-    projects = []
+    activeProjects = []
+    inactiveProjects = []
     for assignment in projectAssignments:
         glProject = loadProject(assignment.project, assignment.accessToken)
-        if glProject not in projects:
-            projects.append(glProject)
+        if glProject not in inactiveProjects and glProject not in activeProjects:
+            if glProject['localProject'].inactive:
+                inactiveProjects.append(glProject)
+            else:
+                activeProjects.append(glProject)
 
-    return HttpResponse(template('overview').render({'projects': projects}, request))
+    return HttpResponse(template('overview').render({'inactiveProjects': inactiveProjects, 'activeProjects': activeProjects}, request))
 
 
 def publicOverview(request: WSGIRequest, slug:str, id:int, hash:str) -> HttpResponse:
