@@ -78,9 +78,12 @@ def overview(request: WSGIRequest) -> HttpResponse:
     for assignment in projectAssignments:
         glProject = loadProject(assignment.project, assignment.accessToken)
         if glProject not in inactiveProjects and glProject not in activeProjects:
-            if glProject['localProject'].inactive:
-                inactiveProjects.append(glProject)
-            else:
+            try:
+                if glProject['localProject'].inactive:
+                    inactiveProjects.append(glProject)
+                else:
+                    activeProjects.append(glProject)
+            except:
                 activeProjects.append(glProject)
 
     return HttpResponse(template('overview').render({'inactiveProjects': inactiveProjects, 'activeProjects': activeProjects}, request))
