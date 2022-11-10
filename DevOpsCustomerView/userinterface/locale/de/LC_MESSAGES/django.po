@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-09 12:34+0000\n"
-"PO-Revision-Date: 2022-11-09 13:34+0100\n"
+"POT-Creation-Date: 2022-11-10 14:38+0000\n"
+"PO-Revision-Date: 2022-11-10 15:38+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -18,47 +18,47 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.2\n"
 
-#: userinterface/models.py:80
+#: userinterface/models.py:82
 msgid "Important Files & Links"
 msgstr "Wichtige Dokumente & Links"
 
-#: userinterface/models.py:81
+#: userinterface/models.py:83
 msgid "Customer data"
 msgstr "Kundendokumente"
 
-#: userinterface/models.py:82
+#: userinterface/models.py:84
 msgid "Offers"
 msgstr "Angebote"
 
-#: userinterface/models.py:83 userinterface/templates/base/issue.html:116
+#: userinterface/models.py:85 userinterface/templates/base/issue.html:116
 msgid "Draft"
 msgstr "Entwurf"
 
-#: userinterface/models.py:84
+#: userinterface/models.py:86
 msgid "Orders"
 msgstr "Auftragsbestätigungen"
 
-#: userinterface/models.py:85
+#: userinterface/models.py:87
 msgid "Contracts"
 msgstr "Verträge"
 
-#: userinterface/models.py:86
+#: userinterface/models.py:88
 msgid "Privacy documents"
 msgstr "Dokumente zum Datenschutz"
 
-#: userinterface/models.py:87
+#: userinterface/models.py:89
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#: userinterface/models.py:88
+#: userinterface/models.py:90
 msgid "Development"
 msgstr "Testdaten & Entwicklungsumgebung"
 
-#: userinterface/models.py:89
+#: userinterface/models.py:91
 msgid "Production"
 msgstr "Produktivsystem"
 
-#: userinterface/models.py:90 userinterface/templates/base/base.html:71
+#: userinterface/models.py:92 userinterface/templates/base/base.html:71
 #: userinterface/templates/base/base.html:77
 #: userinterface/templates/base/issueList.html:21
 #: userinterface/templates/base/milestones.html:20
@@ -68,12 +68,12 @@ msgstr "Produktivsystem"
 #: userinterface/templates/base/project.html:68
 #: userinterface/templates/base/wiki.html:24
 #: userinterface/templates/base/wiki.html:26
-#: userinterface/templates/software-design/base.html:182
+#: userinterface/templates/software-design/base.html:183
 #: userinterface/templates/software-design/project.html:69
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: userinterface/models.py:91
+#: userinterface/models.py:93
 msgid "Other"
 msgstr "Andere"
 
@@ -159,7 +159,7 @@ msgstr "Beim Bearbeiten Ihrer Anfrage trat ein Fehler auf:"
 
 #: userinterface/templates/base/downloadFiles.html:14
 #: userinterface/templates/base/issueCreate.html:22
-#: userinterface/templates/base/overview.html:13
+#: userinterface/templates/base/partials/project.html:8
 #: userinterface/templates/base/project.html:82
 #: userinterface/templates/base/publicOverview.html:34
 #: userinterface/templates/base/wiki.html:19
@@ -454,19 +454,6 @@ msgstr "Kommende Projektphasen"
 msgid "All your projects with us"
 msgstr "Alle Ihre Projekte"
 
-#: userinterface/templates/base/overview.html:19
-#: userinterface/templates/software-design/overview.html:24
-msgid "Last activity:"
-msgstr "Letzte Aktivität:"
-
-#: userinterface/templates/base/overview.html:23
-msgid "Current Milestone(s)"
-msgstr "Aktuelle Projektphase(n)"
-
-#: userinterface/templates/base/overview.html:32
-msgid "Go to project"
-msgstr "Weiter zum Projekt"
-
 #: userinterface/templates/base/partials/employee.html:24
 msgid "GitLab Profile"
 msgstr "GitLab Profil"
@@ -492,6 +479,19 @@ msgstr ""
 #: userinterface/templates/base/partials/milestones.html:13
 msgid "No specified time range"
 msgstr "Keine angegebene Zeitspanne"
+
+#: userinterface/templates/base/partials/project.html:15
+#: userinterface/templates/software-design/partials/project.html:18
+msgid "Last activity:"
+msgstr "Letzte Aktivität:"
+
+#: userinterface/templates/base/partials/project.html:20
+msgid "Current Milestone(s)"
+msgstr "Aktuelle Projektphase(n)"
+
+#: userinterface/templates/base/partials/project.html:29
+msgid "Go to project"
+msgstr "Weiter zum Projekt"
 
 #: userinterface/templates/base/print/overview.html:32
 msgid "Issue"
@@ -557,19 +557,24 @@ msgstr "Zugangscode eingeben"
 msgid "Request access"
 msgstr "Zugriff anfordern"
 
+#: userinterface/templates/base/wiki.html:10
+#: userinterface/templates/base/wikipage.html:13
+msgid "Download Documentation"
+msgstr "Dokumentation herunterladen"
+
 #: userinterface/templates/base/wiki.html:26
 msgid "Chapter"
 msgstr "Kapitel"
 
-#: userinterface/templates/software-design/overview.html:29
+#: userinterface/templates/software-design/partials/project.html:32
 msgid "file attached"
 msgstr "Datei(en) angehängt"
 
-#: userinterface/templates/software-design/overview.html:33
+#: userinterface/templates/software-design/partials/project.html:36
 msgid "releases attached"
 msgstr "Release(s) angehängt"
 
-#: userinterface/templates/software-design/overview.html:58
+#: userinterface/templates/software-design/partials/project.html:67
 msgid "Go to project &raquo;"
 msgstr "Weiter zum Projekt &raquo;"
 
@@ -581,7 +586,7 @@ msgstr "Kunde"
 msgid "An error occurred"
 msgstr "Ein Fehler ist aufgetreten"
 
-#: userinterface/views.py:361 userinterface/views.py:386
+#: userinterface/views.py:368 userinterface/views.py:393
 msgid "of"
 msgstr "von"
 

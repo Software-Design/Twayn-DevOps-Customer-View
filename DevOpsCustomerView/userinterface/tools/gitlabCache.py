@@ -58,7 +58,6 @@ def loadWikiPage(projectObject: Project, tokenOrInstance, slug: str=None) -> Uni
     @return:
         Either a single wiki page if slug is set or all pages of the project in a list
     """
-
     if not projectObject.enableDocumentation:
         return False
 

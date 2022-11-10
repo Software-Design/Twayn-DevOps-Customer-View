@@ -10,12 +10,14 @@ register = Library()
 
 
 customTranslations = {
-    "(^<p>|</p>$)": "",
+    "(^<p>|</p>$)": "<br>",
+    "\n": "<br>",
     r"\[ \] -": '<input type="checkbox" disabled>',
     r"\[x\] -": '<input type="checkbox" checked disabled>',
     r"\[ \]": '<input type="checkbox" disabled>',
     r"\[x\]": '<input type="checkbox" checked disabled>',
     '<ul>': '<ul class="list-group">',
+    '<br><li>': '<li>',
     '<li>': '<li class="list-group-item">',
 }
 
@@ -23,7 +25,6 @@ customTranslations = {
 def markdown(text):
         
     text = md.markdown(text,extensions=['fenced_code', 'nl2br'])
-    
     for key,value in customTranslations.items():
         text = re.sub(key,value,text)
 
@@ -37,7 +38,4 @@ def markdown(text):
 def wikicontent(slug,localProject, remoteProject):
     
     text = loadWikiPage(localProject, remoteProject, slug).content
-    for key,value in customTranslations.items():
-        text = re.sub(key,value,text)
-
     return markdown(text)
