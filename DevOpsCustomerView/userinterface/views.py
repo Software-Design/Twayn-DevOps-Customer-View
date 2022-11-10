@@ -345,7 +345,7 @@ def wikiPage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
     glProject['page'] = loadWikiPage(
         glProject['localProject'], glProject['remoteProject'], page)
 
-    return HttpResponse(template('wikiPage').render(glProject, request))
+    return HttpResponse(template('wikipage').render(glProject, request))
 
 
 @login_required
