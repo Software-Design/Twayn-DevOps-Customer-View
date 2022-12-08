@@ -3,7 +3,7 @@
 <div class="row">
     {% if employee.avatar and employee.avatar.url %}
     <div class="col-3 text-end">
-        {% if employee.homepage %}<a href="{{ employee.homepage }}" target="_blank">{% endif %}
+        {% if employee.homepage %}<a href="{{ employee.homepage }}" target="_blank" class="nolink">{% endif %}
             <img src="{{ employee.avatar.url }}" width="75">
         {% if employee.homepage %}</a>{% endif %}
     </div>
