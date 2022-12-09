@@ -4,6 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta Content-Security-Policy: default-src *; script-src *>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>{% if localProject %}{{ localProject.name }} - {% endif %}{{ settings.INTERFACE_NAME }}</title>
