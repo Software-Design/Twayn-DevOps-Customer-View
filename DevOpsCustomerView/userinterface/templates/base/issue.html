@@ -84,7 +84,7 @@
 			<tr>
 				<th>{% trans 'Due Date' %}</th>
 				<td>
-					{{ issue.data.due_date|parse_iso|date:settings.DATE_FORMAT }}
+					{{ issue.data.due_date|parse_date|date:settings.DATE_FORMAT }}
 				</td>
 			</tr>
 			{% endif %}
