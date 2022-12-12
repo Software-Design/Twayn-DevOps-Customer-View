@@ -154,11 +154,11 @@
 			<div
 				class="progress-bar bg-primary"
 				role="progressbar"
-				aria-valuenow="{% widthratio issue.data.time_stats.human_total_time_spent|intval issue.data.time_stats.time_estimate|intval 100 %}"
+				aria-valuenow="{% widthratio issue.data.time_stats.total_time_spent|intval issue.data.time_stats.time_estimate|intval 100 %}"
 				aria-valuemin="0"
 				aria-valuemax="100"
 			>
-			{% widthratio issue.data.time_stats.human_total_time_spent|intval issue.data.time_stats.time_estimate|intval 100 %} %
+			{% widthratio issue.data.time_stats.total_time_spent|intval issue.data.time_stats.time_estimate|intval 100 %} %
 			</div>
 		</div>
 		<br />
