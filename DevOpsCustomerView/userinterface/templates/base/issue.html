@@ -95,7 +95,9 @@
 					{% for label in issue.data.labels %}
 						{% with names=label.name|split:"::" %}
 							{% if names|length > 1 %}
-								<span class="badge bg-primary">{{ names.0|capfirst }}: {{ names.1|capfirst }}{% else %}{{ names.0|capfirst }}</span>
+								<span class="badge bg-primary">{{ names.0|capfirst }}: {{ names.1|capfirst }}</span>
+							{% else %}	
+								<span class="badge bg-primary">{{ label }}</span>
 							{% endif %}
 						{% endwith %}
 					{% endfor %}
