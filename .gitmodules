@@ -1,0 +1,6 @@
+[submodule "DevOpsCustomerView/DevOpsCustomerView/userinterface/templates/software-design"]
+	path = DevOpsCustomerView/DevOpsCustomerView/userinterface/templates/software-design
+	url = https://gitlab.com/sd-software-design/internal/gitlab-customer-view-sd-template.git
+[submodule "DevOpsCustomerView/userinterface/templates/software-design"]
+	path = DevOpsCustomerView/userinterface/templates/software-design
+	url = https://gitlab.com/sd-software-design/internal/gitlab-customer-view-sd-template.git
