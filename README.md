@@ -103,3 +103,6 @@ There are terms and conditions when using APIs - respect them.
 Since this project is meant to be an interface it should mainly use the DevOp tools as a data source and store as little information as poissible within its own database.
 3. Don't break the permission and access control features of the DevOp tools - use them! 
 Assign individual tokens to each user and don't use any method that allows access beyond the token-based permissions.
+
+## Known issues on Windows-Maschines
+1. wkhtml : please adjust WKHTML_OUTPUT_PATH = '/tmp/' to '//' in your local.py if you are using a Windows-System 

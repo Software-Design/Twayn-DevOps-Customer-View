@@ -361,16 +361,17 @@ def printWiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRed
         return glProject
 
     projectIdentifier = glProject['localProject'].projectIdentifier
+   
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
-
-    pdfkit.from_string(template('print/wiki').render(glProject, request), '/tmp/'+projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
+    
+    pdfkit.from_string(template('print/wiki').render(glProject, request), settings.WKHTML_OUTPUT_PATH + projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
         'of')+' [topage]', '--footer-left': settings.INTERFACE_NAME, '--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
-
-    with open('/tmp/'+projectIdentifier+'.pdf', 'rb') as f:
+    print(projectIdentifier)
+    with open(settings.WKHTML_OUTPUT_PATH + projectIdentifier+'.pdf', 'rb') as f:
         file_data = f.read()
 
-    os.remove('/tmp/'+projectIdentifier+'.pdf')
+    os.remove(settings.WKHTML_OUTPUT_PATH + projectIdentifier+'.pdf')
 
     response = HttpResponse(file_data, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="documentation.pdf"'
