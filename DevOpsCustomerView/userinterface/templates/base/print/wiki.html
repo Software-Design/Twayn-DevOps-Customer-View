@@ -5,12 +5,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="{{ settings.INTERFACE_URL }}/static/cdn/css/bootstrap.min.css">
-    <style>
-        body { 
-            font-size: 20px;
-            font-family: 'Helvetica';
-        }
-    </style>
+    <script defer src="https://software-design.de/static/vendor/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
   </head>
   <body class="p-5">
       <div style="width: 80%; float: left;">
@@ -21,7 +16,7 @@
               {% include t with links=False %}
             {% endwith %}
         </div>
-        <br />
+        <br >
       </div>
       <div style="width: 20%; float: right;">
         {% if localProject.image %}
