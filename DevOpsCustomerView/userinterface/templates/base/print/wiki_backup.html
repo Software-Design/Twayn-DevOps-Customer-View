@@ -1,0 +1,63 @@
+{% load i18n %}
+{% load markdown %}
+{% load template %}
+
+<html>
+  <script defer src="https://software-design.de/static/vendor/fontawesome-pro-5.15.4/js/fontawesome.min.js"></script>
+  <script defer src="https://software-design.de/static/vendor/fontawesome-pro-5.15.4/js/regular.min.js"></script>
+  <script defer src="https://software-design.de/static/vendor/fontawesome-pro-5.15.4/js/brands.min.js"></script>
+  <script defer src="https://software-design.de/static/vendor/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
+  <script defer src="https://software-design.de/static/vendor/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+  <script defer nonce="{{ request.csp_nonce }}" src="/static/vendor/simplemde/simplemde.min.js"></script>
+  <script defer nonce="{{ request.csp_nonce }}" src="/static/js/base.js"></script>
+  <link rel="stylesheet" href="https://software-design.de/static/vendor/bootstrap-5.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://software-design.de/static/fonts/LatoLatin/latolatinfonts.css">
+  <body>
+
+      <div >
+        <button class="btn btn-primary">test</button>
+        <div style="width: 100%; float: left;border: 1px;border-color: black; border-style: solid;">
+          <h1>{% trans "Documentation" %}</h1>
+        </div>
+        
+        <br><br>
+        <div style="line-height: 1.3em;">
+            {% with t='partials/tableofcontents'|template %}
+              {% include t with links=False %}
+            {% endwith %}
+        </div>
+        <br >
+      </div>
+      <div style="width: 20%; float: right;">
+        {% if localProject.image %}
+          <img src="{{ settings.INTERFACE_URL }}{{ localProject.image.url }}" class="float-end" width="200">
+        {% endif %}
+      </div>
+      
+    <div class="row">
+    {% for path, category in wikiPages.items %}
+        {% with forloop.counter as no %}
+        <div style="display:block; clear:both; page-break-after:always;"></div>
+        <div class="col-12 pt-5">
+
+          <h1 class="text-capitalize">
+            {{ no }} {% if path == '/' %}{% trans 'Documentation' %}{% else %}{{ path }}{% endif %}
+          </h1>
+
+              {% for page in category %}
+                {% if forloop.counter != 1 %} 
+                <div style="display:block; clear:both; page-break-after:always;"></div>
+                {% endif %}
+                <h2 class="text-capitalize pt-5">{{ no }}.{{ forloop.counter }} {{ page.title }}</h2>
+                <div class="px-4" style="text-align: justify">
+                  {% autoescape off %}
+                    {% wikicontent page.slug localProject remoteProject %}
+                  {% endautoescape %}
+                </div>
+              {% endfor %}
+        </div>
+        {% endwith %}
+    {% endfor %}
+      </div>
+  </body>
+</html>
