@@ -27,19 +27,20 @@ customTranslations = {
     r"\[x\] -": '<input type="checkbox" checked disabled>',
     r"\[ \]": '<input type="checkbox" disabled>',
     r"\[x\]": '<input type="checkbox" checked disabled>',
-    '<table>' : '<table class="table">'
+    r"<table>" : '<table class="table">',
+    r"<th>": '<td style="text-align:left">'
     #'<ul>': '<ul class="list-group">',
     #'<li>': '<li class="list-group-item">'
 }
 
 @register.filter()
 def markdown(text):
-    print(text)
+    
     text = md.markdown(text,extensions=['fenced_code', 'nl2br','markdown.extensions.tables','pymdownx.tilde'])
     print(text)
     for key,value in customTranslations.items():          
         text = re.sub(key,value,text)
-    print(text)
+    
     for employee in TeamMember.objects.all():
         text = text.replace('@'+employee.username,'%s').replace('%s',employee.name)
         text = text.replace(employee.username,'%s').replace('%s',employee.name)

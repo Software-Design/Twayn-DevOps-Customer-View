@@ -1,11 +1,11 @@
 {% load i18n %}
-<ol>
+<ol >
 {% for path, category in wikiPages.items %}
     {% if not request.GET.category or request.GET.category == path %}
         {% with forloop.counter as no %}
-            <li style="list-style-type: none;">{{ no }} {% if path == '/' %}{% trans 'Documentation' %}{% else %}{{ path }}{% endif %}</li>
+            <li style="list-style-type: none;line-height:150%">{{ no }} {% if path == '/' %}{% trans 'Documentation' %}{% else %}{{ path }}{% endif %}</li>
                 {% for page in category %}
-                <li style="list-style-type: none;"> &nbsp; {% if links != False %}<a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/{{ page.slug }}">{{ no }}.{{ forloop.counter }} {{ page.title }}</a>{% else %}{{ no }}.{{ forloop.counter }} {{ page.title }}{% endif %}
+                <li style="list-style-type: none;line-height:150%"> &nbsp; {% if links != False %}<a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/{{ page.slug }}">{{ no }}.{{ forloop.counter }} {{ page.title }}</a>{% else %}{{ no }}.{{ forloop.counter }} {{ page.title }}{% endif %}
                 </li>
                 {% endfor %}
         {% endwith %}

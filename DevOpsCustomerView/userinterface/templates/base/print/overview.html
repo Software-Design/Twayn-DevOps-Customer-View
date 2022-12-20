@@ -5,26 +5,29 @@
 
 <html>
   <head>
-    <link rel="stylesheet" href="{{ settings.INTERFACE_URL }}/static/cdn/css/bootstrap.min.css">
+    <script defer src="https://software-design.de/static/vendor/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
     <style>
-        body { 
-            font-size: 20px;
-            font-family: 'Helvetica';
-        }
+      table {
+        width: 1000px;
+      }
+      body {
+        font-family: "Arial", sans-serif;
+      }
     </style>
+    <link rel="stylesheet" href="https://software-design.de/static/vendor/bootstrap-5.1.3/css/bootstrap.min.css">
   </head>
   <body class="p-5">
       <div style="width: 80%; padding-right: 20px; float: left">
         <h1>{% trans "Overview" %}: {{ localProject.name }}</h1>
         <br><br>
         <div style="line-height: 1.3em;">
-          {{ remoteProject.description|markdown }}
+          {{ remoteProject.description}}
         </div>
         <br />
       </div>
       <div style="width: 20%; float: right;">
         {% if localProject.image %}
-          <img src="{{ settings.INTERFACE_URL }}{{ localProject.image.url }}" class="float-end" width="200">
+          <img src="{{ settings.INTERFACE_URL }}{{ localProject.image.url }}" class="float-end" height="80" width="auto">
         {% endif %}
       </div>
     <table class="w-100 table">
