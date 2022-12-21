@@ -37,8 +37,10 @@
         <td>{{ remoteProject.description }}</td>
       </tr>
     </table>
+
     <br>
     <br>
+
     <!-- Index -->
     <table>
       <tr>
@@ -50,6 +52,7 @@
       </tr>
     </table>
 
+    <!-- Pages -->
    <div class="row">
     {% for path, category in wikiPages.items %}
         {% with forloop.counter as no %}

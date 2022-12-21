@@ -26,7 +26,7 @@ from .tools.viewsHelper import getProject
 def index(request: WSGIRequest) -> Union[HttpResponseRedirect, HttpResponse]:
     """
     Handles the requests for /
-    Provites the login mechanism to authenticate users
+    Provides the login mechanism to authenticate users
     """
 
     if request.user.is_authenticated:
@@ -367,7 +367,7 @@ def printWiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRed
     
     pdfkit.from_string(template('print/wiki').render(glProject, request), settings.WKHTML_OUTPUT_PATH + projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
         'of')+' [topage]', '--footer-left': settings.INTERFACE_NAME, '--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
-    print(projectIdentifier)
+    
     with open(settings.WKHTML_OUTPUT_PATH + projectIdentifier+'.pdf', 'rb') as f:
         file_data = f.read()
 
