@@ -6,6 +6,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 import os, hashlib, datetime
 
+
 class TeamMember(models.Model):
     """Overwrite profile information of GitLab Users
 
@@ -21,6 +22,7 @@ class TeamMember(models.Model):
     phone = models.CharField(max_length=200)
     homepage = models.CharField(max_length=1000,null=True,blank=True)
     username = models.CharField(max_length=200)
+    
 
 class Project(models.Model):
     """Representation of the hosted project
@@ -36,6 +38,8 @@ class Project(models.Model):
             self.save()
         return self.privateUrlHash
 
+    
+
     assignees = models.ManyToManyField(TeamMember, blank=True)
 
     name = models.CharField(max_length=500)
@@ -43,7 +47,9 @@ class Project(models.Model):
 
     publicOverviewPassword = models.CharField(max_length=64,default="",null=True,blank=True,help_text="If no password is set, the public overview page is not accessible")
     publicOverviewText = RichTextField(null=True,blank=True)
-
+    
+    firstEMailAdress = models.CharField(max_length=100,default=None,help_text="first notification eMail-Address if a costumer added a new  ticket")
+    
     enableDocumentation = models.BooleanField(default=True,help_text="Make the documentation accessible for users")
     enableMilestones = models.BooleanField(default=True,help_text="Visualize milestones and create a gantt chart")
     enableTicketCreation = models.BooleanField(default=True,help_text="Allow customers to create new tickets")

@@ -3,6 +3,7 @@ import os
 from typing import Union
 
 import pdfkit
+from django.core.mail import EmailMessage, send_mail
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -194,9 +195,16 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
         try:
             issue = glProject['remoteProject'].issues.create(body)
             cache.delete('glp_'+glProject['localProject'].projectIdentifier+'issues_'+str(issue.iid))
+            if  settings.SEND_MAIL:
+                subjecttext = 'Hello, there is a new ticket in {}'.format(glProject['localProject'].name)
+                messagetext = f'Title : {request.POST["title"]}\nLabel : {request.POST["label"]}\nMilestone :{request.POST["milestone"]}\nDescription : {request.POST["description"]}'
+                print(subjecttext)               
+                sendingEmail([glProject['localProject'].firstEMailAdress],messagetext,subjecttext)
         except:
             return redirect(url+'?error=invalid')
         return redirect(url)
+
+        
 
     return HttpResponse(template('issueCreate').render(glProject, request))
 
@@ -441,3 +449,10 @@ def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
     if(url_has_allowed_host_and_scheme(redirectUrl, None)):
         return redirect(iri_to_uri(redirectUrl))
     return redirect('/')
+
+
+def sendingEmail(recipient,msgtext,subject):
+           
+    email_from = "noreply@software-design.de"
+    email = EmailMessage(subject,msgtext,email_from,recipient)
+    email.send()
