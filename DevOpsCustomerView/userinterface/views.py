@@ -198,7 +198,7 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
             if  settings.SEND_MAIL:
                 subjecttext = 'Hello, there is a new ticket in {}'.format(glProject['localProject'].name)
                 messagetext = f'Title : {request.POST["title"]}\nLabel : {request.POST["label"]}\nMilestone :{request.POST["milestone"]}\nDescription : {request.POST["description"]}'
-                print(subjecttext)               
+                # send mail if ticket is saved       
                 sendingEmail([glProject['localProject'].firstEMailAdress],messagetext,subjecttext)
         except:
             return redirect(url+'?error=invalid')
@@ -452,7 +452,9 @@ def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
 
 
 def sendingEmail(recipient,msgtext,subject):
-           
+    """
+    Send E-Mail after new issue is saved. 
+    """
     email_from = "noreply@software-design.de"
     email = EmailMessage(subject,msgtext,email_from,recipient)
     email.send()
