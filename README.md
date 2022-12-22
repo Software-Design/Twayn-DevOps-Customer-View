@@ -105,4 +105,9 @@ Since this project is meant to be an interface it should mainly use the DevOp to
 Assign individual tokens to each user and don't use any method that allows access beyond the token-based permissions.
 
 ## Known issues on Windows-Maschines
-1. wkhtml : please adjust WKHTML_OUTPUT_PATH = '/tmp/' to '//' in your local.py if you are using a Windows-System 
+
+1. wkhtmltopdf
+when using wkhtmltopdf on Windows systems an OS error can occur if an output directory is selected that is not accessible.
+QPainter::begin(): Return false
+Error: Unable to write to destination
+You have to change the output directory in settings.py or local.py using WKHTML_OUTPUT_PATH
