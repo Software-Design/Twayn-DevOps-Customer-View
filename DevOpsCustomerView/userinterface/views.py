@@ -181,7 +181,7 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
     Handles the requests for /project/<slug:slug>/<int:id>/issues/create
     Creates a new issue for the project specified with the id
     """
-
+    
     glProject = getProject(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
@@ -197,10 +197,11 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
             issue = glProject['remoteProject'].issues.create(body)
             cache.delete('glp_'+glProject['localProject'].projectIdentifier+'issues_'+str(issue.iid))
             if  settings.SEND_MAIL:
+                milestone = loadMilestones(glProject['localProject'], glProject['remoteProject'],request.POST['milestone'])
                 subjecttext = 'Hello, there is a new ticket in {}'.format(glProject['localProject'].name)
-                messagetext = f'Title : {request.POST["title"]}\nLabel : {request.POST["label"]}\nMilestone :{request.POST["milestone"]}\nDescription : {request.POST["description"]}'
+                messagetext = f'Title : {request.POST["title"]}\nLabel : {request.POST["label"]}\nMilestone : {milestone.title}\nDescription : {request.POST["description"]}'
                 # send mail if ticket is saved       
-                sendingEmail([glProject['localProject'].firstEMailAdress],messagetext,subjecttext)
+                sendingEmail([glProject['localProject'].firstEMailAddress],messagetext,subjecttext)
         except:
             return redirect(url+'?error=invalid')
         return redirect(url)
