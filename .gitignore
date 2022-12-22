@@ -10,3 +10,4 @@ DevOpsCustomerView/db.sqlite3
 DevOpsCustomerView/main/local.py
 report.xml
 DevOpsCustomerView/userinterface/templates/software-design
+local.py

@@ -12,7 +12,7 @@ class AssignmentAdmin(ImportExportModelAdmin):
         return '{} {}'.format(assigment.user.first_name,assigment.user.last_name)
 
 class ProjectAdmin(ImportExportModelAdmin):
-    list_display = ('name', 'firstEMailAdress','assigneesNames', 'projectIdentifier')
+    list_display = ('name', 'firstEMailAddress','assigneesNames', 'projectIdentifier')
     exclude = ('privateUrlHash','')
 
     def assigneesNames(self,project):
