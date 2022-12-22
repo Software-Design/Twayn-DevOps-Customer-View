@@ -146,6 +146,8 @@ EMAIL_HOST = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
+#E-Mail sender from witch user gets notified if a new ticket is created by the customer
+EMAIL_FROM = ''
 
 """
 =========================================================

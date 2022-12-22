@@ -37,3 +37,15 @@ CACHE_WIKI = 60 * 60 * 4
 
 DATETIME_FORMAT = "d.m.y H:i"
 DATE_FORMAT = "d.m.y"
+
+#set to True to use eMail System
+SEND_MAIL = False
+#email settings
+EMAIL_BACKEND = ''
+EMAIL_USE_TLS = True
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 587
+#E-Mail sender from witch user gets notified if a new ticket is created by the customer
+EMAIL_FROM = ''

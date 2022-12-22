@@ -449,12 +449,14 @@ def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
     if(url_has_allowed_host_and_scheme(redirectUrl, None)):
         return redirect(iri_to_uri(redirectUrl))
     return redirect('/')
-
+#
+#eMail System
+#
 
 def sendingEmail(recipient,msgtext,subject):
     """
     Send E-Mail after new issue is saved. 
     """
-    email_from = "noreply@software-design.de"
+    email_from = settings.EMAIL_FROM
     email = EmailMessage(subject,msgtext,email_from,recipient)
     email.send()
