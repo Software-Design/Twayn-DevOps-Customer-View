@@ -3,7 +3,6 @@ import os
 from typing import Union
 
 import pdfkit
-from django.core.mail import EmailMessage, send_mail
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
