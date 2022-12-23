@@ -42,7 +42,7 @@ class Project(models.Model):
     image = models.ImageField(blank=True)
     publicOverviewPassword = models.CharField(max_length=64,default="",null=True,blank=True,help_text="If no password is set, the public overview page is not accessible")
     publicOverviewText = RichTextField(null=True,blank=True)
-    firstEMailAddress = models.CharField(max_length=100,default=None,help_text="E-Mail Address that gets notified if a new ticket is created by the custome")
+    firstEMailAddress = models.CharField(max_length=100,default=None,help_text="E-Mail Address that gets notified if a new ticket is created by the customer")
     enableDocumentation = models.BooleanField(default=True,help_text="Make the documentation accessible for users")
     enableMilestones = models.BooleanField(default=True,help_text="Visualize milestones and create a gantt chart")
     enableTicketCreation = models.BooleanField(default=True,help_text="Allow customers to create new tickets")
