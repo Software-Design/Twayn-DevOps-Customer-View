@@ -13,7 +13,7 @@ class AssignmentAdmin(ImportExportModelAdmin):
 
 class ProjectAdmin(ImportExportModelAdmin):
     list_display = ('name', 'firstEMailAddress','assigneesNames', 'projectIdentifier')
-    exclude = ('privateUrlHash','')
+    exclude = ('privateUrlHash',)
 
     def assigneesNames(self,project):
         assignees = ""
