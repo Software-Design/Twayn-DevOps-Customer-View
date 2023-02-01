@@ -18,7 +18,7 @@
         <h1>{% trans "Overview" %}: {{ localProject.name }}</h1>
         <br><br>
         <div style="line-height: 1.3em;">
-          {{ remoteProject.description|markdown }}
+          {% autoescape off %}{{ remoteProject.description|markdown }}{% endautoescape %}
         </div>
         <br />
       </div>
