@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='firstEMailAdress',
-            field=models.CharField(default=None, help_text='first notification eMail-Address if a costumer added a new  ticket', max_length=100),
+            field=models.CharField(default=None, help_text='first notification eMail-Address if a costumer added a new  ticket', max_length=100, null=True),
         ),
     ]
