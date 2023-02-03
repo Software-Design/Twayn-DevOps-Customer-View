@@ -171,7 +171,7 @@ def issueList(request, slug, id):
 
     glProject['issues'] = loadIssues(glProject['localProject'], glProject['remoteProject'], page=request.GET.get('page', 1), status=request.GET.get('status',None), label=request.GET.get('label',None))
 
-    return HttpResponse(template('issueList').render(glProject, request))
+    return HttpResponse(template('issue/list').render(glProject, request))
 
 
 @login_required
@@ -207,7 +207,7 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
 
         
 
-    return HttpResponse(template('issueCreate').render(glProject, request))
+    return HttpResponse(template('issue/create').render(glProject, request))
 
 
 @login_required
@@ -232,7 +232,7 @@ def issue(request: WSGIRequest, slug: str, id: int, issue: int) -> HttpResponse:
     glProject['issue'] = loadIssues(
         glProject['localProject'], glProject['remoteProject'], iid=issue)
 
-    return HttpResponse(template('issue').render(glProject, request))
+    return HttpResponse(template('issue/view').render(glProject, request))
 
 
 @login_required
@@ -249,7 +249,7 @@ def milestones(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
-    return HttpResponse(template('milestones').render(glProject, request))
+    return HttpResponse(template('milestone/list').render(glProject, request))
 
 
 @login_required
@@ -281,7 +281,7 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid:int) -> HttpRes
     
     issues['totalTime'] = issues['timeEstimated'] + issues['timeSpent']
 
-    return HttpResponse(template('milestoneBoard').render(glProject | {'issues': issues, 'milestone': milestone, 'total': len(issues['open'])+len(issues['assigned'])+len(issues['closed'])}, request))
+    return HttpResponse(template('milestone/board').render(glProject | {'issues': issues, 'milestone': milestone, 'total': len(issues['open'])+len(issues['assigned'])+len(issues['closed'])}, request))
 
 @login_required
 def downloadFiles(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
@@ -333,7 +333,7 @@ def wiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRedirect
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
-    return HttpResponse(template('wiki').render(glProject, request))
+    return HttpResponse(template('wiki/overview').render(glProject, request))
 
 
 @login_required
@@ -354,7 +354,7 @@ def wikiPage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
     glProject['page'] = loadWikiPage(
         glProject['localProject'], glProject['remoteProject'], page)
 
-    return HttpResponse(template('wikipage').render(glProject, request))
+    return HttpResponse(template('wiki/page').render(glProject, request))
 
 
 @login_required
