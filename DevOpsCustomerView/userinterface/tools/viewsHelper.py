@@ -39,6 +39,6 @@ def getProject(request: WSGIRequest, id: int) -> Union[dict, HttpResponse]:
         if '404' in project['error']:
             raise Http404
         else:
-            return HttpResponse(template('defaultErrorPage').render({ **project }, request))
+            return HttpResponse(template('404').render({ **project }, request))
 
     return project

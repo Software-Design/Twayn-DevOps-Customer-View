@@ -63,7 +63,7 @@ def loggingout(request: WSGIRequest) -> HttpResponseRedirect:
 
 
 @login_required
-def overview(request: WSGIRequest) -> HttpResponse:
+def projectList(request: WSGIRequest) -> HttpResponse:
     """
     Handles the requests for /overview
     Gets all projects to show on the page
@@ -87,10 +87,10 @@ def overview(request: WSGIRequest) -> HttpResponse:
             except:
                 activeProjects.append(glProject)
 
-    return HttpResponse(template('overview').render({'inactiveProjects': inactiveProjects, 'activeProjects': activeProjects}, request))
+    return HttpResponse(template('project/list').render({'inactiveProjects': inactiveProjects, 'activeProjects': activeProjects}, request))
 
 
-def publicOverview(request: WSGIRequest, slug:str, id:int, hash:str) -> HttpResponse:
+def projectPublic(request: WSGIRequest, slug:str, id:int, hash:str) -> HttpResponse:
     """
     Generate an overview for a project that is accesible without having an account
     """
@@ -128,11 +128,11 @@ def publicOverview(request: WSGIRequest, slug:str, id:int, hash:str) -> HttpResp
     if lastMilestoneEnd and firstMilestoneStart:
         daysbetween = (lastMilestoneEnd - firstMilestoneStart).days
 
-    return HttpResponse(template('publicOverview').render(glProject | {'fileTypes': DownloadableFile, 'daysbetween': daysbetween}, request))
+    return HttpResponse(template('project/public').render(glProject | {'fileTypes': DownloadableFile, 'daysbetween': daysbetween}, request))
 
 
 @login_required
-def project(request, slug:str, id:int) -> HttpResponse:
+def projectView(request, slug:str, id:int) -> HttpResponse:
     
     glProject = getProject(request, id)
     if isinstance(glProject, HttpResponse):
@@ -155,7 +155,7 @@ def project(request, slug:str, id:int) -> HttpResponse:
     if lastMilestoneEnd and firstMilestoneStart:
         daysbetween = (lastMilestoneEnd - firstMilestoneStart).days
 
-    return HttpResponse(template('project').render(glProject | {'daysbetween': daysbetween}, request))
+    return HttpResponse(template('project/view').render(glProject | {'daysbetween': daysbetween}, request))
 
 
 @login_required
@@ -284,7 +284,7 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid:int) -> HttpRes
     return HttpResponse(template('milestone/board').render(glProject | {'issues': issues, 'milestone': milestone, 'total': len(issues['open'])+len(issues['assigned'])+len(issues['closed'])}, request))
 
 @login_required
-def downloadFiles(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
+def fileList(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     """
     Handles the requests for /project/<slug:slug>/<int:id>/download
     Get the information needed to display the files of the project specified with the id
@@ -297,9 +297,9 @@ def downloadFiles(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
-    return HttpResponse(template('downloadFiles').render(glProject | {'fileTypes': DownloadableFile}, request))
+    return HttpResponse(template('file/list').render(glProject | {'fileTypes': DownloadableFile}, request))
 
-def downloadFile(request: WSGIRequest, slug: str, id: int, file: str) -> HttpResponse:
+def fileDownload(request: WSGIRequest, slug: str, id: int, file: str) -> HttpResponse:
     """
     Given a file name from the uploads folder, download the file
     """
