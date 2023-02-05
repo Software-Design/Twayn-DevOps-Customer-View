@@ -18,7 +18,7 @@ run tests:
   script:
     - pip install -r requirements.txt
     - mv DevOpsCustomerView/main/local.py.example DevOpsCustomerView/main/local.py 
-    - echo "\nSECRET_KEY = 'test'" >> DevOpsCustomerView/main/local.py
+    - echo -e "\nSECRET_KEY = 'test'" >> DevOpsCustomerView/main/local.py
     - pytest --cov DevOpsCustomerView/ DevOpsCustomerView/userinterface/tests --junitxml=report.xml
     - coverage report
     - coverage xml
