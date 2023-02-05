@@ -112,4 +112,4 @@ class TestTemplateTags(TestCase):
         assert html == '<h1>Hi</h1>'
 
         html = markdown('[x] @skywalker was here')
-        assert html == '<input type="checkbox" checked disabled> Luke was here'
+        assert html == '<br><input type="checkbox" checked disabled> Luke was here<br>'
