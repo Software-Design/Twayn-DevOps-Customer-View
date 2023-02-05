@@ -6,6 +6,7 @@ import pdfkit
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.handlers.wsgi import WSGIRequest
@@ -63,6 +64,7 @@ def loggingout(request: WSGIRequest) -> HttpResponseRedirect:
 
 
 @login_required
+@staff_member_required
 def reportsOverview(request: WSGIRequest) -> HttpResponse:
     """
     Handles the requests for /overview
@@ -444,8 +446,8 @@ def printOverview(request: WSGIRequest, slug: str, id:  int, date: str):
 # Caching helpers
 #
 
-
 @login_required
+@staff_member_required
 def clearCache(request: WSGIRequest) -> HttpResponseRedirect:
     """
     Handles the requests for /cache/clear
@@ -461,6 +463,7 @@ def clearCache(request: WSGIRequest) -> HttpResponseRedirect:
 
 
 @login_required
+@staff_member_required
 def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
     """
     Handles the requests for /cache/warmup
