@@ -14,12 +14,23 @@
   <table class="table">
     <tr>
       <th>{% trans "Name" %}</th>
+      <th class="text-center">{% trans "Last activity" %}</th>
       <th class="text-center">{% trans "Active state" %}</th>
       <th class="text-center">{% trans "Active milestone" %}</th>
     </tr>
     {% for project in activeProjects %}
       <tr>
         <td><strong>{{ project.localProject.name }}</strong><br>{% trans "Last activity:" %} <em>{{ project.mostRecentIssues.0.updated_at|parse_iso }}</em></td>
+        <td class="text-center">
+          {% with dsince=project.mostRecentIssues.0.updated_at|parse_iso|dayssince %}
+          {% if dsince > 14 %}
+              <i class="fa far fa-engine-warning" style="color: red;"></i>
+            {% else %}
+              <i class="fa far fa-thumbs-up" style="color: green;"></i>
+            {% endif %}
+            <br><small class="text-muted">{{ dsince }} {% trans "days ago" %}</small>
+          {% endwith %}
+        </td>
         <td class="text-center">
           {% if not project.localProject.inactive %}
             {% if project.remoteProject.open_issues_count == 0 %}
