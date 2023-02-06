@@ -17,4 +17,7 @@ def parse_date(value):
 
 @register.filter(expects_localtime=True)
 def dayssince(value):
-    return(value - datetime.datetime.now()).days * -1
+    try:
+        return(value - datetime.datetime.now()).days * -1
+    except:
+        return '?'
