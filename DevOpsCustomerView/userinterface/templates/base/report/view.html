@@ -18,6 +18,7 @@
   <h2>{% trans "Project status" %}</h2>
   <table class="table">
     <tr>
+      <th></th>
       <th>{% trans "Name" %}</th>
       <th class="text-center">{% trans "Last activity" %}</th>
       <th class="text-center">{% trans "Active state" %}</th>
@@ -25,6 +26,11 @@
     </tr>
     {% for project in activeProjects %}
       <tr>
+        <td>
+          <a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}" class="nolink">
+            <img {% if project.localProject.inactive %}class="p-2 greyscale" style="max-height: 100px !important"{% else %}class="p-2"{% endif %} src="{% if project.localProject.image %}{{ project.localProject.image.url }}{% else %}{{ project.remoteProject.avatar_url }}{% endif %}" width="60">
+          </a>
+        </td>
         <td>
           <a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}" class="nolink">
             <strong>{{ project.localProject.name }}</strong><br>
@@ -35,7 +41,7 @@
         </td>
         <td class="text-center">
           {% with dsince=project.mostRecentIssues.0.updated_at|parse_iso|dayssince %}
-          {% if dsince > 14 %}
+          {% if dsince > 28 %}
               <i class="fa far fa-engine-warning" style="color: red;"></i>
             {% else %}
               <i class="fa far fa-thumbs-up" style="color: green;"></i>
@@ -66,7 +72,7 @@
           {% if not project.localProject.inactive %}
             {% if project.activeMilestones|length == 0 %}
               <i class="fa far fa-engine-warning" style="color: red;"></i>
-              <br><small class="text-muted">{% trans "active" %} + {% trans "without open milestones" %}</small>
+              <br><small class="text-muted">{% trans "active" %} + {% trans "without active milestones" %}</small>
             {% else %}
               <i class="fa far fa-thumbs-up" style="color: green;"></i>
               <br><small class="text-muted">{% trans "active" %} + {{ project.activeMilestones|length }} {% trans "active milestone(s)" %}</small>
@@ -74,7 +80,7 @@
           {% else %}
             {% if project.remoteProject.open_issues_count == 0 %}
               <i class="fa far fa-thumbs-up" style="color: green;"></i>
-              <br><small class="text-muted">{% trans "inactive" %} + {% trans "without open milestones" %}</small>
+              <br><small class="text-muted">{% trans "inactive" %} + {% trans "without active milestones" %}</small>
             {% else %}
               <i class="fa far fa-engine-warning" style="color: red;"></i>
               <br><small class="text-muted">{% trans "inactive" %} + {{ project.activeMilestones|length }} {% trans "active milestone(s)" %}</small>
@@ -104,9 +110,13 @@
               <li class="list-group-item">
                   <strong>{{ project.name }}</strong><br>
                   <div class="text-muted">
-                    {% for p in gl.activeMilestones %}
-                      <small>{{ p.title }} <em>({{ p.start_date|parse_date|date:"d.m.y" }} - {{ p.due_date|parse_date|date:"d.m.y" }})</em></small><br>
-                    {% endfor %}
+                    {% if gl.activeMilestones|length > 0 %}
+                      {% for p in gl.activeMilestones %}
+                        <small>{{ p.title }} <em>({{ p.start_date|parse_date|date:"d.m.y" }} - {{ p.due_date|parse_date|date:"d.m.y" }})</em></small><br>
+                      {% endfor %}
+                    {% else %}
+                      <small class="text-danger">{% trans "No active milestone" %}</small>
+                    {% endif %}
                   </div>
               </li>
             </a>
