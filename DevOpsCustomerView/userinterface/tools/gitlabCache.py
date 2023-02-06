@@ -1,10 +1,12 @@
 from typing import Union
 
 import gitlab
+from datetime import datetime
 from django.conf import settings
 from django.core.cache import cache
 from django.utils.translation import gettext as _
 from gitlab.v4.objects.wikis import ProjectWiki
+from userinterface.templatetags.dates import parse_date
 from userinterface.models import Project
 
 from .wikiParser import parseStructure
@@ -42,6 +44,8 @@ def loadProject(projectObject: Project, accessToken: str) -> dict:
                 'projectLabels': loadLabels(projectObject, glProject),
                 'projectReleases': loadReleases(projectObject, glProject),
             }
+        now = datetime.now()
+        project['activeMilestones'] = [m for m in list(project['allMilestones']) if not m.expired and m.state == 'active' and parse_date(m.start_date) < now and parse_date(m.due_date) >= now]
         cache.set(id,project,settings.CACHE_PROJECTS)
 
     return project
@@ -147,6 +151,7 @@ def loadReleases(projectObject: Project, tokenOrInstance) -> list:
     project = getInstance(projectObject, tokenOrInstance)
     id = f'glp_{projectObject.projectIdentifier}_releases'
 
+    glReleases = []
     labels = cache.get(id)
     if not labels:
         glReleases = project.releases.list()

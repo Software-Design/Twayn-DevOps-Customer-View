@@ -1,0 +1,167 @@
+{% extends base %}
+{% load i18n %}
+{% load static %}
+{% load dates %}
+{% load template %}
+
+{% block extra_css %}
+  <style>
+    .project .bar {
+      fill: #ff8128 !important;
+    }
+  </style>
+  <link rel="stylesheet" href="{% static 'vendor/frappe-gantt/frappe-gantt.min.css' %}">
+  <script nonce="{{ request.csp_nonce }}" src="{% static 'vendor/frappe-gantt/frappe-gantt.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <h2>{% trans "Project status" %}</h2>
+  <table class="table">
+    <tr>
+      <th>{% trans "Name" %}</th>
+      <th class="text-center">{% trans "Last activity" %}</th>
+      <th class="text-center">{% trans "Active state" %}</th>
+      <th class="text-center">{% trans "Active milestone" %}</th>
+    </tr>
+    {% for project in activeProjects %}
+      <tr>
+        <td>
+          <a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}" class="nolink">
+            <strong>{{ project.localProject.name }}</strong><br>
+          </a>
+          {% for member in project.localProject.assignees.all %}
+            <img src="{{ member.avatar.url }}" width="25" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
+          {% endfor %}
+        </td>
+        <td class="text-center">
+          {% with dsince=project.mostRecentIssues.0.updated_at|parse_iso|dayssince %}
+          {% if dsince > 14 %}
+              <i class="fa far fa-engine-warning" style="color: red;"></i>
+            {% else %}
+              <i class="fa far fa-thumbs-up" style="color: green;"></i>
+            {% endif %}
+            <br><small class="text-muted">{{ dsince }} {% trans "days ago" %}</small>
+          {% endwith %}
+        </td>
+        <td class="text-center">
+          {% if not project.localProject.inactive %}
+            {% if project.remoteProject.open_issues_count == 0 %}
+              <i class="fa far fa-engine-warning" style="color: red;"></i>
+              <br><small class="text-muted">{% trans "active" %} + {% trans "without open issues" %}</small>
+            {% else %}
+              <i class="fa far fa-thumbs-up" style="color: green;"></i>
+              <br><small class="text-muted">{% trans "active" %} + {{ project.remoteProject.open_issues_count }} {% trans "open issue(s)" %}</small>
+            {% endif %}
+          {% else %}
+            {% if project.remoteProject.open_issues_count != 0 %}
+              <i class="fa far fa-thumbs-up" style="color: green;"></i>
+              <br><small class="text-muted">{% trans "inactive" %} + {% trans "without open issues" %}</small>
+            {% else %}
+              <i class="fa far fa-engine-warning" style="color: red;"></i>
+              <br><small class="text-muted">{% trans "inactive" %} + {{ project.remoteProject.open_issues_count }} {% trans "open issue(s)" %}</small>
+            {% endif %}
+          {% endif %} 
+        </td>
+        <td class="text-center">
+          {% if not project.localProject.inactive %}
+            {% if project.activeMilestones|length == 0 %}
+              <i class="fa far fa-engine-warning" style="color: red;"></i>
+              <br><small class="text-muted">{% trans "active" %} + {% trans "without open milestones" %}</small>
+            {% else %}
+              <i class="fa far fa-thumbs-up" style="color: green;"></i>
+              <br><small class="text-muted">{% trans "active" %} + {{ project.activeMilestones|length }} {% trans "active milestone(s)" %}</small>
+            {% endif %}
+          {% else %}
+            {% if project.remoteProject.open_issues_count == 0 %}
+              <i class="fa far fa-thumbs-up" style="color: green;"></i>
+              <br><small class="text-muted">{% trans "inactive" %} + {% trans "without open milestones" %}</small>
+            {% else %}
+              <i class="fa far fa-engine-warning" style="color: red;"></i>
+              <br><small class="text-muted">{% trans "inactive" %} + {{ project.activeMilestones|length }} {% trans "active milestone(s)" %}</small>
+            {% endif %}
+          {% endif %} 
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+  <br>
+  <h2>{% trans "Employees" %}</h2>
+  <br>
+  {% for member in members %}
+    <div class="row">
+      <div class="col-1 text-center">
+        <img src="{{ member.avatar.url }}" width="50" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
+      </div>    
+      <div class="col-7">
+        <h4>{{ member.name }}</h4><br>
+        <svg id="gantt{{ member.pk }}"></svg>
+      </div>
+      <div class="col-4">
+        <h5>{% blocktranslate with projectCount=member.getActiveProjects|length %}In {{ projectCount }} active projects involved{% endblocktranslate %}:</h5>
+        {% for project in member.getActiveProjects %}
+          {% with gl=project.loadRemoteProject %}
+            <a href="/project/{{ gl.remoteProject.path }}/{{ gl.remoteProject.id }}" class="nolink">
+              <li class="list-group-item">
+                  <strong>{{ project.name }}</strong><br>
+                  <div class="text-muted">
+                    {% for p in gl.activeMilestones %}
+                      <small>{{ p.title }} <em>({{ p.start_date|parse_date|date:"d.m.y" }} - {{ p.due_date|parse_date|date:"d.m.y" }})</em></small><br>
+                    {% endfor %}
+                  </div>
+              </li>
+            </a>
+          {% endwith %}
+        {% endfor %}
+      </div>
+    </div>
+    <hr>
+    <script nonce="{{ request.csp_nonce }}">
+      var tasks = [
+
+      {% for project in member.getActiveProjects %}
+        {% with gl=project.loadRemoteProject %}
+          {
+            id: '{{ project.id }}0',
+            name: '{{ project.name }}',
+            start: '{% with lastMilestone=gl.allMilestones|last %}{{ lastMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
+            end: '{{ gl.allMilestones.0.due_date|parse_date|date:"Y-m-d" }}',
+            progress: 0,
+            custom_class: 'project' 
+          },
+          {% for milestone in gl.allMilestones reversed %} 
+            {% if milestone.start_date and milestone.due_date %}
+              {% with milestone.due_date|parse_date|dayssince as dayssince %}
+                {% if milestone.expired == False or milestone.expired == True and dayssince < 365 %}
+                {
+                  id: '{{ project.id }}{{ forloop.counter }}',
+                  name: '{{ milestone.title }}',
+                  start: '{{ milestone.start_date|parse_date|date:"Y-m-d" }}',
+                  end: '{{ milestone.due_date|parse_date|date:"Y-m-d" }}',
+                  progress: 0,
+                  dependencies: '{{ project.id }}{{ forloop.counter0 }}',
+                },
+                {% endif %}
+              {% endwith %}
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
+      {% endfor %}
+      ]
+      var gantt = new Gantt(document.querySelector('#gantt{{ member.pk }}'), tasks, {
+          header_height: 20,
+          column_width: 30,
+          step: 24,
+          bar_height: 20,
+          bar_corner_radius: 0,
+          arrow_curve: 7,
+          padding: 18,
+          custom_popup_html: function(task) {
+            window.location = '/project/{{ gl.remoteProject.path }}/{{ gl.remoteProject.id }}/milestone/'+task.id;
+            return ``;
+          },
+          view_mode: 'Month',
+          date_format: 'YYYY-MM-DD',
+      });
+    </script>
+  {% endfor %}
+{% endblock %}

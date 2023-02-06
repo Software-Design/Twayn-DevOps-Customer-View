@@ -6,6 +6,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 import os, hashlib, datetime
 
+
 class TeamMember(models.Model):
     """Overwrite profile information of GitLab Users
 
@@ -22,6 +23,8 @@ class TeamMember(models.Model):
     homepage = models.CharField(max_length=1000,null=True,blank=True)
     username = models.CharField(max_length=200)
     
+    def getActiveProjects(self):
+        return self.project_set.filter(inactive=False)
 
 class Project(models.Model):
     """Representation of the hosted project
@@ -36,6 +39,10 @@ class Project(models.Model):
             self.privateUrlHash = hashlib.md5((settings.SECRET_KEY+self.projectIdentifier+datetime.datetime.now().strftime(settings.DATETIME_FORMAT)).encode('utf-8')).hexdigest()
             self.save()
         return self.privateUrlHash
+
+    def loadRemoteProject(self):
+        from .tools.gitlabCache import loadProject
+        return loadProject(self, UserProjectAssignment.objects.filter(project=self).first().accessToken)
 
     assignees = models.ManyToManyField(TeamMember, blank=True)
     name = models.CharField(max_length=500)

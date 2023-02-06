@@ -6,6 +6,7 @@ import pdfkit
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.handlers.wsgi import WSGIRequest
@@ -60,6 +61,26 @@ def loggingout(request: WSGIRequest) -> HttpResponseRedirect:
 
     logout(request)
     return redirect('/')
+
+
+@login_required
+@staff_member_required
+def reportOverview(request: WSGIRequest) -> HttpResponse:
+    """
+    Handles the requests for /report
+    Gets all projects to show on the page
+    """
+
+    members = TeamMember.objects.all()
+
+    projectAssignments = UserProjectAssignment.objects.filter(project__closed=False).order_by('project__name').all()
+ 
+    activeProjects = []
+    for assignment in projectAssignments:
+        glProject = loadProject(assignment.project, assignment.accessToken)
+        activeProjects.append(glProject)
+
+    return HttpResponse(template('report/view').render({'members': members, 'activeProjects': activeProjects}, request))
 
 
 @login_required
@@ -416,8 +437,8 @@ def printOverview(request: WSGIRequest, slug: str, id:  int, date: str):
 # Caching helpers
 #
 
-
 @login_required
+@staff_member_required
 def clearCache(request: WSGIRequest) -> HttpResponseRedirect:
     """
     Handles the requests for /cache/clear
@@ -433,6 +454,7 @@ def clearCache(request: WSGIRequest) -> HttpResponseRedirect:
 
 
 @login_required
+@staff_member_required
 def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
     """
     Handles the requests for /cache/warmup

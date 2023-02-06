@@ -96,6 +96,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarWikiDropdown">
                   <li><a class="dropdown-item" href="/admin/">{% trans "Administration" %}</a></li>
+                  <li><a class="dropdown-item" href="/reports/">{% trans "Reports" %}</a></li>
                   <li><a class="dropdown-item" href="/cache/clear?redirect={{ request.path }}">{% trans "Clear cache" %}</a></li>
                   <li><a class="dropdown-item" href="/cache/warmup?redirect={{ request.path }}">{% trans "Warmup cache" %}</a></li>
                 </ul>
@@ -117,7 +118,7 @@
         {% endblock %}
           <br>
           <hr>  
-          &copy; 2022
+          &copy; {% now "Y" %}
           <p class="float-end">powered by <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view" class="text-muted" target="_blank"><strong>Twayn</strong> - DevOps Customer View</a></p>
           <br><br>
         </div>
