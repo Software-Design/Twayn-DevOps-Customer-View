@@ -129,32 +129,34 @@
       var tasks = [
 
       {% for project in member.getActiveProjects %}
-        {% with gl=project.loadRemoteProject %}
-          {
-            id: '{{ project.id }}0',
-            name: '{{ project.name }}',
-            start: '{% with lastMilestone=gl.allMilestones|last %}{{ lastMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
-            end: '{{ gl.allMilestones.0.due_date|parse_date|date:"Y-m-d" }}',
-            progress: 0,
-            custom_class: 'project' 
-          },
-          {% for milestone in gl.allMilestones reversed %} 
-            {% if milestone.start_date and milestone.due_date %}
-              {% with milestone.due_date|parse_date|dayssince as dayssince %}
-                {% if milestone.expired == False or milestone.expired == True and dayssince < 365 %}
-                {
-                  id: '{{ project.id }}{{ forloop.counter }}',
-                  name: '{{ milestone.title }}',
-                  start: '{{ milestone.start_date|parse_date|date:"Y-m-d" }}',
-                  end: '{{ milestone.due_date|parse_date|date:"Y-m-d" }}',
-                  progress: 0,
-                  dependencies: '{{ project.id }}{{ forloop.counter0 }}',
-                },
-                {% endif %}
-              {% endwith %}
-            {% endif %}
-          {% endfor %}
-        {% endwith %}
+        {% if not project.closed %}
+          {% with gl=project.loadRemoteProject %}
+            {
+              id: '{{ project.id }}0',
+              name: '{{ project.name }}',
+              start: '{% with lastMilestone=gl.allMilestones|last %}{{ lastMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
+              end: '{{ gl.allMilestones.0.due_date|parse_date|date:"Y-m-d" }}',
+              progress: 0,
+              custom_class: 'project' 
+            },
+            {% for milestone in gl.allMilestones reversed %} 
+              {% if milestone.start_date and milestone.due_date %}
+                {% with milestone.due_date|parse_date|dayssince as dayssince %}
+                  {% if milestone.expired == False or milestone.expired == True and dayssince < 365 %}
+                  {
+                    id: '{{ project.id }}{{ forloop.counter }}',
+                    name: '{{ milestone.title }}',
+                    start: '{{ milestone.start_date|parse_date|date:"Y-m-d" }}',
+                    end: '{{ milestone.due_date|parse_date|date:"Y-m-d" }}',
+                    progress: 0,
+                    dependencies: '{{ project.id }}{{ forloop.counter0 }}',
+                  },
+                  {% endif %}
+                {% endwith %}
+              {% endif %}
+            {% endfor %}
+          {% endwith %}
+        {% endif %}
       {% endfor %}
       ]
       var gantt = new Gantt(document.querySelector('#gantt{{ member.pk }}'), tasks, {
