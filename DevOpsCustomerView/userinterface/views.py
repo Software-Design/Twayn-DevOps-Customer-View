@@ -78,7 +78,8 @@ def reportOverview(request: WSGIRequest) -> HttpResponse:
     activeProjects = []
     for assignment in projectAssignments:
         glProject = loadProject(assignment.project, assignment.accessToken)
-        activeProjects.append(glProject)
+        if not glProject in activeProjects:
+            activeProjects.append(glProject)
 
     return HttpResponse(template('report/view').render({'members': members, 'activeProjects': activeProjects}, request))
 

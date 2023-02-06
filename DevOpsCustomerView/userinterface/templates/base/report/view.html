@@ -53,7 +53,7 @@
               <br><small class="text-muted">{% trans "active" %} + {{ project.remoteProject.open_issues_count }} {% trans "open issue(s)" %}</small>
             {% endif %}
           {% else %}
-            {% if project.remoteProject.open_issues_count != 0 %}
+            {% if project.remoteProject.open_issues_count == 0 %}
               <i class="fa far fa-thumbs-up" style="color: green;"></i>
               <br><small class="text-muted">{% trans "inactive" %} + {% trans "without open issues" %}</small>
             {% else %}
@@ -148,7 +148,7 @@
       {% endfor %}
       ]
       var gantt = new Gantt(document.querySelector('#gantt{{ member.pk }}'), tasks, {
-          header_height: 20,
+          header_height: 50,
           column_width: 30,
           step: 24,
           bar_height: 20,

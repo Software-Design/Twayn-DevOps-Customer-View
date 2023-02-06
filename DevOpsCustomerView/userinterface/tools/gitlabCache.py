@@ -186,7 +186,7 @@ def loadMilestones(projectObject: Project, tokenOrInstance, iid:int=None) -> Uni
         if iid:
             milestones = project.milestones.get(iid)
         else:
-            milestones = project.milestones.list()
+            milestones = project.milestones.list(order_by='start_date')
         cache.set(id,milestones,settings.CACHE_MILESTONES)
 
     return milestones
