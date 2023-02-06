@@ -18,10 +18,8 @@
         <br><br>
         {% if p.localProject.enableMilestones and not p.localProject.inactive %}
             <strong>{% trans "Current Milestone(s)" %}:</strong><br>
-            {% for milestone in p.allMilestones %} 
-            {% if milestone.state == 'active' and milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
+            {% for milestone in p.activeMilestones %} 
                 &raquo; {{ milestone.title }}<br>
-            {% endif %}
             {% endfor %} <br />
         {% endif %}
         </p>

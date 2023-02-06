@@ -65,31 +65,22 @@ def loggingout(request: WSGIRequest) -> HttpResponseRedirect:
 
 @login_required
 @staff_member_required
-def reportsOverview(request: WSGIRequest) -> HttpResponse:
+def reportOverview(request: WSGIRequest) -> HttpResponse:
     """
-    Handles the requests for /overview
+    Handles the requests for /report
     Gets all projects to show on the page
     """
 
-    if request.user.is_staff:
-        projectAssignments = UserProjectAssignment.objects.filter(project__closed=False).order_by('project__name').all()
-    else:
-        projectAssignments = UserProjectAssignment.objects.filter(project__closed=False,user=request.user)
+    members = TeamMember.objects.all()
 
+    projectAssignments = UserProjectAssignment.objects.filter(project__closed=False).order_by('project__name').all()
+ 
     activeProjects = []
-    inactiveProjects = []
     for assignment in projectAssignments:
         glProject = loadProject(assignment.project, assignment.accessToken)
-        if glProject not in inactiveProjects and glProject not in activeProjects:
-            try:
-                if glProject['localProject'].inactive:
-                    inactiveProjects.append(glProject)
-                else:
-                    activeProjects.append(glProject)
-            except:
-                activeProjects.append(glProject)
+        activeProjects.append(glProject)
 
-    return HttpResponse(template('report/view').render({'inactiveProjects': inactiveProjects, 'activeProjects': activeProjects}, request))
+    return HttpResponse(template('report/view').render({'members': members, 'activeProjects': activeProjects}, request))
 
 
 @login_required
