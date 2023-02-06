@@ -5,6 +5,11 @@
 {% load template %}
 
 {% block extra_css %}
+  <style>
+    .project .bar {
+      fill: #ff8128 !important;
+    }
+  </style>
   <link rel="stylesheet" href="{% static 'vendor/frappe-gantt/frappe-gantt.min.css' %}">
   <script nonce="{{ request.csp_nonce }}" src="{% static 'vendor/frappe-gantt/frappe-gantt.js' %}"></script>
 {% endblock %}
@@ -20,7 +25,14 @@
     </tr>
     {% for project in activeProjects %}
       <tr>
-        <td><strong>{{ project.localProject.name }}</strong><br>{% trans "Last activity:" %} <em>{{ project.mostRecentIssues.0.updated_at|parse_iso }}</em></td>
+        <td>
+          <a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}" class="nolink">
+            <strong>{{ project.localProject.name }}</strong><br>
+          </a>
+          {% for member in project.localProject.assignees.all %}
+            <img src="{{ member.avatar.url }}" width="25" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
+          {% endfor %}
+        </td>
         <td class="text-center">
           {% with dsince=project.mostRecentIssues.0.updated_at|parse_iso|dayssince %}
           {% if dsince > 14 %}
@@ -76,52 +88,6 @@
   <h2>{% trans "Employees" %}</h2>
   <br>
   {% for member in members %}
-    {% for project in member.getActiveProjects %}
-      {% with gl=project.loadRemoteProject %}
-
-        <script nonce="{{ request.csp_nonce }}">
-          var tasks = [
-          {% for milestone in allMilestones %} 
-            
-            {% if milestone.start_date and milestone.due_date %}
-              {% with milestone.due_date|parse_date|dayssince as dayssince %}
-                {% if milestone.expired == False or milestone.expired == True and dayssince < 365 %}
-                {
-                  id: '{{ milestone.id }}',
-                  name: '{{ milestone.title }}',
-                  start: '{{ milestone.start_date|parse_date|date:"Y-m-d" }}',
-                  end: '{{ milestone.due_date|parse_date|date:"Y-m-d" }}',
-                  progress: 0,
-                },
-                {% endif %}
-              {% endwith %}
-            {% endif %}
-          {% endfor %}
-          ]
-          var gantt = new Gantt(document.querySelector('#gantt{{ member.pk }}'), tasks, {
-              header_height: 50,
-              column_width: 30,
-              step: 24,
-              bar_height: 40,
-              bar_corner_radius: 0,
-              arrow_curve: 5,
-              padding: 18,
-              custom_popup_html: function(task) {
-                window.location = '/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestone/'+task.id;
-                return ``;
-              },
-              {% if daysbetween < 180 %}
-                view_mode: 'Week',
-              {% elif daysbetween < 730 %}
-                view_mode: 'Month',
-              {% else %}
-                view_mode: 'Year',
-              {% endif %}
-              date_format: 'YYYY-MM-DD',
-          });
-        </script>
-      {% endwith %}
-    {% endfor %}
     <div class="row">
       <div class="col-1 text-center">
         <img src="{{ member.avatar.url }}" width="50" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
@@ -149,5 +115,53 @@
       </div>
     </div>
     <hr>
+    <script nonce="{{ request.csp_nonce }}">
+      var tasks = [
+
+      {% for project in member.getActiveProjects %}
+        {% with gl=project.loadRemoteProject %}
+          {
+            id: '{{ project.id }}0',
+            name: '{{ project.name }}',
+            start: '{% with lastMilestone=gl.allMilestones|last %}{{ lastMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
+            end: '{{ gl.allMilestones.0.due_date|parse_date|date:"Y-m-d" }}',
+            progress: 0,
+            custom_class: 'project' 
+          },
+          {% for milestone in gl.allMilestones reversed %} 
+            {% if milestone.start_date and milestone.due_date %}
+              {% with milestone.due_date|parse_date|dayssince as dayssince %}
+                {% if milestone.expired == False or milestone.expired == True and dayssince < 365 %}
+                {
+                  id: '{{ project.id }}{{ forloop.counter }}',
+                  name: '{{ milestone.title }}',
+                  start: '{{ milestone.start_date|parse_date|date:"Y-m-d" }}',
+                  end: '{{ milestone.due_date|parse_date|date:"Y-m-d" }}',
+                  progress: 0,
+                  dependencies: '{{ project.id }}{{ forloop.counter0 }}',
+                },
+                {% endif %}
+              {% endwith %}
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
+      {% endfor %}
+      ]
+      var gantt = new Gantt(document.querySelector('#gantt{{ member.pk }}'), tasks, {
+          header_height: 20,
+          column_width: 30,
+          step: 24,
+          bar_height: 20,
+          bar_corner_radius: 0,
+          arrow_curve: 7,
+          padding: 18,
+          custom_popup_html: function(task) {
+            window.location = '/project/{{ gl.remoteProject.path }}/{{ gl.remoteProject.id }}/milestone/'+task.id;
+            return ``;
+          },
+          view_mode: 'Month',
+          date_format: 'YYYY-MM-DD',
+      });
+    </script>
   {% endfor %}
 {% endblock %}

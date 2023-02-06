@@ -23,3 +23,7 @@ def startswith(text, starts):
 @register.filter('split')
 def split(text, limit):
     return text.split(limit)
+
+@register.filter()
+def last(lst):
+    return lst[-1]
