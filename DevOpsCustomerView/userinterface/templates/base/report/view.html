@@ -51,7 +51,23 @@
           {% endif %} 
         </td>
         <td class="text-center">
-          <i class="fa far fa-thumbs-up" style="color: green;"></i>
+          {% if not project.localProject.inactive %}
+            {% if project.activeMilestones|length == 0 %}
+              <i class="fa far fa-engine-warning" style="color: red;"></i>
+              <br><small class="text-muted">{% trans "active" %} + {% trans "without open milestones" %}</small>
+            {% else %}
+              <i class="fa far fa-thumbs-up" style="color: green;"></i>
+              <br><small class="text-muted">{% trans "active" %} + {{ project.activeMilestones|length }} {% trans "active milestone(s)" %}</small>
+            {% endif %}
+          {% else %}
+            {% if project.remoteProject.open_issues_count == 0 %}
+              <i class="fa far fa-thumbs-up" style="color: green;"></i>
+              <br><small class="text-muted">{% trans "inactive" %} + {% trans "without open milestones" %}</small>
+            {% else %}
+              <i class="fa far fa-engine-warning" style="color: red;"></i>
+              <br><small class="text-muted">{% trans "inactive" %} + {{ project.activeMilestones|length }} {% trans "active milestone(s)" %}</small>
+            {% endif %}
+          {% endif %} 
         </td>
       </tr>
     {% endfor %}
