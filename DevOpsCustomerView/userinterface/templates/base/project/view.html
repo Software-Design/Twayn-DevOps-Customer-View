@@ -51,6 +51,11 @@
           {% endif %}
           date_format: 'YYYY-MM-DD',
       });
+
+      const oldest = gantt.get_oldest_starting_date().getTime()
+      const t = new Date() - oldest
+      gantt.gantt_start = new Date(gantt.gantt_start.getTime() - t)
+      gantt.set_scroll_position()
     </script>
   {% endif %}
 {% endblock %}

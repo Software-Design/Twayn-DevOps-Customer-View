@@ -41,7 +41,7 @@
         </td>
         <td class="text-center">
           {% with dsince=project.mostRecentIssues.0.updated_at|parse_iso|dayssince %}
-          {% if dsince > 28 %}
+          {% if dsince > 28 or dsince == '?' %}
               <i class="fa far fa-engine-warning" style="color: red;"></i>
             {% else %}
               <i class="fa far fa-thumbs-up" style="color: green;"></i>
@@ -165,13 +165,13 @@
           bar_corner_radius: 0,
           arrow_curve: 7,
           padding: 18,
-          custom_popup_html: function(task) {
-            window.location = '/project/{{ gl.remoteProject.path }}/{{ gl.remoteProject.id }}/milestone/'+task.id;
-            return ``;
-          },
           view_mode: 'Month',
           date_format: 'YYYY-MM-DD',
       });
+      const oldest = gantt.get_oldest_starting_date().getTime()
+      const t = new Date() - oldest
+      gantt.gantt_start = new Date(gantt.gantt_start.getTime() - t)
+      gantt.set_scroll_position()
     </script>
   {% endfor %}
 {% endblock %}
