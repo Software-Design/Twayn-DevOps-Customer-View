@@ -34,7 +34,7 @@
           {% endfor %}
         </td>
         <td class="text-center">
-          {% with dsince=project.mostRecentIssues.0.updated_at|parse_iso|dayssince %}
+          {% with dsince=project.mostRecentIssues.0.updated_at|parse_date|dayssince %}
           {% if dsince > 14 %}
               <i class="fa far fa-engine-warning" style="color: red;"></i>
             {% else %}
