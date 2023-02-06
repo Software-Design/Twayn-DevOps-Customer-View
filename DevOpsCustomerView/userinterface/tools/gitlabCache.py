@@ -45,7 +45,7 @@ def loadProject(projectObject: Project, accessToken: str) -> dict:
                 'projectReleases': loadReleases(projectObject, glProject),
             }
         now = datetime.now()
-        project['activeMilestones'] = [m for m in list(project['allMilestones']) if not m.expired and m.state == 'active' and m.start_date and parse_date(m.start_date) < now and m.due_date and parse_date(m.due_date) >= now]
+        project['activeMilestones'] = [m for m in list(project['allMilestones']) if not m.expired and m.state == 'active' and parse_date(m.start_date) != '?' and parse_date(m.start_date) < now and parse_date(m.due_date) != '?' and parse_date(m.due_date) >= now]
         cache.set(id,project,settings.CACHE_PROJECTS)
 
     return project
