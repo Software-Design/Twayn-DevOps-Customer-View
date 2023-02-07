@@ -24,7 +24,7 @@ class TeamMember(models.Model):
     username = models.CharField(max_length=200)
     
     def getActiveProjects(self):
-        return self.project_set.filter(inactive=False)
+        return self.project_set.filter(inactive=False, closed=False)
 
 class Project(models.Model):
     """Representation of the hosted project
