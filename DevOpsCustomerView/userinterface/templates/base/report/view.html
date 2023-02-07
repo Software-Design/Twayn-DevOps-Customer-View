@@ -27,8 +27,8 @@
               {
                 id: '{{ project.localProject.id }}0',
                 name: '{{ project.localProject.name }}',
-                start: '{% with lastMilestone=project.allMilestones|lastMilestone %}{{ lastMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
-                end: '{{ project.allMilestones.0.due_date|parse_date|date:"Y-m-d" }}',
+                start: '{% with firstMilestone=project.allMilestones|firstMilestone %}{{ firstMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
+                end: '{% with lastMilestone=project.allMilestones|lastMilestone %}{{ lastMilestone.due_date|parse_date|date:"Y-m-d" }}{% endwith %}',
                 progress: 0,
                 custom_class: 'project' 
               },
@@ -174,8 +174,8 @@
             {
               id: '{{ project.id }}0',
               name: '{{ project.name }}',
-              start: '{% with lastMilestone=gl.allMilestones|last %}{{ lastMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
-              end: '{{ gl.allMilestones.0.due_date|parse_date|date:"Y-m-d" }}',
+              start: '{% with firstMilestone=gl.allMilestones|firstMilestone %}{{ firstMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
+              end: '{% with lastMilestone=gl.allMilestones|lastMilestone %}{{ lastMilestone.due_date|parse_date|date:"Y-m-d" }}{% endwith %}',
               progress: 0,
               custom_class: 'project' 
             },
