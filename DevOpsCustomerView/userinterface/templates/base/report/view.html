@@ -21,7 +21,7 @@
         var tasks = [
 
         {% for project in activeProjects %}
-          {% if not project.localProject.closed %}
+          {% if not project.localProject.closed and not project.localProject.inactive %}
               {
                 id: '{{ project.localProject.id }}0',
                 name: '{{ project.localProject.name }}',
@@ -70,7 +70,7 @@
             {% if not project.localProject.inactive %}
             <strong>{{ project.localProject.name }}</strong><br>
             {% else %}
-            <em>{{ project.localProject.name }}</em><br>
+            <em>{{ project.localProject.name }}</em> ({% trans "inactive" %})<br>
             {% endif %}
           </a>
           {% for member in project.localProject.assignees.all %}

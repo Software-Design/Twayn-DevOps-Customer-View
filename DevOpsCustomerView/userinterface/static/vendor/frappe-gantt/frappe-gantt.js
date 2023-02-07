@@ -1406,12 +1406,14 @@ var Gantt = (function () {
             for (let date of this.dates) {
                 let tick_class = 'tick';
                 // if date is today
-                if (date.getMonth() == new Date().getMonth() && date.getYear() == new Date().getYear()) {
-                    createSVG('path', {
-                        d: `M ${tick_x+(this.options.column_width/30*date.getDay())} ${tick_y} v ${tick_height}`,
-                        class: 'tick today',
-                        append_to: this.layers.grid,
-                    });
+                if (date.getMonth() == new Date().getMonth() && date.getYear() == new Date().getYear()) { 
+                    if (this.view_is(VIEW_MODE.DAY) && date.getDay() == new Date().getDay() || !this.view_is(VIEW_MODE.DAY)) {
+                        createSVG('path', {
+                            d: `M ${tick_x+(this.options.column_width/30*date.getDay())} ${tick_y} v ${tick_height}`,
+                            class: 'tick today',
+                            append_to: this.layers.grid,
+                        });
+                    }
                 }
                 
 
