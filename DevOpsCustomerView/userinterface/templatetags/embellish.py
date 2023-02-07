@@ -1,7 +1,9 @@
 from django.template import Library
 from userinterface.models import TeamMember
+from .dates import parse_date
 
 from django.utils.translation import gettext as _
+from datetime import datetime
 import re
 
 register = Library()
@@ -25,5 +27,5 @@ def split(text, limit):
     return text.split(limit)
 
 @register.filter()
-def last(lst):
-    return lst[-1]
+def lastMilestone(milestones):
+    return sorted(milestones, key=lambda m: parse_date(m.due_date) if parse_date(m.due_date) != '?' else datetime(2020,1,1,0,0), reverse=True)[-1]

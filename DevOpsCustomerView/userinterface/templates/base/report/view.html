@@ -3,6 +3,8 @@
 {% load static %}
 {% load dates %}
 {% load template %}
+{% load embellish %}
+
 
 {% block extra_css %}
   <style>
@@ -25,7 +27,7 @@
               {
                 id: '{{ project.localProject.id }}0',
                 name: '{{ project.localProject.name }}',
-                start: '{% with lastMilestone=project.allMilestones|last %}{{ lastMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
+                start: '{% with lastMilestone=project.allMilestones|lastMilestone %}{{ lastMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
                 end: '{{ project.allMilestones.0.due_date|parse_date|date:"Y-m-d" }}',
                 progress: 0,
                 custom_class: 'project' 
