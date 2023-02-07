@@ -28,4 +28,7 @@ def split(text, limit):
 
 @register.filter()
 def lastMilestone(milestones):
-    return sorted(milestones, key=lambda m: parse_date(m.due_date) if parse_date(m.due_date) != '?' else datetime(2020,1,1,0,0), reverse=True)[-1]
+    milestones = sorted(milestones, key=lambda m: parse_date(m.due_date) if parse_date(m.due_date) != '?' else datetime(2020,1,1,0,0), reverse=True)
+    if len(milestones) > 0:
+        return milestones[-1]
+    return None
