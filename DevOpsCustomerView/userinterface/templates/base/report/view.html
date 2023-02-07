@@ -15,6 +15,40 @@
 {% endblock %}
 
 {% block content %}
+  <h2>{% trans "Current projects" %}</h2>
+      <svg id="gantt"></svg>
+      <script nonce="{{ request.csp_nonce }}">
+        var tasks = [
+
+        {% for project in activeProjects %}
+          {% if not project.localProject.closed %}
+              {
+                id: '{{ project.localProject.id }}0',
+                name: '{{ project.localProject.name }}',
+                start: '{% with lastMilestone=project.allMilestones|last %}{{ lastMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
+                end: '{{ project.allMilestones.0.due_date|parse_date|date:"Y-m-d" }}',
+                progress: 0,
+                custom_class: 'project' 
+              },
+          {% endif %}
+        {% endfor %}
+        ]
+        var gantt = new Gantt(document.querySelector('#gantt'), tasks, {
+            header_height: 50,
+            column_width: 30,
+            step: 24,
+            bar_height: 20,
+            bar_corner_radius: 0,
+            arrow_curve: 7,
+            padding: 18,
+            view_mode: 'Month',
+            date_format: 'YYYY-MM-DD',
+        });
+        var oldest = gantt.get_oldest_starting_date().getTime()
+        var t = new Date() - oldest
+        gantt.gantt_start = new Date(gantt.gantt_start.getTime() - t)
+        gantt.set_scroll_position()
+      </script>
   <h2>{% trans "Project status" %}</h2>
   <table class="table">
     <tr>
@@ -33,7 +67,11 @@
         </td>
         <td>
           <a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}" class="nolink">
+            {% if not project.localProject.inactive %}
             <strong>{{ project.localProject.name }}</strong><br>
+            {% else %}
+            <em>{{ project.localProject.name }}</em><br>
+            {% endif %}
           </a>
           {% for member in project.localProject.assignees.all %}
             <img src="{{ member.avatar.url }}" width="25" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
@@ -41,7 +79,7 @@
         </td>
         <td class="text-center">
           {% with dsince=project.mostRecentIssues.0.updated_at|parse_iso|dayssince %}
-          {% if dsince > 28 or dsince == '?' %}
+          {% if dsince > 28 and not project.localProject.inactive or dsince == '?' and not project.localProject.inactive %}
               <i class="fa far fa-engine-warning" style="color: red;"></i>
             {% else %}
               <i class="fa far fa-thumbs-up" style="color: green;"></i>
