@@ -187,6 +187,9 @@ def loadMilestones(projectObject: Project, tokenOrInstance, iid:int=None) -> Uni
             milestones = project.milestones.get(iid)
         else:
             milestones = project.milestones.list(order_by='start_date')
+            # sort milestones by start date reverse, due to the fact the the GitLab Api does not support sorting
+            milestones = sorted(milestones, key=lambda m: parse_date(m.start_date), reverse=True)
+
         cache.set(id,milestones,settings.CACHE_MILESTONES)
 
     return milestones
