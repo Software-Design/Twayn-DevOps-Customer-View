@@ -17,6 +17,19 @@
 {% endblock %}
 
 {% block content %}
+  <h2>{% trans "Important dates" %}</h2>
+  <div class="row">
+    <div class="col-4">
+      <h5>{% trans "Ending soon" %}</h5>
+    </div>
+    <div class="col-4">
+      <h5>{% trans "Recently ended" %}</h5>
+    </div>
+    <div class="col-4">
+      <h5>{% trans "Overdue" %}</h5>
+    </div>
+  </div>
+  <br>
   <h2>{% trans "Current projects" %}</h2>
       <svg id="gantt"></svg>
       <script nonce="{{ request.csp_nonce }}">
