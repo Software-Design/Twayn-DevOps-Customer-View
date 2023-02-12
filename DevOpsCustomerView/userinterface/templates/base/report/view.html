@@ -25,7 +25,7 @@
         {% for milestone in project.allMilestones %}
           {% if not milestone.due_date or milestone.due_date|parse_date|dayssince < 0 and milestone.due_date|parse_date|dayssince > -14 %}
             <li class="list-group-item">
-                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}/issues/{{ issue.iid }}">{{ milestone.title }}</a></strong><br>
+                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}/milestone/{{ milestone.id }}">{{ milestone.title }}</a></strong><br>
                 <div class="text-muted">
                   <small>{{ project.localProject.name }}</small><br>
                   <small class="text-danger">{% trans "Ending" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
@@ -39,9 +39,9 @@
       <h5>{% trans "Recently ended" %}</h5>
       {% for project in activeProjects %}
         {% for milestone in project.allMilestones %}
-          {% if not milestone.due_date or milestone.due_date|parse_date|dayssince >= 0 and milestone.due_date|parse_date|dayssince < 14 %}
+          {% if milestone.due_date and milestone.due_date|parse_date|dayssince >= 0 and milestone.due_date|parse_date|dayssince < 14 %}
             <li class="list-group-item">
-                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}/issues/{{ issue.iid }}">{{ milestone.title }}</a></strong><br>
+                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}/milestone/{{ milestone.id }}">{{ milestone.title }}</a></strong><br>
                 <div class="text-muted">
                   <small>{{ project.localProject.name }}</small><br>
                   <small class="text-danger">{% trans "Ended" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
