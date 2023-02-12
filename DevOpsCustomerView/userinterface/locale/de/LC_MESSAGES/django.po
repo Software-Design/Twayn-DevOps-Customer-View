@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-08 06:55+0000\n"
-"PO-Revision-Date: 2023-02-08 07:59+0100\n"
+"POT-Creation-Date: 2023-02-12 09:48+0000\n"
+"PO-Revision-Date: 2023-02-12 10:48+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -560,79 +560,103 @@ msgstr ""
 msgid "Important dates"
 msgstr "Wichtige Termine"
 
-#: userinterface/templates/base/report/view.html:21
+#: userinterface/templates/base/report/view.html:23
+msgid "Ending soon"
+msgstr "Endet bald"
+
+#: userinterface/templates/base/report/view.html:31
+msgid "Ending"
+msgstr "Endet"
+
+#: userinterface/templates/base/report/view.html:39
+msgid "Recently ended"
+msgstr "Vor kurzem geendet"
+
+#: userinterface/templates/base/report/view.html:47
+msgid "Ended"
+msgstr "Endete"
+
+#: userinterface/templates/base/report/view.html:55
+msgid "Overdue"
+msgstr "Überfällig"
+
+#: userinterface/templates/base/report/view.html:63
+msgid "Due"
+msgstr "Fällig bis"
+
+#: userinterface/templates/base/report/view.html:72
 msgid "Current projects"
 msgstr "Aktuelle Projekte"
 
-#: userinterface/templates/base/report/view.html:55
+#: userinterface/templates/base/report/view.html:106
 msgid "Project status"
 msgstr "Projektstatus"
 
-#: userinterface/templates/base/report/view.html:59
+#: userinterface/templates/base/report/view.html:110
 msgid "Name"
 msgstr "Name"
 
-#: userinterface/templates/base/report/view.html:60
+#: userinterface/templates/base/report/view.html:111
 msgid "Last activity"
 msgstr "Letzte Aktivität"
 
-#: userinterface/templates/base/report/view.html:61
+#: userinterface/templates/base/report/view.html:112
 msgid "Active state"
 msgstr "Aktiver Status"
 
-#: userinterface/templates/base/report/view.html:62
+#: userinterface/templates/base/report/view.html:113
 msgid "Active milestone"
 msgstr "Aktive Projektphasen"
 
-#: userinterface/templates/base/report/view.html:76
-#: userinterface/templates/base/report/view.html:105
-#: userinterface/templates/base/report/view.html:108
-#: userinterface/templates/base/report/view.html:124
 #: userinterface/templates/base/report/view.html:127
+#: userinterface/templates/base/report/view.html:156
+#: userinterface/templates/base/report/view.html:159
+#: userinterface/templates/base/report/view.html:175
+#: userinterface/templates/base/report/view.html:178
 msgid "inactive"
 msgstr "Inaktiv"
 
-#: userinterface/templates/base/report/view.html:90
+#: userinterface/templates/base/report/view.html:141
 msgid "days ago"
 msgstr "Tage her"
 
-#: userinterface/templates/base/report/view.html:97
-#: userinterface/templates/base/report/view.html:100
-#: userinterface/templates/base/report/view.html:116
-#: userinterface/templates/base/report/view.html:119
+#: userinterface/templates/base/report/view.html:148
+#: userinterface/templates/base/report/view.html:151
+#: userinterface/templates/base/report/view.html:167
+#: userinterface/templates/base/report/view.html:170
 msgid "active"
 msgstr "Aktiv"
 
-#: userinterface/templates/base/report/view.html:97
-#: userinterface/templates/base/report/view.html:105
+#: userinterface/templates/base/report/view.html:148
+#: userinterface/templates/base/report/view.html:156
 msgid "without open issues"
 msgstr "Ohne offene Tickets"
 
-#: userinterface/templates/base/report/view.html:100
-#: userinterface/templates/base/report/view.html:108
+#: userinterface/templates/base/report/view.html:151
+#: userinterface/templates/base/report/view.html:159
 msgid "open issue(s)"
 msgstr "offene Tickets"
 
-#: userinterface/templates/base/report/view.html:116
-#: userinterface/templates/base/report/view.html:124
+#: userinterface/templates/base/report/view.html:167
+#: userinterface/templates/base/report/view.html:175
 msgid "without active milestones"
 msgstr "Ohne aktiven Meilenstein"
 
-#: userinterface/templates/base/report/view.html:119
-#: userinterface/templates/base/report/view.html:127
+#: userinterface/templates/base/report/view.html:170
+#: userinterface/templates/base/report/view.html:178
 msgid "active milestone(s)"
 msgstr "Aktive Projektphase(n)"
 
-#: userinterface/templates/base/report/view.html:135
+#: userinterface/templates/base/report/view.html:186
 msgid "Employees"
 msgstr "Mitarbeitende"
 
-#: userinterface/templates/base/report/view.html:147
+#: userinterface/templates/base/report/view.html:198
 #, python-format
 msgid "In %(projectCount)s active projects involved"
 msgstr "In %(projectCount)s aktive Projekte involviert"
 
-#: userinterface/templates/base/report/view.html:159
+#: userinterface/templates/base/report/view.html:210
 msgid "No active milestone"
 msgstr "Keinen aktiven Meilenstein"
 

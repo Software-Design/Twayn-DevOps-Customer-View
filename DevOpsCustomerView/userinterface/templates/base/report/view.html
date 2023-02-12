@@ -21,12 +21,51 @@
   <div class="row">
     <div class="col-4">
       <h5>{% trans "Ending soon" %}</h5>
+      {% for project in activeProjects %}
+        {% for milestone in project.allMilestones %}
+          {% if not milestone.due_date or milestone.due_date|parse_date|dayssince < 0 and milestone.due_date|parse_date|dayssince > -14 %}
+            <li class="list-group-item">
+                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}/issues/{{ issue.iid }}">{{ milestone.title }}</a></strong><br>
+                <div class="text-muted">
+                  <small>{{ project.localProject.name }}</small><br>
+                  <small class="text-danger">{% trans "Ending" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+                </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
     </div>
     <div class="col-4">
       <h5>{% trans "Recently ended" %}</h5>
+      {% for project in activeProjects %}
+        {% for milestone in project.allMilestones %}
+          {% if not milestone.due_date or milestone.due_date|parse_date|dayssince >= 0 and milestone.due_date|parse_date|dayssince < 14 %}
+            <li class="list-group-item">
+                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}/issues/{{ issue.iid }}">{{ milestone.title }}</a></strong><br>
+                <div class="text-muted">
+                  <small>{{ project.localProject.name }}</small><br>
+                  <small class="text-danger">{% trans "Ended" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+                </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
     </div>
     <div class="col-4">
       <h5>{% trans "Overdue" %}</h5>
+      {% for project in activeProjects %}
+        {% for issue in project.mostRecentIssues %} 
+          {% if issue.state != "closed" and issue.due_date|parse_date|dayssince > 0 %}
+            <li class="list-group-item">
+                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}/issues/{{ issue.iid }}">#{{ issue.iid }} {{ issue.title }}</a></strong><br>
+                <div class="text-muted">
+                  <small>{{ project.localProject.name }}</small><br>
+                  <small class="text-danger">{% trans "Due" %} {{ issue.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+                </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
     </div>
   </div>
   <br>
