@@ -170,7 +170,7 @@
               <br><small class="text-muted">{% trans "active" %} + {{ project.activeMilestones|length }} {% trans "active milestone(s)" %}</small>
             {% endif %}
           {% else %}
-            {% if project.remoteProject.open_issues_count == 0 %}
+            {% if project.activeMilestones|length == 0 %}
               <i class="fa far fa-thumbs-up" style="color: green;"></i>
               <br><small class="text-muted">{% trans "inactive" %} + {% trans "without active milestones" %}</small>
             {% else %}
