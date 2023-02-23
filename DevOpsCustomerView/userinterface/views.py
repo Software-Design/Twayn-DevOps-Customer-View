@@ -127,7 +127,7 @@ def projectPublic(request: WSGIRequest, slug:str, id:int, hash:str) -> HttpRespo
             return redirect(f'/project/{slug}/{id}/{hash}?error=invalid')
 
     if request.GET.get('error'):
-        return HttpResponse(template('publicOverview').render(glProject, request))
+        return HttpResponse(template('project/public').render(glProject, request))
 
     if not request.session.get('password') or request.session.get('password') != assignment.project.publicOverviewPassword:
             return redirect(f'/project/{slug}/{id}/{hash}?error=loginrequired')

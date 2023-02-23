@@ -42,7 +42,9 @@
             window.location = '/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestone/'+task.id;
             return ``;
           },
-          {% if daysbetween < 730 %}
+          {% if daysbetween < 180 %}
+            view_mode: 'Week',
+          {% elif daysbetween < 730 %}
             view_mode: 'Month',
           {% else %}
             view_mode: 'Year',
