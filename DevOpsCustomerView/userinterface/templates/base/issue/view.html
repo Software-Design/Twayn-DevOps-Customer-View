@@ -34,7 +34,7 @@
 	{% endif %}
 </h3>
 <br />
-<div class="row">
+<div class="row-fluid">
 	<div class="col-5">
 		<table class="table table-striped">
 			<tr>
@@ -130,7 +130,7 @@
 					{% with t='partials/employee'|template %}
 						{% include t with employee=employee user=issue.data.author %}
 					{% endwith %}
-				</td>
+				</td>image.png
 			</tr>
 			{% endwith %} 
 			{% if issue.data.assignees|length > 0 %}
