@@ -26,13 +26,13 @@
 		{% endif %}
 	</div>
 			
-<h1>#{{ issue.data.iid }} - {{ issue.data.title }}</h1>
-<h3>
+<h2>#{{ issue.data.iid }} - {{ issue.data.title }}</h2>
+<h4>
 	<i class="fa far fa-archive"></i> {{ localProject.name }} 
 	{% if issue.data.milestone %}
 		<span class="float-end"><i class="fa far fa-tasks"></i> {{ issue.data.milestone.title }}</span>
 	{% endif %}
-</h3>
+</h4>
 <br />
 <div class="row">
 	<div class="col-5">
