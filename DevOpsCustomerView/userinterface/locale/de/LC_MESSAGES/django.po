@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-12 09:48+0000\n"
-"PO-Revision-Date: 2023-02-12 10:52+0100\n"
+"PO-Revision-Date: 2023-03-15 09:42+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.2\n"
 
 #: userinterface/models.py:88
 msgid "Important Files & Links"
@@ -683,7 +683,7 @@ msgstr "Weiter zum Projekt &raquo;"
 
 #: userinterface/templatetags/embellish.py:18
 msgid "Customer"
-msgstr "Kunde"
+msgstr "Kund:in"
 
 #: userinterface/tools/gitlabCache.py:35
 msgid "An error occurred"
