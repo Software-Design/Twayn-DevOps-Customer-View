@@ -242,7 +242,6 @@ def loadIssues(projectObject: Project, tokenOrInstance, iid: int=None, page: int
         elif label:
             issue = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page, labels=label)
         elif status:
-            print(status)
             issue = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page, state=status)
         else:
             issue = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page)
