@@ -1,0 +1,25 @@
+{% extends base %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+        <h1>{{ localProject.name }}</h1>
+        <h2>{% trans "Project settings" %}</h2>
+      <br><br>
+    </div>
+    <div class="col-5">
+      <form class="" method="post">
+          {% csrf_token %}
+          <h4 class="h4 mb-3 font-weight-normal">{% trans "Notifications" %}</h4>
+          <label for="enableNotifications" class="">{% trans "Send email notifications for changes" %}</label>
+          <input type="checkbox" name="enableNotifications" value="enable" {% if enableNotifications %} checked {% endif %}>
+          <br><br><br>
+          <input type="submit" class="btn btn-primary float-start">
+        </form>
+      <br>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -12,7 +12,7 @@
 
 			<div class="btn-group float-end" role="group">
 				{% if localProject.enableTicketCreation %}
-				<a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
+				<a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
 				{% endif %}
 				{% if request.user.is_superuser %}
 				<a href="{{ remoteProject.web_url }}/-/milestones" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
@@ -23,7 +23,7 @@
 				<h3><i class="fa far fa-archive"></i> {{ localProject.name }}
 					<span class="float-end">
 						{% if milestone.start_date or milestone.due_date %}
-						<i class="far fa-calendar-alt"></i> <small>{{ milestone.start_date|parse_date|date:settings.DATE_FORMAT }} bis {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+						<i class="far fa-calendar-alt"></i> <small>{{ milestone.start_date|date:settings.DATE_FORMAT }} bis {{ milestone.due_date|date:settings.DATE_FORMAT }}</small>
 				{% endif %}</span>
 				</h3>
 

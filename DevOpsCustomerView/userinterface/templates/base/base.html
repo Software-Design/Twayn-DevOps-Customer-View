@@ -46,35 +46,38 @@
                 <a class="nav-link disabled" aria-current="page" href="/overview/">|</a>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <strong><i class="fa fa-folder-open"></i> {{ localProject.name }}</strong>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}">{% trans "Overview" %}</a></li>
+                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}">{% trans "Overview" %}</a></li>
                   <li><hr class="dropdown-divider"></li>
                   {% if localProject.enableMilestones %}
-                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/">{% trans "Milestones / Kanban Board" %}</a></li>
+                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/milestones/">{% trans "Milestones / Kanban Board" %}</a></li>
                   {% endif %}
-                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/">{% trans "Browse all Issues" %}</a></li>
+                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/issues/">{% trans "Browse all Issues" %}</a></li>
                   {% if localProject.downloadablefile_set.count > 0 or projectReleases|length > 0 %}
                   <li>
-                    <a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/downloads">{% trans "Documents & Downloads" %}</a>
+                    <a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/downloads">{% trans "Documents & Downloads" %}</a>
                   </li>
                   {% endif %}
+                  <li>
+                    <a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/userSettings/">{% trans "Settings" %}</a>
+                  </li>
                 </ul>
               </li>
               {% endif %}
 
               {% if wikiPages and localProject.enableDocumentation  %}
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/" id="navbarWikiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/" id="navbarWikiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-book"></i> {% trans "Documentation" %}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarWikiDropdown">
-                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/">{% trans "Full Documentation" %}</a></li>
+                  <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/documentation/">{% trans "Full Documentation" %}</a></li>
                   <li><hr class="dropdown-divider"></li>
                   {% for wiki in wikiPages %}
-                    <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/?category={{ wiki.title }}">{{ forloop.counter }} {% if wiki.title == '/' %}{% trans 'Documentation' %}{% else %}{{ wiki.title }}{% endif %}</a></li>
+                    <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/documentation/?category={{ wiki.title }}">{{ forloop.counter }} {% if wiki.title == '/' %}{% trans 'Documentation' %}{% else %}{{ wiki.title }}{% endif %}</a></li>
                   {% endfor %}
                 </ul>
               </li>
@@ -139,10 +142,10 @@
               </div>
               <div class="modal-body">
                 {% trans "This export will generate an overview of all issues updated since the date you chose below and the sum of time spent since this day." %}<br><br>
-                <input type="date" id="exportDate" class="form-control" value="{{ now|date:"Y-m-d" }}" onchange="document.getElementById('exportButton').href = '/project/{{ remoteProject.path }}/{{ remoteProject.id }}/print/'+this.value; ">
+                <input type="date" id="exportDate" class="form-control" value="{{ now|date:"Y-m-d" }}" onchange="document.getElementById('exportButton').href = '/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/print/'+this.value; ">
               </div>
               <div class="modal-footer">
-                <a class="btn btn-primary" id="exportButton" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/print/{{ now|date:"Y-m-d" }}">{% trans "Export" %}</a>
+                <a class="btn btn-primary" id="exportButton" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/print/{{ now|date:"Y-m-d" }}">{% trans "Export" %}</a>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Close" %}</button>
               </div>
             </div>

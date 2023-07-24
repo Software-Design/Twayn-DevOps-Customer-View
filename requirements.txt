@@ -6,6 +6,7 @@ platformdirs==2.5.2
 sqlparse==0.4.2
 virtualenv==20.14.1
 python-gitlab
+PyGithub
 markdown
 Pillow
 pdfkit

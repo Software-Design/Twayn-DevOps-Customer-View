@@ -11,13 +11,13 @@
 
         <div class="btn-group float-end" role="group">
           {% if localProject.enableTicketCreation %}
-          <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
+          <a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
           {% endif %}
           {% if localProject.enableMilestones %}
-          <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/" class="btn btn-outline-primary"><i class="fa far fa-tasks"></i> {% trans "Milestones" %}</a>
+          <a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/milestones/" class="btn btn-outline-primary"><i class="fa far fa-tasks"></i> {% trans "Milestones" %}</a>
           {% endif %}
           {% if wikiPages and localProject.enableDocumentation  %}
-          <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/" class="btn btn-outline-primary"><i class="fa far fa-book"></i> {% trans "Documentation" %}</a>
+          <a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/documentation/" class="btn btn-outline-primary"><i class="fa far fa-book"></i> {% trans "Documentation" %}</a>
           {% endif %}
           {% if request.user.is_superuser %}
           <a href="{{ remoteProject.web_url }}/-/milestones" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
@@ -32,7 +32,7 @@
             <hr>
             <ul class="list-group">
             {% for milestone in allMilestones %} 
-              {% if milestone.state != 'active' and milestone.due_date or milestone.due_date and milestone.due_date|parse_date < now %}
+              {% if milestone.isActive == False and milestone.due_date or milestone.due_date and milestone.due_date < now %}
                 {% with t='partials/milestones'|template %}
                   {% include t %}
                 {% endwith %}
@@ -47,8 +47,8 @@
             <hr>
             <ul class="list-group">
             {% for milestone in allMilestones %} 
-              {% if milestone.state == 'active' %}
-                {% if not milestone.start_date or milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
+              {% if milestone.isActive %}
+                {% if not milestone.start_date or milestone.start_date <= now and milestone.due_date >= now %}
                   {% with t='partials/milestones'|template %}
                     {% include t %}
                   {% endwith %}
@@ -64,7 +64,7 @@
             <hr>
             <ul class="list-group">
             {% for milestone in allMilestones %} 
-              {% if milestone.state == 'active' and milestone.start_date and milestone.start_date|parse_date >= now %}
+              {% if milestone.isActive and milestone.start_date and milestone.start_date >= now %}
                 {% with t='partials/milestones'|template %}
                   {% include t %}
                 {% endwith %}

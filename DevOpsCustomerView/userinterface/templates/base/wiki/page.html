@@ -10,7 +10,7 @@
   <div class="col-12">
     <div class="btn-group float-end" role="group">
       {% if localProject.enableExports %}
-      <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/print/" class="btn btn-outline-primary"><i class="fa fa-book"></i> {% trans "Download Documentation" %}</a>
+      <a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/documentation/print/" class="btn btn-outline-primary"><i class="fa fa-book"></i> {% trans "Download Documentation" %}</a>
       {% endif %}
     </div>
     <br><br><br>

@@ -8,7 +8,8 @@ from django.http import Http404, HttpResponse
 from .templateHelper import template
 from userinterface.models import Project, UserProjectAssignment
 
-from .gitlabCache import loadProject
+from .gitlabCache import gitlabServiceCache
+from .githubCache import githubServiceCache
 
 
 def getProject(request: WSGIRequest, id: int) -> Union[dict, HttpResponse]:
@@ -26,15 +27,16 @@ def getProject(request: WSGIRequest, id: int) -> Union[dict, HttpResponse]:
         raise Http404
 
     if request.user.is_staff:
-        assigment = UserProjectAssignment.objects.filter(project=project).first()
+        assignment = UserProjectAssignment.objects.filter(project=project).first()
     else:
-        assigment = UserProjectAssignment.objects.filter(user=request.user, project=project).first()
+        assignment = UserProjectAssignment.objects.filter(user=request.user, project=project).first()
 
-    if not project or not assigment:
+    if not project or not assignment:
         raise Http404
 
     # TODO: if we plan to support other things besides gitlab we should extend this to load even other projects (none-gitlab projects)
-    project = loadProject(project, assigment.accessToken)
+    repService = getRepositoryService(project)
+    project = repService.loadProject(project, assignment.accessToken)
     if 'error' in project:
         if '404' in project['error']:
             raise Http404
@@ -42,3 +44,9 @@ def getProject(request: WSGIRequest, id: int) -> Union[dict, HttpResponse]:
             return HttpResponse(template('404').render({ **project }, request))
 
     return project
+
+def getRepositoryService(projectObject: Project):
+    if projectObject.repositoryService == Project.RepositoryServiceTypes.GITLAB:
+        return gitlabServiceCache()
+    elif projectObject.repositoryService == Project.RepositoryServiceTypes.GITHUB:
+        return githubServiceCache()

@@ -8,7 +8,7 @@
 {% block content %}
 <div class="btn-group float-end" role="group">
   {% if localProject.enableTicketCreation %}
-  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/" class="btn btn-outline-primary"><i class="fa far fa-folder-open"></i> {% trans "All Issues" %}</a>
+  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/issues/" class="btn btn-outline-primary"><i class="fa far fa-folder-open"></i> {% trans "All Issues" %}</a>
   {% endif %}
   {% if request.user.is_superuser %}
   <a href="{{ remoteProject.web_url }}/-/issues/new" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
@@ -39,9 +39,9 @@
           <select class="form-select" name="milestone" aria-label="{% trans "Milestone" %}">
             <option value="">-- {% trans "Don't assign a milestone" %} --</option>
             {% for milestone in allMilestones %}
-                {% if milestone.state == 'active' %}
-                <optgroup label="{% trans "Until" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}">
-                  <option value="{{ milestone.id }}">{{ milestone.title }}</option>
+                {% if milestone.isActive %}
+                <optgroup label="{% trans "Until" %} {{ milestone.due_date|date:settings.DATE_FORMAT }}">
+                  <option value="{{ milestone.remoteIdentifier }}">{{ milestone.title }}</option>
                 </optgroup>
                 {% endif %}
             {% endfor %}

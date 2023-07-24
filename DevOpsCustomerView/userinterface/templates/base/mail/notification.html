@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notification</title>
+</head>
+<body>
+    <p>
+        There are news for project: <b>{{ project.localProject.name }}</b>.
+    </p>
+    <p>
+        You can click on the link below to open the project:
+    </p>
+    <p>
+        <a href="{{ baseUrl }}{% url 'project' project.remoteProject.path project.remoteProject.remoteIdentifier %}">{{ project.localProject.name }}</a>
+    </p>
+    <p>
+        Have a nice day!
+    </p>
+</body>
+</html>

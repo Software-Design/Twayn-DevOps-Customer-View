@@ -12,13 +12,13 @@
   {% endif %}
   <div class="btn-group float-end" role="group">
     {% if localProject.enableTicketCreation %}
-    <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
+    <a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
     {% endif %}
     {% if localProject.enableMilestones %}
-    <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/" class="btn btn-outline-primary"><i class="fa far fa-tasks"></i> {% trans "Milestones" %}</a>
+    <a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/milestones/" class="btn btn-outline-primary"><i class="fa far fa-tasks"></i> {% trans "Milestones" %}</a>
     {% endif %}
     {% if wikiPages and localProject.enableDocumentation  %}
-    <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/" class="btn btn-outline-primary"><i class="fa far fa-book"></i> {% trans "Documentation" %}</a>
+    <a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/documentation/" class="btn btn-outline-primary"><i class="fa far fa-book"></i> {% trans "Documentation" %}</a>
     {% endif %}
     {% if request.user.is_superuser %}
     <a href="{{ remoteProject.web_url }}" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
@@ -35,7 +35,7 @@
       <a href="?status=closed{% if request.GET.label %}&label={{ request.GET.label }}{% endif %}" class="btn btn-outline-primary"><i class="fa far fa-folder-open"></i> {% trans "Closed" %}</a>
     </div>
     <div class="dropdown float-end">
-      <a class="btn btn-outline-primary dropdown-toggle" href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/" id="labelDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <a class="btn btn-outline-primary dropdown-toggle" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/" id="labelDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fa fa-tags"></i> {% if request.GET.label %}{% trans "Label" %} "{{ request.GET.label }}"{% else %}{% trans "Filter by label" %}{% endif %}
       </a>
       <ul class="dropdown-menu" aria-labelledby="labelDropdown">

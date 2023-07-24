@@ -23,12 +23,12 @@
       <h5>{% trans "Ending soon" %}</h5>
       {% for project in activeProjects %}
         {% for milestone in project.allMilestones %}
-          {% if not milestone.due_date or milestone.due_date|parse_date|dayssince < 0 and milestone.due_date|parse_date|dayssince > -14 %}
+          {% if not milestone.due_date or milestone.due_date|dayssince < 0 and milestone.due_date|dayssince > -14 %}
             <li class="list-group-item">
-                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}/milestone/{{ milestone.id }}">{{ milestone.title }}</a></strong><br>
+                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.remoteIdentifier }}/milestone/{{ milestone.remoteIdentifier }}">{{ milestone.title }}</a></strong><br>
                 <div class="text-muted">
                   <small>{{ project.localProject.name }}</small><br>
-                  <small class="text-danger">{% trans "Ending" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+                  <small class="text-danger">{% trans "Ending" %} {{ milestone.due_date|date:settings.DATE_FORMAT }}</small>
                 </div>
             </li>
           {% endif %}
@@ -39,12 +39,12 @@
       <h5>{% trans "Recently ended" %}</h5>
       {% for project in activeProjects %}
         {% for milestone in project.allMilestones %}
-          {% if milestone.due_date and milestone.due_date|parse_date|dayssince >= 0 and milestone.due_date|parse_date|dayssince < 14 %}
+          {% if milestone.due_date and milestone.due_date|dayssince >= 0 and milestone.due_date|dayssince < 14 %}
             <li class="list-group-item">
-                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}/milestone/{{ milestone.id }}">{{ milestone.title }}</a></strong><br>
+                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.remoteIdentifier }}/milestone/{{ milestone.remoteIdentifier }}">{{ milestone.title }}</a></strong><br>
                 <div class="text-muted">
                   <small>{{ project.localProject.name }}</small><br>
-                  <small class="text-danger">{% trans "Ended" %} {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+                  <small class="text-danger">{% trans "Ended" %} {{ milestone.due_date|date:settings.DATE_FORMAT }}</small>
                 </div>
             </li>
           {% endif %}
@@ -55,12 +55,12 @@
       <h5>{% trans "Overdue" %}</h5>
       {% for project in activeProjects %}
         {% for issue in project.mostRecentIssues %} 
-          {% if issue.state != "closed" and issue.due_date|parse_date|dayssince > 0 %}
+          {% if issue.state != "closed" and issue.due_date|dayssince > 0 %}
             <li class="list-group-item">
-                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}/issues/{{ issue.iid }}">#{{ issue.iid }} {{ issue.title }}</a></strong><br>
+                <strong><a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.remoteIdentifier }}/issues/{{ issue.remoteIdentifier }}">#{{ issue.remoteIdentifier }} {{ issue.title }}</a></strong><br>
                 <div class="text-muted">
                   <small>{{ project.localProject.name }}</small><br>
-                  <small class="text-danger">{% trans "Due" %} {{ issue.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+                  <small class="text-danger">{% trans "Due" %} {{ issue.due_date|date:settings.DATE_FORMAT }}</small>
                 </div>
             </li>
           {% endif %}
@@ -77,10 +77,10 @@
         {% for project in activeProjects %}
           {% if not project.localProject.closed and not project.localProject.inactive %}
               {
-                id: '{{ project.localProject.id }}0',
+                id: '{{ project.localProject.id }}',
                 name: '{{ project.localProject.name }}',
-                start: '{% with firstMilestone=project.allMilestones|firstMilestone %}{{ firstMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
-                end: '{% with lastMilestone=project.allMilestones|lastMilestone %}{{ lastMilestone.due_date|parse_date|date:"Y-m-d" }}{% endwith %}',
+                start: '{% with firstMilestone=project.allMilestones|first %}{{ firstMilestone.start_date|date:"Y-m-d"|default:"2020-01-01" }}{% endwith %}',
+                end: '{% with lastMilestone=project.allMilestones|last %}{{ lastMilestone.due_date|date:"Y-m-d"|default:"2020-01-01" }}{% endwith %}',
                 progress: 0,
                 custom_class: 'project' 
               },
@@ -115,12 +115,12 @@
     {% for project in activeProjects %}
       <tr>
         <td>
-          <a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}" class="nolink">
+          <a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.remoteIdentifier }}" class="nolink">
             <img {% if project.localProject.inactive %}class="p-2 greyscale" style="max-height: 100px !important"{% else %}class="p-2"{% endif %} src="{% if project.localProject.image %}{{ project.localProject.image.url }}{% else %}{{ project.remoteProject.avatar_url }}{% endif %}" width="60">
           </a>
         </td>
         <td>
-          <a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.id }}" class="nolink">
+          <a href="/project/{{ project.remoteProject.path }}/{{ project.remoteProject.remoteIdentifier }}" class="nolink">
             {% if not project.localProject.inactive %}
             <strong>{{ project.localProject.name }}</strong><br>
             {% else %}
@@ -128,11 +128,11 @@
             {% endif %}
           </a>
           {% for member in project.localProject.assignees.all %}
-            <img src="{{ member.avatar.url }}" width="25" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
+            <img src="{% if member.avatar %}{{ member.avatar.url }}{% endif %}" width="25" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
           {% endfor %}
         </td>
         <td class="text-center">
-          {% with dsince=project.mostRecentIssues.0.updated_at|parse_iso|dayssince %}
+          {% with dsince=project.mostRecentIssues.0.updated_at|dayssince %}
           {% if dsince > 28 and not project.localProject.inactive or dsince == '?' and not project.localProject.inactive %}
               <i class="fa far fa-engine-warning" style="color: red;"></i>
             {% else %}
@@ -188,7 +188,7 @@
   {% for member in members %}
     <div class="row">
       <div class="col-1 text-center">
-        <img src="{{ member.avatar.url }}" width="50" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
+        <img src="{% if member.avatar %}{{ member.avatar.url }}{% endif %}" width="50" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
       </div>    
       <div class="col-7">
         <h4>{{ member.name }}</h4><br>
@@ -197,14 +197,14 @@
       <div class="col-4">
         <h5>{% blocktranslate with projectCount=member.getActiveProjects|length %}In {{ projectCount }} active projects involved{% endblocktranslate %}:</h5>
         {% for project in member.getActiveProjects %}
-          {% with gl=project.loadRemoteProject %}
-            <a href="/project/{{ gl.remoteProject.path }}/{{ gl.remoteProject.id }}" class="nolink">
+          {% with gl=project.loadProject %}
+            <a href="/project/{{ gl.remoteProject.path }}/{{ gl.remoteProject.remoteIdentifier }}" class="nolink">
               <li class="list-group-item">
                   <strong>{{ project.name }}</strong><br>
                   <div class="text-muted">
                     {% if gl.activeMilestones|length > 0 %}
                       {% for p in gl.activeMilestones %}
-                        <small>{{ p.title }} <em>({{ p.start_date|parse_date|date:"d.m.y" }} - {{ p.due_date|parse_date|date:"d.m.y" }})</em></small><br>
+                        <small>{{ p.title }} <em>({{ p.start_date|date:"d.m.y" }} - {{ p.due_date|date:"d.m.y" }})</em></small><br>
                       {% endfor %}
                     {% else %}
                       <small class="text-danger">{% trans "No active milestone" %}</small>
@@ -222,24 +222,24 @@
 
       {% for project in member.getActiveProjects %}
         {% if not project.closed %}
-          {% with gl=project.loadRemoteProject %}
+          {% with gl=project.loadProject %}
             {
               id: '{{ project.id }}0',
               name: '{{ project.name }}',
-              start: '{% with firstMilestone=gl.allMilestones|firstMilestone %}{{ firstMilestone.start_date|parse_date|date:"Y-m-d" }}{% endwith %}',
-              end: '{% with lastMilestone=gl.allMilestones|lastMilestone %}{{ lastMilestone.due_date|parse_date|date:"Y-m-d" }}{% endwith %}',
+              start: '{% with firstMilestone=gl.allMilestones|first %}{{ firstMilestone.start_date|date:"Y-m-d"|default:"2020-01-01" }}{% endwith %}',
+              end: '{% with lastMilestone=gl.allMilestones|last %}{{ lastMilestone.due_date|date:"Y-m-d"|default:"2020-01-01" }}{% endwith %}',
               progress: 0,
               custom_class: 'project' 
             },
             {% for milestone in gl.allMilestones reversed %} 
               {% if milestone.start_date and milestone.due_date %}
-                {% with milestone.due_date|parse_date|dayssince as dayssince %}
+                {% with milestone.due_date|dayssince as dayssince %}
                   {% if milestone.expired == False or milestone.expired == True and dayssince < 365 %}
                   {
                     id: '{{ project.id }}{{ forloop.counter }}',
                     name: '{{ milestone.title }}',
-                    start: '{{ milestone.start_date|parse_date|date:"Y-m-d" }}',
-                    end: '{{ milestone.due_date|parse_date|date:"Y-m-d" }}',
+                    start: '{{ milestone.start_date|date:"Y-m-d"|default:"2020-01-01" }}',
+                    end: '{{ milestone.due_date|date:"Y-m-d"|default:"2020-01-01" }}',
                     progress: 0,
                     dependencies: '{{ project.id }}{{ forloop.counter0 }}',
                   },

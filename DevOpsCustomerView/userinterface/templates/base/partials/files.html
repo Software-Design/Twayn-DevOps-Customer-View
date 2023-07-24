@@ -3,7 +3,7 @@
 {% load embellish %}
 
 {% for file in files %} 
-    <a href="{% if file.file %}/project/{{ remoteProject.path }}/{{ remoteProject.id }}/download/{{ file.file.name }}{% else %}{{ file.link }}{% endif %}" class="text-decoration-none">
+    <a href="{% if file.file %}/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/download/{{ file.file.name }}{% else %}{{ file.link }}{% endif %}" class="text-decoration-none">
         <li class="list-group-item">
             <small class="float-end">
                 <span class="badge bg-secondary rounded-pill">

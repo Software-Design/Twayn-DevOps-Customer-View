@@ -20,6 +20,7 @@ urlpatterns = [
     path('project/<slug:slug>/<int:id>/issues/<int:issue>', views.issue, name='issue'),
     path('project/<slug:slug>/<int:id>/milestones/', views.milestones, name='milestones'),
     path('project/<slug:slug>/<int:id>/milestone/<int:mid>', views.milestoneBoard, name='milestoneBoard'),
+    path('project/<slug:slug>/<int:id>/userSettings/', views.userSettings, name='userSettings'),
     path('cache/clear/', views.clearCache, name='clearCache'),
     path('cache/warmup/', views.warmupCache, name='warmupCache'),
 ]

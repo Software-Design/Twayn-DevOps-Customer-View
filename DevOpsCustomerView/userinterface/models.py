@@ -2,10 +2,11 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.template.backends import django
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 import os, hashlib, datetime
-
 
 class TeamMember(models.Model):
     """Overwrite profile information of GitLab Users
@@ -31,6 +32,11 @@ class Project(models.Model):
 
     This model should only contain a reference to the project and settings
     """
+
+    class RepositoryServiceTypes(models.IntegerChoices):
+            GITLAB = 1, gettext_lazy('GitLab')
+            GITHUB = 2, gettext_lazy('GitHub')
+
     def __str__(self):
         return '{} ({})'.format(self.name, self.projectIdentifier)
 
@@ -41,7 +47,11 @@ class Project(models.Model):
         return self.privateUrlHash
 
     def loadRemoteProject(self):
-        from .tools.gitlabCache import loadProject
+        # ToDo: add different backends
+        if self.repositoryService == self.RepositoryServiceTypes.GITLAB:
+            from .tools.gitlabCache import loadProject
+        elif self.repositoryService == self.RepositoryServiceTypes.GITHUB:
+            from .tools.githubCache import loadProject
         return loadProject(self, UserProjectAssignment.objects.filter(project=self).first().accessToken)
 
     assignees = models.ManyToManyField(TeamMember, blank=True)
@@ -60,12 +70,15 @@ class Project(models.Model):
 
     labelPrefix = models.CharField(max_length=500, help_text="User are not allowed to create issues with labels that don't start with this prefix", null=True, blank=True)
     wikiPrefix =  models.CharField(max_length=500, help_text="User are not allowed to view wiki pages with paths that don't start with this prefix", null=True, blank=True)
+
+    repositoryService = models.IntegerField(choices=RepositoryServiceTypes.choices, default=RepositoryServiceTypes.GITLAB)
+    notificationLastRun = models.DateTimeField(default=timezone.now)
     # ... add more settings here
 
     projectIdentifier = models.CharField(max_length=200)
     privateUrlHash = models.CharField(max_length=256, null=True)
 
-    inactive = models.BooleanField(default=False, help_text="Inatvie project are marked as inactive and not shown in the overview")
+    inactive = models.BooleanField(default=False, help_text="Inactive project are marked as inactive and not shown in the overview")
     closed = models.BooleanField(default=False, help_text="If closed a project is no longer accessible or visible")
 
 class UserProjectAssignment(models.Model):
@@ -80,6 +93,8 @@ class UserProjectAssignment(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE)
 
     accessToken = models.CharField(max_length=256)
+
+    enableNotifications  = models.BooleanField(default=False)
 
 class DownloadableFile(models.Model):
     """Files related to a project that can be downloaded by authenticated users with project access"""
@@ -103,7 +118,7 @@ class DownloadableFile(models.Model):
 
     name = models.CharField(max_length=200)
     order = models.IntegerField()
-    category = models.IntegerField(max_length=200, choices=DownloadableFileTypes.choices)
+    category = models.IntegerField(choices=DownloadableFileTypes.choices)
     file = models.FileField(help_text="A downloadable file - must not be added if a link is set", null=True, blank=True)
     link = models.CharField(help_text="Link to a file or document - must not be set if a file is present", max_length=2000, null=True, blank=True)
     date = models.DateField()

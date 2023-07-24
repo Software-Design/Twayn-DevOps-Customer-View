@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load dates %}
-<a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestone/{{ milestone.id }}" class="nolink">
+<a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/milestone/{{ milestone.remoteIdentifier }}" class="nolink">
     <li class="list-group-item">
         <strong>{{ milestone.title }} {% if request.user.is_superuser %}
             <a href="{{ p.project.web_url }}" target="_blank"><i class="fab fa-gitlab"></i></a>
@@ -8,7 +8,7 @@
         <div class="text-muted">
             {% if milestone.start_date or milestone.due_date %}
                 {% if milestone.description %}<i class="far fa-file-edit"></i> <small>{{ milestone.description }}</small><br>{% endif %}
-                <i class="far fa-calendar-alt"></i> <small>{{ milestone.start_date|parse_date|date:settings.DATE_FORMAT }} bis {{ milestone.due_date|parse_date|date:settings.DATE_FORMAT }}</small>
+                <i class="far fa-calendar-alt"></i> <small>{{ milestone.start_date|date:settings.DATE_FORMAT }} bis {{ milestone.due_date|date:settings.DATE_FORMAT }}</small>
             {% else %}
                 {% trans 'No specified time range' %}
             {% endif %}

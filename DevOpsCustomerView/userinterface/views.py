@@ -1,7 +1,9 @@
 import datetime
 import os
+from datetime import timezone
 from typing import Union
 
+import django
 import pdfkit
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
@@ -10,18 +12,19 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core.handlers.wsgi import WSGIRequest
+from django.core.mail import EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect, FileResponse, Http404
 from django.shortcuts import redirect
+from django.template import Context
+from django.template.loader import get_template
 from django.utils.translation import gettext as _
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.encoding import iri_to_uri
 
 from .models import *
-from .templatetags.dates import parse_date
-from .tools.gitlabCache import (loadIssues, loadMilestones, loadProject,
-                                loadWikiPage)
+from .templatetags.dates import parse_date, parse_iso
 from .tools.templateHelper import template
-from .tools.viewsHelper import getProject
+from .tools.viewsHelper import getProject, getRepositoryService
 from .tools.sendMail import sendingEmail
 
 
@@ -62,6 +65,18 @@ def loggingout(request: WSGIRequest) -> HttpResponseRedirect:
     logout(request)
     return redirect('/')
 
+@login_required
+def userSettings(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
+    glProject = getProject(request, id)
+    projectAssignment = UserProjectAssignment.objects.filter(project=glProject['localProject'], user=request.user).first()
+
+    if request.POST:
+        projectAssignment.enableNotifications = False
+        if request.POST.get('enableNotifications'):
+            projectAssignment.enableNotifications = True
+        projectAssignment.save()
+
+    return HttpResponse(template('project/userSettings').render({'enableNotifications': projectAssignment.enableNotifications}, request))
 
 @login_required
 @staff_member_required
@@ -77,12 +92,12 @@ def reportOverview(request: WSGIRequest) -> HttpResponse:
  
     activeProjects = []
     for assignment in projectAssignments:
-        glProject = loadProject(assignment.project, assignment.accessToken)
+        repService = getRepositoryService(assignment.project)
+        glProject = repService.loadProject(assignment.project, assignment.accessToken)
         if not glProject in activeProjects:
             activeProjects.append(glProject)
 
     return HttpResponse(template('report/view').render({'members': members, 'activeProjects': activeProjects}, request))
-
 
 @login_required
 def projectList(request: WSGIRequest) -> HttpResponse:
@@ -90,7 +105,6 @@ def projectList(request: WSGIRequest) -> HttpResponse:
     Handles the requests for /overview
     Gets all projects to show on the page
     """
-
     if request.user.is_staff:
         projectAssignments = UserProjectAssignment.objects.filter(project__closed=False).order_by('project__name').all()
     else:
@@ -99,7 +113,9 @@ def projectList(request: WSGIRequest) -> HttpResponse:
     activeProjects = []
     inactiveProjects = []
     for assignment in projectAssignments:
-        glProject = loadProject(assignment.project, assignment.accessToken)
+        # glProject = loadProject(assignment.project, assignment.accessToken)
+        repService = getRepositoryService(assignment.project)
+        glProject = repService.loadProject(assignment.project, assignment.accessToken)
         if glProject not in inactiveProjects and glProject not in activeProjects:
             try:
                 if glProject['localProject'].inactive:
@@ -116,9 +132,11 @@ def projectPublic(request: WSGIRequest, slug:str, id:int, hash:str) -> HttpRespo
     """
     Generate an overview for a project that is accesible without having an account
     """
+    # ToDo Check ???
 
     assignment = UserProjectAssignment.objects.filter(project__closed=False, project__projectIdentifier=id, project__privateUrlHash=hash).exclude(project__publicOverviewPassword__isnull=True,project__publicOverviewPassword__in=["", " ", None]).first()
-    glProject = loadProject(assignment.project, assignment.accessToken)
+    repService = getRepositoryService(assignment.project)
+    glProject = repService.loadProject(assignment.project, assignment.accessToken)
 
     if request.POST.get('password'):
         if request.POST['password'] == assignment.project.publicOverviewPassword:
@@ -164,9 +182,9 @@ def projectView(request, slug:str, id:int) -> HttpResponse:
     lastMilestoneEnd = None
 
     for milestone in glProject['allMilestones']:
-        if milestone.start_date and milestone.due_date:
-            start = parse_date(milestone.start_date)
-            end = parse_date(milestone.due_date)
+        if milestone.start_date and milestone.start_date != '?' and milestone.due_date:
+            start = milestone.start_date
+            end = milestone.due_date
             if (milestone.expired == False or (milestone.expired == True and (end - start).days < 365)):
                 if firstMilestoneStart == None or start < firstMilestoneStart:
                     firstMilestoneStart = start
@@ -191,7 +209,8 @@ def issueList(request, slug, id):
     if isinstance(glProject, HttpResponse):
         return glProject
 
-    glProject['issues'] = loadIssues(glProject['localProject'], glProject['remoteProject'], page=request.GET.get('page', 1), status=request.GET.get('status',None), label=request.GET.get('label',None))
+    repService = getRepositoryService(glProject['localProject'])
+    glProject['issues'] = repService.loadIssues(glProject['localProject'], glProject['remoteInstance'], page=request.GET.get('page', 1), status=request.GET.get('status',None), label=request.GET.get('label',None))
 
     return HttpResponse(template('issue/list').render(glProject, request))
 
@@ -208,26 +227,23 @@ def issueCreate(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseR
         return glProject
 
     if request.POST.get('title'):
-        body = {'title': request.POST['title'], 'description': request.POST['description']}
-        if request.POST.get('label','') != '':
-            body['labels'] = request.POST['label']
-        if request.POST.get('label','') != '':
-            body['milestone_id'] = request.POST['milestone']
-        url = '/project/'+glProject['remoteProject'].path+'/'+str(glProject['remoteProject'].id)+'/issues/'
+        url = '/project/'+glProject['remoteProject'].path+'/'+str(glProject['remoteProject'].remoteIdentifier)+'/issues/'
         try:
-            issue = glProject['remoteProject'].issues.create(body)
-            cache.delete('glp_'+glProject['localProject'].projectIdentifier+'issues_'+str(issue.iid))
-            if  settings.SEND_MAIL:
-                milestone = loadMilestones(glProject['localProject'], glProject['remoteProject'],request.POST['milestone'])
-                subjecttext = 'Hello, there is a new ticket in {}'.format(glProject['localProject'].name)
-                messagetext = f'Title : {request.POST["title"]}\nLabel : {request.POST["label"]}\nMilestone : {milestone.title}\nDescription : {request.POST["description"]}'
-                # send mail if ticket is saved       
-                sendingEmail([glProject['localProject'].firstEMailAddress],messagetext,subjecttext)
+            repService = getRepositoryService(glProject['localProject'])
+            repService.createIssue(glProject['localProject'], glProject['remoteInstance'], request.POST['title'], request.POST['description'], request.POST['milestone'], request.POST['label'])
+
+            # ToDo: not needed anymore?
+            # if  settings.SEND_MAIL:
+            #     repService = getRepositoryService(glProject['localProject'])
+            #     milestone = repService.loadMilestones(glProject['localProject'], glProject['remoteInstance'],request.POST['milestone'])
+            #     subjecttext = 'Hello, there is a new ticket in {}'.format(glProject['localProject'].name)
+            #     messagetext = f'Title : {request.POST["title"]}\nLabel : {request.POST["label"]}\nMilestone : {milestone.title}\nDescription : {request.POST["description"]}'
+            #    send mail if ticket is saved
+            #    ## sendingEmail([glProject['localProject'].firstEMailAddress],messagetext,subjecttext)
         except:
             return redirect(url+'?error=invalid')
-        return redirect(url)
 
-        
+        return redirect(url)
 
     return HttpResponse(template('issue/create').render(glProject, request))
 
@@ -245,14 +261,15 @@ def issue(request: WSGIRequest, slug: str, id: int, issue: int) -> HttpResponse:
 
     if request.POST.get('comment'):
         try:
-            glProject['remoteProject'].issues.get(id=issue).notes.create({'body': '**'+request.user.first_name+' '+request.user.last_name+':**\n '+request.POST['comment']})
-            id = 'glp_'+glProject['localProject'].projectIdentifier+'_issues_'+str(issue)
-            cache.delete(id)
+            repService = getRepositoryService(glProject['localProject'])
+            body = '**'+request.user.first_name+' '+request.user.last_name+':**\n '+request.POST['comment']
+            repService.createIssueComment(glProject['localProject'], glProject['remoteInstance'], issue, body)
         except:
             return redirect('/project/'+glProject['remoteProject'].path+'/'+str(glProject['remoteProject'].id)+'/issues/'+str(issue)+'?error=invalid')
 
-    glProject['issue'] = loadIssues(
-        glProject['localProject'], glProject['remoteProject'], iid=issue)
+    repService = getRepositoryService(glProject['localProject'])
+    glProject['issue'] = repService.loadIssues(
+        glProject['localProject'], glProject['remoteInstance'], iid=issue)
 
     return HttpResponse(template('issue/view').render(glProject, request))
 
@@ -287,19 +304,21 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid:int) -> HttpRes
     if not glProject['localProject'].enableMilestones:
         return redirect('/')
 
-    milestone = loadMilestones(glProject['localProject'], glProject['remoteProject'], mid)
-    milestoneIssues = loadIssues(glProject['localProject'], glProject['remoteProject'], milestone=mid)
+    repService = getRepositoryService(glProject['localProject'])
+    # Todo
+    milestone = repService.loadMilestones(glProject['localProject'], glProject['remoteInstance'], mid)
+    milestoneIssues = repService.loadIssues(glProject['localProject'], glProject['remoteInstance'], milestone=mid)
     issues = {'open': [], 'assigned': [], 'closed': [], 'timeEstimated': 0, 'timeSpent': 0}
-    for issue in milestoneIssues: 
+    for issue in milestoneIssues:
         if issue.state == 'closed':
             issues['closed'].append(issue)
         elif len(issue.assignees) > 0:
             issues['assigned'].append(issue)
         else:
             issues['open'].append(issue)
-        time = issue.time_stats()
-        issues['timeEstimated'] += time['time_estimate']
-        issues['timeSpent'] += time['total_time_spent']
+
+        issues['timeEstimated'] += issue.time_stats_time_estimate
+        issues['timeSpent'] += issue.time_stats_total_time_spent
     
     issues['totalTime'] = issues['timeEstimated'] + issues['timeSpent']
 
@@ -327,7 +346,10 @@ def fileDownload(request: WSGIRequest, slug: str, id: int, file: str) -> HttpRes
     """
 
     assignment = UserProjectAssignment.objects.filter(project__projectIdentifier=id,project__closed=False).exclude(project__publicOverviewPassword__isnull=True,project__publicOverviewPassword__in=["", " ", None]).first()
-    glProject = loadProject(assignment.project, assignment.accessToken)
+
+    # glProject = loadProject(assignment.project, assignment.accessToken)
+    repService = getRepositoryService(assignment.project)
+    glProject = repService.loadProject(assignment.project, assignment.accessToken)
 
     # Only bxpass the regular permission system if the project is public and the user has already authenticated himself with the public board password
     if not request.session.get('password') or not assignment.project.publicOverviewPassword or request.session.get('password') != assignment.project.publicOverviewPassword:
@@ -347,6 +369,7 @@ def wiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRedirect
     Get the information needed to display an overview of the documentation pages of the project specified with the id
     Redirect to / if the documentation is disabled for the project
     """
+    ### ToDo
 
     glProject = getProject(request, id)
     if isinstance(glProject, HttpResponse):
@@ -366,6 +389,8 @@ def wikiPage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
     Redirect to / if the documentation is disabled for the project
     """
 
+    ### ToDo
+
     glProject = getProject(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
@@ -373,7 +398,8 @@ def wikiPage(request: WSGIRequest, slug: str, id: int, page) -> Union[HttpRespon
     if not glProject['localProject'].enableDocumentation:
         return redirect('/')
 
-    glProject['page'] = loadWikiPage(
+    repService = getRepositoryService(glProject)
+    glProject['page'] = repService.loadWikiPage(
         glProject['localProject'], glProject['remoteProject'], page)
 
     return HttpResponse(template('wiki/page').render(glProject, request))
@@ -414,6 +440,8 @@ def printOverview(request: WSGIRequest, slug: str, id:  int, date: str):
     Handles the requests for /project/<slug:slug>/<int:id>/print/<str:date>
     Renders a pdf of the project overview to enable downloading it
     """
+
+    ### ToDo
 
     glProject = getProject(request, id)
     if isinstance(glProject, HttpResponse):
@@ -465,7 +493,8 @@ def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
     for project in Project.objects.all().prefetch_related('userprojectassignment_set'):
         if len(project.userprojectassignment_set.all()) > 0:
             # .first() will break the prefetch
-            loadProject(project, project.userprojectassignment_set.all()[
+            repService = getRepositoryService(project)
+            repService.loadProject(project, project.userprojectassignment_set.all()[
                         0].accessToken)
 
     

@@ -1,7 +1,9 @@
 from django.template import Library
 from django.utils.translation import gettext as _
 
-from ..tools.gitlabCache import loadWikiPage
+# from ..tools.gitlabCache import loadWikiPage
+from ..tools.viewsHelper import getRepositoryService
+
 from ..models import *
 import markdown as md
 import re
@@ -23,6 +25,8 @@ customTranslations = {
 
 @register.filter()
 def markdown(text):
+    if not text:
+        return ""
         
     text = md.markdown(text,extensions=['fenced_code', 'nl2br'])
     for key,value in customTranslations.items():
@@ -36,6 +40,7 @@ def markdown(text):
 
 @register.simple_tag
 def wikicontent(slug,localProject, remoteProject):
-    
-    text = loadWikiPage(localProject, remoteProject, slug).content
+
+    repService = getRepositoryService(localProject)
+    text = repService.loadWikiPage(localProject, remoteProject, slug).content
     return markdown(text)
