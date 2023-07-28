@@ -15,20 +15,17 @@ class Command(BaseCommand):
         parser.add_argument('-maxdays', '--maxdays', type=int, help='If last run is past longer than maxdays, than limit notify to that range.')
 
     def handle(self, *args, **options):
-        try:
-            maxdays = options['maxdays']
-            if not maxdays:
-                maxdays = 3
-            # As we use the permissions from every user, we have to check for every user if there is a change for him/her
-            # go through all projects (only active)
-            # check all changes other than the user the notification is send to
-            # send mail with info about project and changes (issues changed)
+        maxdays = options['maxdays']
+        if not maxdays:
+            maxdays = 3
+        # As we use the permissions from every user, we have to check for every user if there is a change for him/her
+        # go through all projects (only active)
+        # check all changes other than the user the notification is send to
+        # send mail with info about project and changes (issues changed)
 
-            notifications = self.sendNotifications(maxdays)
+        notifications = self.sendNotifications(maxdays)
 
-            self.stdout.write('command executed and %s notifications sent' % len(notifications))
-        except:
-            raise CommandError('command failed')
+        self.stdout.write('command executed and %s notifications sent' % len(notifications))
 
     def sendNotifications(self, maxDays):
         projectWithChanges = []
