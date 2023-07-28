@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='project',
             name='firstEMailAddress',
-            field=models.CharField(default=None, help_text='E-Mail Address that gets notified if a new ticket is created by the customer', max_length=100),
+            field=models.CharField(default=None, help_text='E-Mail Address that gets notified if a new ticket is created by the customer', max_length=200),
         ),
         migrations.AlterField(
             model_name='project',

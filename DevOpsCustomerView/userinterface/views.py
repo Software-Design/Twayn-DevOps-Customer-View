@@ -110,13 +110,15 @@ def projectList(request: WSGIRequest) -> HttpResponse:
     else:
         projectAssignments = UserProjectAssignment.objects.filter(project__closed=False,user=request.user)
 
+    seenProjects = []
     activeProjects = []
     inactiveProjects = []
     for assignment in projectAssignments:
         # glProject = loadProject(assignment.project, assignment.accessToken)
         repService = getRepositoryService(assignment.project)
         glProject = repService.loadProject(assignment.project, assignment.accessToken)
-        if glProject not in inactiveProjects and glProject not in activeProjects:
+        if glProject['localProject'].pk not in seenProjects:
+            seenProjects.append(glProject['localProject'].pk)
             try:
                 if glProject['localProject'].inactive:
                     inactiveProjects.append(glProject)
