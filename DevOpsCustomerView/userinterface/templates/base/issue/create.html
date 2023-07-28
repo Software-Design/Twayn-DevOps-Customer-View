@@ -11,7 +11,6 @@
   <a href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/issues/" class="btn btn-outline-primary"><i class="fa far fa-folder-open"></i> {% trans "All Issues" %}</a>
   {% endif %}
   {% if request.user.is_superuser %}
-    {% if repositoryService == %}
     <a href="{{ remoteProject.web_url }}/-/issues/new" class="btn btn-outline-primary" target="_blank"><i class="fab fa-gitlab"></i></a>
   {% endif %}
 </div>
