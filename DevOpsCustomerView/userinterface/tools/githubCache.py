@@ -14,7 +14,7 @@ from .wikiParser import parseStructure
 from userinterface.tools.repositoryServiceInterface import RepositoryServiceInterface, remoteStdProject, remoteStdMilestone, remoteStdIssue, remoteStdUser, remoteStdMergeRequest, remoteStdNote
 
 """
-    Tp get ID of repository from GitHub:
+    To get ID of repository from GitHub:
         HTML Source: <meta name="octolytics-dimension-repository_id" content="{ID}}">
 """
 class githubServiceCache(RepositoryServiceInterface):
@@ -165,13 +165,13 @@ class githubServiceCache(RepositoryServiceInterface):
             else:
                 remoteMilestones = project.get_milestones()
                 # as there is no start date in github, use due date from last milestone
-                remoteMilestones = sorted(remoteMilestones, key=lambda m: m.due_on if m.due_on != '?' else datetime(2020, 1, 1, 0, 0), reverse=False)
+                remoteMilestones = sorted(remoteMilestones, key=lambda m: m.due_on if m.due_on != '?' and m.due_on else datetime(2020, 1, 1, 0, 0), reverse=False)
                 lastStartDate = datetime(2020, 1, 1, 0, 0)
                 for remoteMilestone in remoteMilestones:
                     newMilestone = self.convertMilestone(remoteMilestone, lastStartDate)
                     milestones.append(newMilestone)
                     lastStartDate = newMilestone.due_date
-                milestones = sorted(milestones, key=lambda m: m.due_date if m.due_date != '?' else datetime(2020, 1, 1, 0, 0), reverse=True)
+                milestones = sorted(milestones, key=lambda m: m.due_date if m.due_date != '?' and m.due_date else datetime(2020, 1, 1, 0, 0), reverse=True)
 
             cache.set(id, milestones, settings.CACHE_MILESTONES)
 

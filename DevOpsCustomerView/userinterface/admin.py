@@ -9,7 +9,7 @@ class AssignmentAdmin(ImportExportModelAdmin):
     list_display = ('userName','project')
 
     def userName(self,assigment):
-        return '{} {}'.format(assigment.user.first_name,assigment.user.last_name)
+        return 'User: {} {}'.format(assigment.user.first_name,assigment.user.last_name)
 
 class ProjectAdmin(ImportExportModelAdmin):
     list_display = ('name', 'firstEMailAddress','assigneesNames', 'projectIdentifier')
