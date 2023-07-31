@@ -11,6 +11,9 @@ def parse_iso(value):
 
 @register.filter(expects_localtime=True)
 def parse_date(value):
+    # if already datetime object, return
+    if(type(value) == datetime.datetime):
+        return value
     if(type(value) != str or value == ''):
         return '?'
     return datetime.datetime.strptime(value, "%Y-%m-%d")

@@ -21,8 +21,6 @@ from ..tools.viewsHelper import getProject
 #
 # ===================================================================
 
-
-
 def fake_request(method: str = 'get', path: str = '/', withAuthUser: bool = False, data: dict = {}) -> WSGIRequest:
     '''
     Uses the request factory to build a fake request object and returns it
@@ -47,7 +45,6 @@ def fake_request(method: str = 'get', path: str = '/', withAuthUser: bool = Fals
 
     return request
 
-
 class DictObj:
     def __init__(self, in_dict:dict):
         for key, val in in_dict.items():
@@ -67,7 +64,6 @@ class TestViews(TestCase):
     """
     Tests the view functions of the views.py
     """
-
     def setUp(self):
         """
         Sets up the database for the tests

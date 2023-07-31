@@ -110,8 +110,6 @@ class RepositoryServiceInterface(metaclass=abc.ABCMeta):
         """
         raise NotImplementedError
 
-
-
 class remoteStdProject:
     id = -1
     remoteIdentifier = ""
@@ -155,7 +153,6 @@ class remoteStdMergeRequest:
 
     # def __init__(self):
     # def __str__(self):
-
 
 class remoteStdUser:
     id = -1
