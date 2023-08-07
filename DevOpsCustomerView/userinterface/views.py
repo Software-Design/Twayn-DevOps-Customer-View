@@ -117,7 +117,7 @@ def projectList(request: WSGIRequest) -> HttpResponse:
         # glProject = loadProject(assignment.project, assignment.accessToken)
         repService = getRepositoryService(assignment.project)
         glProject = repService.loadProject(assignment.project, assignment.accessToken)
-        if not glProject['localProject'] or glProject['localProject'].pk not in seenProjects:
+        if not glProject['localProject']['pk'] not in seenProjects:
             seenProjects.append(glProject['localProject'].pk)
             try:
                 if glProject['localProject'].inactive:
