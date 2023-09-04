@@ -159,3 +159,9 @@ try:
     from .local import *
 except ModuleNotFoundError:
     print("No local settings file")
+
+# if VERIFICATION_KEY is not set set it to secret key
+try:
+    VERIFICATION_SECRET
+except NameError:
+    VERIFICATION_SECRET = SECRET_KEY
