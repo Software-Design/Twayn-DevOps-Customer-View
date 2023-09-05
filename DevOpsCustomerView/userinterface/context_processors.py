@@ -12,5 +12,5 @@ def settings(*args) -> dict:
         'settings': django_settings,
         'now': datetime.datetime.today,
         'base': django_settings.TEMPLATE+'/base.html',
-        'userHash': hmac.new(bytes(django_settings.VERIFICATION_SECRET,'utf-8'), msg=args[0].user.email.encode('utf8'), digestmod=hashlib.sha256).hexdigest()
+        'userHash': hmac.new(bytes(django_settings.VERIFICATION_SECRET,'utf-8'), msg=args[0].user.email.encode('utf8'), digestmod=hashlib.sha256).hexdigest() if request.user.is_authenticated else None
     }
