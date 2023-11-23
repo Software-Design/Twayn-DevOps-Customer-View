@@ -292,7 +292,7 @@
 		*/
 		function setup () {
 			initEventListener()
-			document.querySelector('.progress-bar').style.width = '{% widthratio issue.data.time_stats.human_total_time_spent|intval issue.data.time_stats.human_time_estimate|intval 100 %}%'
+			document.querySelector('.progress-bar').style.width = '{% widthratio issue.data.time_stats_total_time_spent|intval issue.data.time_stats_time_estimate|intval 100 %}%'
 		}
 
 		window.onload = setup()

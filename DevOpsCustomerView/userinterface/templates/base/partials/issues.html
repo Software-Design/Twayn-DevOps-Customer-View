@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load dates %}
+{% load numbers %}
 {% load embellish %}
 
 {% for issue in issues %}
@@ -9,11 +10,17 @@
                 <small class="float-end">
                     {% if issue.time_stats_human_time_estimate %}
                         <i class="far fa-history"></i>
-                        {{ issue.time_stats_human_time_estimate }} {% trans 'planned' %}
+                        <strong>{{ issue.time_stats_human_time_estimate }}</strong> {% trans 'planned' %}
                     {% endif %}
                     {% if issue.time_stats_human_total_time_spent %}
-                        <i class="far fa-clock"></i> 
-                        {{ issue.time_stats_human_total_time_spent }} {% trans 'spent' %}
+                        <i class="far fa-clock ms-2"></i> 
+                        <strong>{{ issue.time_stats_human_total_time_spent }}</strong> {% trans 'spent' %}
+                  cd   {% endif %}
+                    {% if issue.time_stats_human_time_estimate and issue.time_stats_human_total_time_spent %}
+                        <strong>
+                            <i class="far fa-stopwatch ms-2"></i> 
+                            {% widthratio issue.time_stats_human_total_time_spent|intval issue.time_stats_human_time_estimate|intval 100 %}%
+                        </strong>
                     {% endif %}
                 </small>
                 <strong {% if issue.isOpen == False %}class="text-muted"{% endif %}>
