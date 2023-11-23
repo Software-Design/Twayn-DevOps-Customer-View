@@ -337,7 +337,7 @@ class gitlabServiceCache(RepositoryServiceInterface):
         newMergeRequest.user_notes_count = remoteMergeRequest['user_notes_count']
         newMergeRequest.draft = remoteMergeRequest['draft']
         newMergeRequest.work_in_progress = remoteMergeRequest['work_in_progress']
-        newMergeRequest.changes_count = int(remoteMergeRequest['changes_count'])
+        newMergeRequest.changes_count = int(remoteMergeRequest['changes_count'] if 'changes_count' in remoteMergeRequest and remoteMergeRequest['changes_count'] else 0)
         newMergeRequest.web_url = remoteMergeRequest['web_url']
 
         return newMergeRequest
