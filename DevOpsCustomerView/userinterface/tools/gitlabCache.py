@@ -349,6 +349,7 @@ class gitlabServiceCache(RepositoryServiceInterface):
         newNote.created_at = parse_iso(remoteNote.created_at)
         newNote.updated_at = parse_iso(remoteNote.updated_at)
         newNote.confidential = remoteNote.confidential
+        newNote.system = remoteNote.system
         newNote.internal = remoteNote.internal
         newNote.author = self.convertUser(remoteNote.author)
 

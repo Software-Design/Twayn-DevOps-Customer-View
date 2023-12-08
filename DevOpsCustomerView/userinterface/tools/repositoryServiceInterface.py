@@ -169,6 +169,7 @@ class remoteStdNote:
     updated_at = None
     confidential = False
     internal = False
+    system = False
 
 class remoteStdIssue:
     id = -1
