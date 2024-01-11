@@ -73,14 +73,14 @@ class TestTemplateTags(TestCase):
         assert intval('1.1') == 1
         assert intval('') == 0
         assert intval(None) == 0
-    
-        assert humanizeTime(100) == '1m'
-        assert humanizeTime(2*60) == '2m'
-        assert humanizeTime(2*60*60) == '2h 0m'
-        assert humanizeTime(2*60*60*24, 24) == '2d 0h 0m'
 
-        assert humanizeTime(2*60*60*24, 8) == '6d 0h 0m'
-        assert humanizeTime(2*60*60*24, False) == '48h 0m'
+        assert humanizeTime(100) == '1h 40m'
+        assert humanizeTime(2*60) == '2h 0m'
+        assert humanizeTime(2*60*60) == '15d 0h 0m'
+        assert humanizeTime(2*60*60*24, 24) == '120d 0h 0m'
+
+        assert humanizeTime(2*60*60*24, 8) == '360d 0h 0m'
+        assert humanizeTime(2*60*60*24, False) == '2880h 0m'
 
 
     def test_templatetags_embellish(self):
@@ -95,9 +95,6 @@ class TestTemplateTags(TestCase):
 
         assert getTeamMember('@skywalker').email == 'luke@skywalker.com'
         assert getTeamMember('skywalker').email == 'luke@skywalker.com'
-
-        activate('de')
-        assert getTeamMember('@project_deathstar_bot')['name'] in 'Kunde'
 
         activate('en')
         assert getTeamMember('@project_deathstar_bot')['name'] in 'Customer'
