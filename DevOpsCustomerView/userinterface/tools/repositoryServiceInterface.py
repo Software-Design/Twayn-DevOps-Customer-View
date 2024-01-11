@@ -1,6 +1,8 @@
 import abc
 from abc import abstractmethod
 from typing import Union
+from .timetrackingHelper import calculateTime
+import re
 
 from userinterface.models import Project
 
@@ -170,6 +172,10 @@ class remoteStdNote:
     confidential = False
     internal = False
     system = False
+    
+    def cleanBody(self):
+        regex_pattern = r'\[(?P<kind>spend|spent|estimate|estimated) (?P<mode>add|subtract|set) (?P<duration>\d+[wdhmsWDHMS]*(?:\s*\d+[wdhmsWDHMS]*)*)\]'
+        return re.sub(regex_pattern, '', self.body.replace('\\','')).strip()
 
 class remoteStdIssue:
     id = -1
@@ -193,6 +199,7 @@ class remoteStdIssue:
     milestone = remoteStdMilestone()
 
     labels = []
+    notes = []
 
     time_stats_human_time_estimate = 0
     time_stats_human_total_time_spent = 0
@@ -224,3 +231,14 @@ class remoteStdIssue:
 
     # def __init__(self):
     # def __str__(self):
+
+    def getTimeDifference(self, kind, start, end):
+        time = 0
+        for comment in self.notes:
+            if comment.created_at >= start and comment.created_at <= end:
+                duration = calculateTime(None, comment.body)
+                if kind == 'estimate':
+                    time += duration[0]
+                else:
+                    time += duration[1]
+        return time

@@ -1,5 +1,6 @@
 from django.template import Library
 import datetime
+import userinterface.templatetags.numbers as numbers
 
 register = Library()
 
@@ -24,3 +25,27 @@ def dayssince(value):
         return(value - datetime.datetime.now()).days * -1
     except:
         return '?'
+
+@register.filter
+def humanizeTime(value):
+    return numbers.humanizeTime(value)
+
+@register.filter
+def first_day_of_month(date):
+    return date.replace(day=1)
+
+@register.filter
+def last_day_of_month(date):
+    return (first_day_of_month(date) + datetime.timedelta(days=32)).replace(day=1) - datetime.timedelta(days=1)
+
+@register.filter
+def first_day_of_previous_month(date):
+    return (first_day_of_month(date) - datetime.timedelta(days=1)).replace(day=1)
+
+@register.filter
+def last_day_of_previous_month(date):
+    return first_day_of_month(date) - datetime.timedelta(days=1)
+
+@register.simple_tag
+def getTimeDifferences(issue, kind, start, end):
+   return numbers.humanizeTime(issue.getTimeDifference(kind, start, end))

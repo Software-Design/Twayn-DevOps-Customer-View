@@ -440,7 +440,7 @@ def printWiki(request: WSGIRequest, slug: str, id: int) -> Union[HttpResponseRed
     return response
 
 @login_required
-def printOverview(request: WSGIRequest, slug: str, id:  int, date: str):
+def printOverview(request: WSGIRequest, slug: str, id:  int):
     """
     Handles the requests for /project/<slug:slug>/<int:id>/print/<str:date>
     Renders a pdf of the project overview to enable downloading it
@@ -453,7 +453,11 @@ def printOverview(request: WSGIRequest, slug: str, id:  int, date: str):
         return glProject
 
     projectIdentifier = glProject['localProject'].projectIdentifier
-    pdfkit.from_string(template('print/overview').render(glProject|{'issues': glProject['remoteInstance'].issues.list(updated_after=datetime.datetime.strptime(date,'%Y-%m-%d'))}, request), '/tmp/'+projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
+
+    repService = getRepositoryService(glProject['localProject'])
+    issues = repService.loadIssues(glProject['localProject'], glProject['remoteInstance']) # TODO check for different pages
+
+    pdfkit.from_string(template('print/overview').render(glProject|{'issues': issues, 'start': datetime.datetime.strptime(request.GET.get('start'), '%Y-%m-%d'), 'end': datetime.datetime.strptime(request.GET.get('end'),'%Y-%m-%d')}, request), '/tmp/'+projectIdentifier+'.pdf', {'encoding': 'UTF-8', '--footer-center': '[page] '+_(
         'of')+' [topage]', '--footer-left': settings.INTERFACE_NAME, '--footer-right': datetime.datetime.now().strftime('%d.%m.%Y')}, verbose=True)
 
     with open('/tmp/'+projectIdentifier+'.pdf', 'rb') as f:

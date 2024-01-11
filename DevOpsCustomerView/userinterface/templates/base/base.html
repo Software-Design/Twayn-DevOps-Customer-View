@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load dates %}
 <!DOCTYPE html>
 
 <html lang="en">
@@ -131,6 +132,7 @@
     {% endblock %}
       
     {% block modals %}
+    <form method="GET" action="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/print/">
         <div class="modal" id="exportModal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -142,15 +144,25 @@
               </div>
               <div class="modal-body">
                 {% trans "This export will generate an overview of all issues updated since the date you chose below and the sum of time spent since this day." %}<br><br>
-                <input type="date" id="exportDate" class="form-control" value="{{ now|date:"Y-m-d" }}" onchange="document.getElementById('exportButton').href = '/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/print/'+this.value; ">
+                <div class="row">
+                  <div class="col-6">
+                    <label>{% trans "Starting" %}</label>
+                    <input type="date" id="exportStartDate" name="start" class="form-control" value="{{ now|first_day_of_previous_month|date:"Y-m-d" }}">
+                  </div>
+                  <div class="col-6">
+                    <label>{% trans "Until" %}</label>
+                    <input type="date" id="exportEndDate" name="end" class="form-control" value="{{ now|last_day_of_previous_month|date:"Y-m-d" }}">
+                  </div>
+                </div>
               </div>
               <div class="modal-footer">
-                <a class="btn btn-primary" id="exportButton" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/print/{{ now|date:"Y-m-d" }}">{% trans "Export" %}</a>
+                <input type="submit" class="btn btn-primary" id="exportButton" value="{% trans "Export" %}">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Close" %}</button>
               </div>
             </div>
           </div>
         </div>
+    </form>
     {% endblock %}
 
     {% block base_js %}

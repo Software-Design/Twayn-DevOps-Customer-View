@@ -1,6 +1,7 @@
 from typing import Union
 
 import gitlab
+import re
 from datetime import datetime, timezone
 from django.conf import settings
 from django.core.cache import cache
@@ -8,7 +9,8 @@ from django.utils.translation import gettext as _
 from gitlab.v4.objects.wikis import ProjectWiki
 from userinterface.templatetags.dates import parse_date, parse_iso
 from userinterface.models import Project
-
+from userinterface.templatetags.numbers import parseHumanizedTime, humanizeTime
+from .timetrackingHelper import calculateTime
 from .wikiParser import parseStructure
 
 from userinterface.tools.repositoryServiceInterface import RepositoryServiceInterface, remoteStdProject, remoteStdMilestone, remoteStdIssue, remoteStdUser, remoteStdMergeRequest, remoteStdNote
@@ -243,10 +245,12 @@ class gitlabServiceCache(RepositoryServiceInterface):
                         mergeRequests.append(newMR)
 
                     notes = []
-                    for remoteNote in remoteIssue.notes.list(system=False):
+                    for remoteNote in remoteIssue.notes.list(order_by='created_at', sort='asc', system=False, get_all=True):
                         newNote = self.convertNote(remoteNote)
+                        newIssue = calculateTime(newIssue, newNote.body)
                         notes.append(newNote)
 
+                    newIssue.notes = notes
                     issues = {
                         'data': newIssue,
                         'notes': notes,
@@ -259,13 +263,20 @@ class gitlabServiceCache(RepositoryServiceInterface):
             elif label:
                 remoteIssues = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page, labels=label)
             elif status:
-                print(status)
                 remoteIssues = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page, state=status)
             else:
                 remoteIssues = project.issues.list(confidential=False, order_by='updated_at', sort='desc', page=page)
 
             for remoteIssue in remoteIssues:
                 newIssue = self.convertIssue(remoteIssue)
+
+                notes = []
+                for remoteNote in remoteIssue.notes.list(system=False, get_all=True):
+                    newNote = self.convertNote(remoteNote)
+                    newIssue = calculateTime(newIssue, newNote.body)
+                    notes.append(newNote)
+                
+                newIssue.notes = notes
                 issues.append(newIssue)
 
             cache.set(id, issues, settings.CACHE_ISSUES)
@@ -305,12 +316,6 @@ class gitlabServiceCache(RepositoryServiceInterface):
 
         if remoteIssue.labels:
             newIssue.labels = remoteIssue.labels
-
-        if remoteIssue.time_stats():
-            newIssue.time_stats_human_time_estimate = remoteIssue.time_stats()['human_time_estimate']
-            newIssue.time_stats_human_total_time_spent = remoteIssue.time_stats()['human_total_time_spent']
-            newIssue.time_stats_time_estimate = remoteIssue.time_stats()['time_estimate']
-            newIssue.time_stats_total_time_spent = remoteIssue.time_stats()['total_time_spent']
 
         return newIssue
 

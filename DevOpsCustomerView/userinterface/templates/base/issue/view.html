@@ -205,21 +205,21 @@
 		<h3 id="#progress">{% trans 'Progress' %}</h3>
 		<hr>
 		<div class="alert alert-secondary d-none" role="alert">
-			<h5>
-				<strong>{% trans "Add new comment" %}:</strong>
-				<form method="post">
-					{% csrf_token %}
-					<textarea name="comment" class="form-control" rows="5" placeholder="{% trans "You comment here..." %}"></textarea>
-					<button class="btn btn-primary float-end mt-1">{% trans "Save" %}</button>
-					<br>
-				</form>
+			<h5 class="mb-3">
+				{% trans "Add new comment" %}:
 			</h5>
+			<form method="post">
+				{% csrf_token %}
+				<textarea name="comment" class="form-control" rows="5" placeholder="{% trans "You comment here..." %}"></textarea>
+				<button class="btn btn-primary float-end mt-1">{% trans "Save" %}</button>
+			</form>
+			<br><br>
 			{% autoescape off %}
 				{{ note.body|markdown }}
 			{% endautoescape %}
 		</div>
 		<div class="text-muted">
-			{% for note in issue.notes %} 
+			{% for note in issue.notes reversed %} 
 				{% if note.system == True %}
 					<div class="system d-none">
 						<div class="alert alert-light" role="alert">
@@ -234,32 +234,34 @@
 						<hr />
 					</div>
 				{% else %}
-					<div class="alert alert-secondary" role="alert">
-						{% with author=note.author.username|getTeamMember %}
-						<div class="row">
-							<div class="col-1">
-								{% if author %}
-									{% if author.avatar.url != '*' %}
-										<img src="{{ author.avatar.url }}" class="mw-100" />
-									{% elif localProject.image %}
-										<img src="{{ localProject.image.url }}" class="mw-100" />
+					{% if note.cleanBody|length > 0 %}
+						<div class="alert alert-secondary" role="alert">
+							{% with author=note.author.username|getTeamMember %}
+							<div class="row">
+								<div class="col-1">
+									{% if author %}
+										{% if author.avatar.url != '*' %}
+											<img src="{{ author.avatar.url }}" class="mw-100" />
+										{% elif localProject.image %}
+											<img src="{{ localProject.image.url }}" class="mw-100" />
+										{% endif %}
 									{% endif %}
-								{% endif %}
-							</div>
-							<div class="col-11">
-								<h5>
-									<strong>
-										{% if author %}{{ author.name }}{% else %}{{ note.author.name }}{% endif %}</strong> {% trans 'wrote on' %}
-									{{ note.created_at|date:settings.DATE_FORMAT }}:
-								</h5>
-								{% endwith %}
-								{% autoescape off %}
-									{{ note.body|markdown }}
-								{% endautoescape %}
+								</div>
+								<div class="col-11">
+									<h5>
+										<strong>
+											{% if author %}{{ author.name }}{% else %}{{ note.author.name }}{% endif %}</strong> {% trans 'wrote on' %}
+										{{ note.created_at|date:settings.DATE_FORMAT }}:
+									</h5>
+									{% endwith %}
+									{% autoescape off %}
+										{{ note.cleanBody|markdown }}
+									{% endautoescape %}
+								</div>
 							</div>
 						</div>
-					</div>
-					<hr />
+						<hr />
+					{% endif %}
 				{% endif %}
 			{% endfor %}
 		</div>

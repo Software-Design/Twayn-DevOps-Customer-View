@@ -15,11 +15,11 @@
                     {% if issue.time_stats_human_total_time_spent %}
                         <i class="far fa-clock ms-2"></i> 
                         <strong>{{ issue.time_stats_human_total_time_spent }}</strong> {% trans 'spent' %}
-                  cd   {% endif %}
+                    {% endif %}
                     {% if issue.time_stats_human_time_estimate and issue.time_stats_human_total_time_spent %}
                         <strong>
                             <i class="far fa-stopwatch ms-2"></i> 
-                            {% widthratio issue.time_stats_human_total_time_spent|intval issue.time_stats_human_time_estimate|intval 100 %}%
+                            {% widthratio issue.time_stats_total_time_spent|intval issue.time_stats_time_estimate|intval 100 %}%
                         </strong>
                     {% endif %}
                 </small>

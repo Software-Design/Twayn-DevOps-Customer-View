@@ -43,10 +43,10 @@
           {{ issue.title }}
         </td>
         <td>
-          {{ issue.updated_at|parse_iso|date:settings.DATE_FORMAT }}
+          {{ issue.updated_at|date:settings.DATE_FORMAT }}
         </td>
         <td>
-          {{ issue.time_stats.human_total_time_spent }}
+          {% getTimeDifferences issue "spend" start end %}
         </td>
       </tr>
     {% endfor %}

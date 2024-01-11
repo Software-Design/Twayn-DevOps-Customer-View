@@ -32,3 +32,14 @@
   </div>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+  <script nonce="{{ request.csp_nonce }}">
+    document.querySelector('button[type=submit]').addEventListener('click', function(event) {
+      let element = event.target;
+      element.disabled = true;
+      element.innerHTML = '<i class="far fa-spinner fa-spin"></i> {% trans "Fetching project data..." %}';
+      element.form.submit();
+    });
+  </script>
+{% endblock %}

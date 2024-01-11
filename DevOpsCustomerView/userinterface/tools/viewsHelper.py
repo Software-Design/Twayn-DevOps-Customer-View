@@ -7,6 +7,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.http import Http404, HttpResponse
 from .templateHelper import template
 from userinterface.models import Project, UserProjectAssignment
+from userinterface.templatetags.numbers import parseHumanizedTime
 
 from .gitlabCache import gitlabServiceCache
 from .githubCache import githubServiceCache

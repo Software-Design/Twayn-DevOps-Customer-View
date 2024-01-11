@@ -1,6 +1,7 @@
 from typing import Union
 
 import github
+import re
 from datetime import datetime, date, timezone
 from django.conf import settings
 from django.core.cache import cache
@@ -8,7 +9,7 @@ from django.utils.translation import gettext as _
 from gitlab.v4.objects.wikis import ProjectWiki
 from userinterface.templatetags.dates import parse_date
 from userinterface.models import Project
-
+from .timetrackingHelper import calculateTime
 from .wikiParser import parseStructure
 
 from userinterface.tools.repositoryServiceInterface import RepositoryServiceInterface, remoteStdProject, remoteStdMilestone, remoteStdIssue, remoteStdUser, remoteStdMergeRequest, remoteStdNote
@@ -27,7 +28,7 @@ class githubServiceCache(RepositoryServiceInterface):
                 Either { 'remoteProject': GitHubProjectObject, 'localProject': Project, 'allMilestones': list or False, 'mostRecentIssues': list[:5], 'wikiPages': list or False, 'projectLabels':  }
                 or { 'localProject': { 'name': 'projectName' }, 'error': 'An error occured: SomeException' }
         """
-
+        
         id = f'glh_{projectObject.projectIdentifier}'
 
         project = cache.get(id)
@@ -258,8 +259,10 @@ class githubServiceCache(RepositoryServiceInterface):
                 notes = []
                 for remoteNote in remoteIssue.get_comments():
                     newNote = self.convertNote(remoteNote)
+                    newIssue = calculateTime(newIssue, newNote.body)
                     notes.append(newNote)
 
+                newIssue.notes = notes
                 # ToDo: There is no confidential in github, any alternative?
                 issues = {
                     'data': newIssue,
@@ -267,26 +270,30 @@ class githubServiceCache(RepositoryServiceInterface):
                     'mergeRequests': mergeRequests
                 }
             elif milestone:
-                # ToDo
                 milestone = project.get_milestone(number=int(milestone))
                 remoteIssues = project.get_issues(milestone=milestone, state='all', sort='updated', direction='desc')
             elif label and status:
-                # ToDo
                 remoteIssues = project.get_issues(labels=label, state=status, sort='updated', direction='desc')
             elif label:
-                # ToDo
-                print(label)
                 remoteIssues = project.get_issues(labels=label, state='all', sort='updated', direction='desc')
             elif status:
-                # ToDo
-                print(status)
                 remoteIssues = project.get_issues(state=status, sort='updated', direction='desc')
             else:
                 remoteIssues = project.get_issues(state='all', sort='updated', direction='desc')
 
             for remoteIssue in remoteIssues:
                 newIssue = self.convertIssue(remoteIssue)
+                notes = []
+
+                for remoteNote in remoteIssue.notes.list(system=False):
+                    newNote = self.convertNote(remoteNote)
+                    newIssue = calculateTime(newIssue, newNote.body)
+                    notes.append(newNote)
+
+                newIssue.notes = notes
                 issues.append(newIssue)
+
+            cache.set(id, issues, settings.CACHE_ISSUES)
 
             cache.set(id, issues, settings.CACHE_ISSUES)
 
@@ -297,7 +304,6 @@ class githubServiceCache(RepositoryServiceInterface):
         newIssue.id = remoteIssue.id
         newIssue.iid = remoteIssue.number
         newIssue.remoteIdentifier = remoteIssue.number
-        # Todo alternative?
         newIssue.confidential = False
         newIssue.state = remoteIssue.state
         newIssue.isOpen = newIssue.state == 'open'
