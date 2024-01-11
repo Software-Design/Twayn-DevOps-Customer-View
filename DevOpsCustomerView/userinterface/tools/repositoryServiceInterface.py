@@ -191,6 +191,7 @@ class remoteStdIssue:
     due_date = None
     closed_at = None
     user_notes_count = 0
+    web_url = ""
 
     author = remoteStdUser()
 

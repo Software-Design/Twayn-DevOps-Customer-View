@@ -74,6 +74,7 @@ class githubServiceCache(RepositoryServiceInterface):
         remoteProject.path = "GitHub"
         remoteProject.avatar_url = ""
         remoteProject.description = project.description
+        remoteProject.web_url = project.url
 
         return remoteProject
 
@@ -313,6 +314,7 @@ class githubServiceCache(RepositoryServiceInterface):
         newIssue.updated_at = remoteIssue.updated_at
         newIssue.due_date = None
         newIssue.closed_at = remoteIssue.closed_at
+        newIssue.web_url = remoteIssue.url
         newIssue.user_notes_count = remoteIssue.comments
         newIssue.author = self.convertUser(remoteIssue.user)
 

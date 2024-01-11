@@ -67,6 +67,7 @@ class gitlabServiceCache(RepositoryServiceInterface):
         remoteProject.path = project.path
         remoteProject.avatar_url = project.avatar_url
         remoteProject.description = project.description
+        remoteProject.web_url = project.web_url
 
         return remoteProject
 
@@ -298,6 +299,7 @@ class gitlabServiceCache(RepositoryServiceInterface):
         newIssue.due_date = parse_date(remoteIssue.due_date)
         newIssue.closed_at = parse_iso(remoteIssue.closed_at)
         newIssue.user_notes_count = remoteIssue.user_notes_count
+        newIssue.web_url = remoteIssue.web_url
         newIssue.author = self.convertUser(remoteIssue.author)
 
         if remoteIssue.assignees:
