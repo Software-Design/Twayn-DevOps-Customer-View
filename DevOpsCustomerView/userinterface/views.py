@@ -121,7 +121,7 @@ def projectList(request: WSGIRequest) -> HttpResponse:
         localProject = glProject['localProject']
         pk = localProject.get('pk') if isinstance(localProject, dict) else getattr(localProject, 'pk', None)
         if pk not in seenProjects:
-            seenProjects.append(glProject['localProject'].pk)
+            seenProjects.append(pk)
             try:
                 if localProject.inactive:
                     inactiveProjects.append(glProject)
