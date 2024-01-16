@@ -286,7 +286,7 @@ class githubServiceCache(RepositoryServiceInterface):
                 newIssue = self.convertIssue(remoteIssue)
                 notes = []
 
-                for remoteNote in remoteIssue.notes.list(system=False):
+                for remoteNote in remoteIssue.get_comments():
                     newNote = self.convertNote(remoteNote)
                     newIssue = calculateTime(newIssue, newNote.body)
                     notes.append(newNote)
