@@ -2,8 +2,9 @@ from userinterface.templatetags.numbers import parseHumanizedTime, humanizeTime
 import re
 
 def calculateTime(issue, text):
-    regex_pattern = r'\[(?P<kind>spend|spent|estimate|estimated) (?P<mode>add|subtract|set) (?P<duration>\d+[wdhmsWDHMS]*(?:\s*\d+[wdhmsWDHMS]*)*)\]'
+    regex_pattern = r'\[(?P<kind>spend|spent|estimate|estimated) (?P<mode>add|subtract|set) (?P<duration>\d+[wdhmsWDHMS]*(?:\s*\d+[wdhmsWDHMS]*)*)(?P<text>.*)?\]'
     matches = re.finditer(regex_pattern, text.replace('\\',''))
+    comment = None
     
     time_stats_time_estimate = 0
     time_stats_total_time_spent = 0
@@ -11,6 +12,7 @@ def calculateTime(issue, text):
     for match in matches:
         kind = match.group('kind')
         mode = match.group('mode')
+        comment = match.group('text')
         total_minutes = parseHumanizedTime(match.group('duration'))
 
         if issue:
@@ -29,6 +31,9 @@ def calculateTime(issue, text):
                     issue.time_stats_total_time_spent -= total_minutes
                 elif mode == 'set':
                     issue.time_stats_total_time_spent = total_minutes
+                if not issue.invoice_notes:
+                    issue.invoice_notes = []
+                issue.invoice_notes.append(comment)
 
         else:
 
@@ -51,4 +56,4 @@ def calculateTime(issue, text):
         return issue
 
     else:
-        return (time_stats_time_estimate, time_stats_total_time_spent)
+        return (time_stats_time_estimate, time_stats_total_time_spent, comment)

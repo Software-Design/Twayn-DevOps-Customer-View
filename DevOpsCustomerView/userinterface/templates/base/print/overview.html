@@ -41,6 +41,12 @@
         </td>
         <td>
           {{ issue.title }}
+          {% for line in issue.invoice_notes %}
+            {% if line %}
+            <br>
+            <small>{{ line }}</small>
+            {% endif %}
+          {% endfor %}
         </td>
         <td>
           {{ issue.updated_at|date:settings.DATE_FORMAT }}

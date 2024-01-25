@@ -296,8 +296,6 @@ class githubServiceCache(RepositoryServiceInterface):
 
             cache.set(id, issues, settings.CACHE_ISSUES)
 
-            cache.set(id, issues, settings.CACHE_ISSUES)
-
         return issues
 
     def convertIssue(self, remoteIssue):

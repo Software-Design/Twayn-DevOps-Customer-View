@@ -174,7 +174,13 @@ class remoteStdNote:
     system = False
     
     def cleanBody(self):
-        regex_pattern = r'\[(?P<kind>spend|spent|estimate|estimated) (?P<mode>add|subtract|set) (?P<duration>\d+[wdhmsWDHMS]*(?:\s*\d+[wdhmsWDHMS]*)*)\]'
+        self.body = self.body.replace('\\','')
+        regex_pattern = r'\[(?P<kind>spend|spent|estimate|estimated) (?P<mode>add|subtract|set) (?P<duration>\d+[wdhmsWDHMS]*(?:\s*\d+[wdhmsWDHMS]*)*)(?P<text>.*)?\]'
+        # find all matches of text group and replace the full match with it
+        matches = re.finditer(regex_pattern, self.body.replace('\\',''))
+        for match in matches:
+                self.body = self.body.replace(match.group(0), match.group('text'))
+            
         return re.sub(regex_pattern, '', self.body.replace('\\','')).strip()
 
 class remoteStdIssue:
@@ -192,6 +198,7 @@ class remoteStdIssue:
     closed_at = None
     user_notes_count = 0
     web_url = ""
+    invoice_notes = []
 
     author = remoteStdUser()
 
