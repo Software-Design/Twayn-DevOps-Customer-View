@@ -318,6 +318,9 @@ class gitlabServiceCache(RepositoryServiceInterface):
 
         if remoteIssue.labels:
             newIssue.labels = remoteIssue.labels
+            
+            if 'confidential' in newIssue.labels or 'Confidential' in newIssue.labels or 'hidden' in newIssue.labels or 'Hidden' in newIssue.labels or 'internal' in newIssue.labels or 'Internal' in newIssue.labels:
+                newIssue.confidential = True
 
         return newIssue
 

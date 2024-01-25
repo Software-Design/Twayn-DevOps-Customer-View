@@ -331,6 +331,9 @@ class githubServiceCache(RepositoryServiceInterface):
             newIssue.labels = []
             for label in remoteIssue.labels:
                 newIssue.labels.append(label.name)
+            
+            if 'confidential' in newIssue.labels or 'Confidential' in newIssue.labels or 'hidden' in newIssue.labels or 'Hidden' in newIssue.labels or 'internal' in newIssue.labels or 'Internal' in newIssue.labels:
+                newIssue.confidential = True
 
         # if remoteIssue.time_stats():
         #     newIssue.time_stats_human_time_estimate = 0
