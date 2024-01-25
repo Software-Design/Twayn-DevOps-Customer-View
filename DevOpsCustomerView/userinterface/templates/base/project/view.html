@@ -39,7 +39,7 @@
           arrow_curve: 5,
           padding: 18,
           custom_popup_html: function(task) {
-            window.location = '/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/milestone/'+task.id;
+            window.location = '/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/milestone/'+task.remoteIdentifier;
             return ``;
           },
           {% if daysbetween < 180 %}
