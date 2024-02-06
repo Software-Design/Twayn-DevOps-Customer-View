@@ -48,6 +48,7 @@ class gitlabServiceCache(RepositoryServiceInterface):
                 'wikiPages': [], #parseStructure(loadWikiPage(projectObject, glProject)),
                 'projectLabels': self.loadLabels(projectObject, glProject),
                 'projectReleases': self.loadReleases(projectObject, glProject),
+                'lastUpdate': self.lastUpdate(projectObject, glProject)
             }
             now = datetime.now()
             project['activeMilestones'] = [m for m in list(project['allMilestones']) if
@@ -270,9 +271,6 @@ class gitlabServiceCache(RepositoryServiceInterface):
 
             for remoteIssue in remoteIssues:
                 newIssue = self.convertIssue(remoteIssue)
-
-                if not project.update_at or newIssue.updated_at > project.update_at:
-                    project.update_at = newIssue.updated_at
 
                 notes = []
                 for remoteNote in remoteIssue.notes.list(system=False, get_all=True):

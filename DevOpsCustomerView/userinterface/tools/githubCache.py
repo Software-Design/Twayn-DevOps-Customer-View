@@ -55,6 +55,7 @@ class githubServiceCache(RepositoryServiceInterface):
                 'wikiPages': [], #parseStructure(loadWikiPage(projectObject, ghProject)),
                 'projectLabels': self.loadLabels(projectObject, ghProject),
                 'projectReleases': self.loadReleases(projectObject, ghProject),
+                'lastUpdated': self.lastUpdate(projectObject, ghProject)
             }
             now = datetime.now()
             project['activeMilestones'] = [m for m in list(project['allMilestones']) if
@@ -285,9 +286,6 @@ class githubServiceCache(RepositoryServiceInterface):
             for remoteIssue in remoteIssues:
                 newIssue = self.convertIssue(remoteIssue)
                 notes = []
-
-                if not project.update_at or newIssue.updated_at > project.update_at:
-                    project.update_at = newIssue.updated_at
 
                 for remoteNote in remoteIssue.get_comments():
                     newNote = self.convertNote(remoteNote)
