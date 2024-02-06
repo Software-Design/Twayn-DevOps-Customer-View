@@ -119,6 +119,7 @@ class remoteStdProject:
     avatar_url = ""
     description = ""
     web_url = ""
+    updated_at = None
 
     # def __init__(self):
     # def __str__(self):

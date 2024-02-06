@@ -271,6 +271,9 @@ class gitlabServiceCache(RepositoryServiceInterface):
             for remoteIssue in remoteIssues:
                 newIssue = self.convertIssue(remoteIssue)
 
+                if not project.update_at or newIssue.updated_at > project.update_at:
+                    project.update_at = newIssue.updated_at
+
                 notes = []
                 for remoteNote in remoteIssue.notes.list(system=False, get_all=True):
                     newNote = self.convertNote(remoteNote)

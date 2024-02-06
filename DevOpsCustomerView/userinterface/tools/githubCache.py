@@ -286,6 +286,9 @@ class githubServiceCache(RepositoryServiceInterface):
                 newIssue = self.convertIssue(remoteIssue)
                 notes = []
 
+                if not project.update_at or newIssue.updated_at > project.update_at:
+                    project.update_at = newIssue.updated_at
+
                 for remoteNote in remoteIssue.get_comments():
                     newNote = self.convertNote(remoteNote)
                     newIssue = calculateTime(newIssue, newNote.body)
