@@ -130,13 +130,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
 CSP_DEFAULT_SRC = "'none'"
-CSP_STYLE_SRC = "'self'"
-CSP_SCRIPT_SRC = "'self'"
-CSP_FONT_SRC = "'self'"
 CSP_IMG_SRC = "data: 'self' https://gitlab.com"
 CSP_OBJECT_SRC = "blob: data: 'self'"
 CSP_BASE_URI = "'none'"
 CSP_INCLUDE_NONCE_IN = ["script-src"]
+CSP_STYLE_SRC = "'self' 'unsafe-inline' https://software-design.de"
+CSP_SCRIPT_SRC = "'self' 'unsafe-inline' https://software-design.de"
+CSP_IMG_SRC = "'self' data: https://software-design.de"
+CSP_FONT_SRC = "'self' https://software-design.de"
 
 # set to True to use eMail System
 SEND_MAIL = False
@@ -188,6 +189,7 @@ try:
 except ModuleNotFoundError:
     print("No local settings file")
 
+VERIFICATION_SECRET = ""
 # if VERIFICATION_KEY is not set set it to secret key
 try:
     VERIFICATION_SECRET

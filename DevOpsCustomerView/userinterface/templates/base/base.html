@@ -121,16 +121,16 @@
         {% block content %}
         {% endblock %}
           <br>
-          <hr>  
+          <hr>
           &copy; {% now "Y" %}
           <p class="float-end">powered by <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view" class="text-muted" target="_blank"><strong>Twayn</strong> - DevOps Customer View</a></p>
           <br><br>
         </div>
     {% endblock %}
-    
+
     {% block footer %}
     {% endblock %}
-      
+
     {% block modals %}
     <form method="GET" action="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/print/">
         <div class="modal" id="exportModal" tabindex="-1" role="dialog">
