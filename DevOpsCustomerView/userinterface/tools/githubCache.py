@@ -19,7 +19,7 @@ from userinterface.tools.repositoryServiceInterface import RepositoryServiceInte
         HTML Source: <meta name="octolytics-dimension-repository_id" content="{ID}}">
 """
 class githubServiceCache(RepositoryServiceInterface):
-    def loadProject(self, projectObject: Project, accessToken: str) -> dict:
+    def loadProject(self, projectObject: Project, access_token: str) -> dict:
         """
         Loads the project from github and all its information and returns them
 
@@ -28,17 +28,17 @@ class githubServiceCache(RepositoryServiceInterface):
                 Either { 'remoteProject': GitHubProjectObject, 'localProject': Project, 'allMilestones': list or False, 'mostRecentIssues': list[:5], 'wikiPages': list or False, 'projectLabels':  }
                 or { 'localProject': { 'name': 'projectName' }, 'error': 'An error occured: SomeException' }
         """
-        
-        id = f'glh_{projectObject.projectIdentifier}'
+
+        id = f'glh_{projectObject.project_identifier}'
 
         project = cache.get(id)
         if not project:
             try:
                 # Only for self hosted github
-                # gh = Github(base_url=settings.GITHUB_URL, login_or_token=accessToken)
-                gh = github.Github(accessToken)
+                # gh = Github(base_url=settings.GITHUB_URL, login_or_token=access_token)
+                gh = github.Github(access_token)
                 # full_name_or_id, (str, int)
-                ghProject = gh.get_repo(int(projectObject.projectIdentifier))
+                ghProject = gh.get_repo(int(projectObject.project_identifier))
                 ghProject.path = 'GitHub'
             except Exception as e:
                 return {
@@ -94,14 +94,14 @@ class githubServiceCache(RepositoryServiceInterface):
         """
 
         project = self.getInstance(projectObject, tokenOrInstance)
-        id = f'glh_{projectObject.projectIdentifier}_labels'
+        id = f'glh_{projectObject.project_identifier}_labels'
 
         labels = cache.get(id)
         if not labels:
             labels = []
             ghLabels = project.get_labels()
             for label in ghLabels:
-                if not projectObject.labelPrefix or label.name.startswith(projectObject.labelPrefix):
+                if not projectObject.label_prefix or label.name.startswith(projectObject.label_prefix):
                     labels.append(label)
 
             cache.set(id, labels, settings.CACHE_PROJECTS)
@@ -126,7 +126,7 @@ class githubServiceCache(RepositoryServiceInterface):
         return []
 
         project = self.getInstance(projectObject, tokenOrInstance)
-        id = f'glh_{projectObject.projectIdentifier}_releases'
+        id = f'glh_{projectObject.project_identifier}_releases'
 
         ghReleases = []
         labels = cache.get(id)
@@ -150,11 +150,11 @@ class githubServiceCache(RepositoryServiceInterface):
             [ gitlab.v4.objects.milestones.ProjectMilestone, ... ]
         """
 
-        if not projectObject.enableMilestones:
+        if not projectObject.enable_milestones:
             return []
 
         project = self.getInstance(projectObject, tokenOrInstance)
-        id = 'glh_' + projectObject.projectIdentifier + '_milestones'
+        id = 'glh_' + projectObject.project_identifier + '_milestones'
         if iid:
             id = f'{id}_{str(iid)}'
 
@@ -231,7 +231,7 @@ class githubServiceCache(RepositoryServiceInterface):
 
         project = self.getInstance(projectObject, tokenOrInstance)
 
-        id = f'glh_{projectObject.projectIdentifier}_issues'
+        id = f'glh_{projectObject.project_identifier}_issues'
         if iid:
             id = f'{id}_{str(iid)}'
         elif milestone:
@@ -399,14 +399,14 @@ class githubServiceCache(RepositoryServiceInterface):
         # ToDo: No wikis!!!
         return False
 
-        if not projectObject.enableDocumentation:
+        if not projectObject.enable_documentation:
             return False
 
         project = self.getInstance(projectObject, tokenOrInstance)
         if slug:
-            id = 'glh_' + projectObject.projectIdentifier + '_' + slug
+            id = 'glh_' + projectObject.project_identifier + '_' + slug
         else:
-            id = 'glh_' + projectObject.projectIdentifier
+            id = 'glh_' + projectObject.project_identifier
 
         page = cache.get(id)
         if not page:
@@ -435,7 +435,7 @@ class githubServiceCache(RepositoryServiceInterface):
 
         issue = project.create_issue(**newIssue)
 
-        cache.delete('glh_' + projectObject.projectIdentifier + 'issues_' + str(issue.number))
+        cache.delete('glh_' + projectObject.project_identifier + 'issues_' + str(issue.number))
 
         return True
 
@@ -444,12 +444,18 @@ class githubServiceCache(RepositoryServiceInterface):
 
         issue = project.get_issue(issue).create_comment(body)
 
-        id = 'glp_' + projectObject.projectIdentifier + '_issues_' + str(issue)
+        id = 'glp_' + projectObject.project_identifier + '_issues_' + str(issue)
         cache.delete(id)
 
         return True
 
     def lastUpdate(self, projectObject: Project, tokenOrInstance):
+        def get_naive_datetime(dt: datetime) -> datetime:
+            """Ensure the datetime is naive."""
+            if dt.tzinfo is not None:
+                return dt.replace(tzinfo=None)
+            return dt
+
         project = self.getInstance(projectObject, tokenOrInstance)
         lastUpdate = project.updated_at
         if (lastUpdate < project.pushed_at):
@@ -459,8 +465,9 @@ class githubServiceCache(RepositoryServiceInterface):
         if (remoteIssues.totalCount > 0):
             lastUpdate = remoteIssues[0].updated_at
 
+        naive_last_update = get_naive_datetime(lastUpdate)
         import django
-        return django.utils.timezone.make_aware(lastUpdate, timezone.utc)
+        return django.utils.timezone.make_aware(naive_last_update, timezone.utc)
 
     def getInstance(self, projectObject: Project, tokenOrInstance):
         """
@@ -479,10 +486,10 @@ class githubServiceCache(RepositoryServiceInterface):
             # gh = Github(base_url=settings.GITHUB_URL, login_or_token=tokenOrInstance)
             # ToDo: not working or used ???
             ### gh = Github(login_or_token=tokenOrInstance)
-            ### project = gh.projects.get(projectObject.projectIdentifier)
+            ### project = gh.projects.get(projectObject.project_identifier)
             # full_name_or_id, (str, int)
             gh = github.Github(tokenOrInstance)
-            ghProject = gh.get_repo(int(projectObject.projectIdentifier))
+            ghProject = gh.get_repo(int(projectObject.project_identifier))
             ghProject.path = 'GitHub'
             project = ghProject
         else:

@@ -73,7 +73,7 @@ class TestViews(TestCase):
         self.user.set_password('test123')
         self.user.save()
         self.teammember = TeamMember.objects.create(name='Luke', email='luke@skywalker.com', phone='', homepage='', username='@skywalker')
-        self.project = Project.objects.create(projectIdentifier=12345,name="New Death Star", firstEMailAddress="luke@skywalker.de")
+        self.project = Project.objects.create(project_identifier=12345,name="New Death Star", firstEMailAddress="luke@skywalker.de")
         self.projectassignment = UserProjectAssignment.objects.create(project=self.project, user=self.user)
 
 

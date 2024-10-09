@@ -22,7 +22,7 @@ def getProject(request: WSGIRequest, id: int) -> Union[dict, HttpResponse]:
             If the requested project does not exist or is not linked to the requesting user
     """
 
-    project = Project.objects.filter(projectIdentifier=id,closed=False).first()
+    project = Project.objects.filter(project_identifier=id,closed=False).first()
 
     if not request.user.is_authenticated or not project:
         raise Http404
@@ -37,7 +37,7 @@ def getProject(request: WSGIRequest, id: int) -> Union[dict, HttpResponse]:
 
     # TODO: if we plan to support other things besides gitlab we should extend this to load even other projects (none-gitlab projects)
     repService = getRepositoryService(project)
-    project = repService.loadProject(project, assignment.accessToken)
+    project = repService.loadProject(project, assignment.access_token)
     if 'error' in project:
         if '404' in project['error']:
             raise Http404

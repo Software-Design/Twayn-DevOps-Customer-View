@@ -9,7 +9,6 @@
         </a>
     </div>
     <div class="col-5">
-        <strong>Projekt</strong>
         <h4 class="card-title text-bold"><a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="nolink"> {{ p.localProject.name }}</a></h4>
         {% if not p.localProject.inactive %}
         <div class="text-justify">
@@ -36,12 +35,12 @@
     </div>
     <div class="col-5" style="border-left: 1px solid orange">
         <div class="badge bg-primary float-end">
-            {{ p.remoteProject.open_issues_count }} offene Tickets
+            {{ p.remoteProject.open_issues_count|default:"0" }} {% trans "offene Tickets" %}
         </div>
         <br><br>
         {% if p.allMilestones and not p.localProject.inactive %}
             <ul>
-            {% for milestone in p.allMilestones %} 
+            {% for milestone in p.allMilestones %}
                 {% if milestone.state == 'active' and milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
                     {% with t='partials/milestones'|template %}
                         {% include t with remoteProject=p.remoteProject %}

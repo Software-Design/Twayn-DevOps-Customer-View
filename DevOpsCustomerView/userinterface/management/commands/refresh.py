@@ -15,8 +15,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         cache.clear()
         projectAssignments = UserProjectAssignment.objects.filter(project__closed=False).order_by('project__name').all()
-        
+
         for assignment in projectAssignments:
             print("Refreshing project: " + assignment.project.name)
             repService = getRepositoryService(assignment.project)
-            glProject = repService.loadProject(assignment.project, assignment.accessToken)
+            glProject = repService.loadProject(assignment.project, assignment.access_token)

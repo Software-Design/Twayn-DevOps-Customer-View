@@ -160,7 +160,7 @@ JAZZMIN_SETTINGS = {
     "login_logo_dark": None,
     "site_logo_classes": "img-circle",
     "site_icon": None,
-    "welcome_sign": "Welcome to the Twayn PM Tool",
+    "welcome_sign": "Willkommen im Twayn PM Tool",
     "copyright": "SD Software-Design GmbH",
     "user_avatar": None,
     "usermenu_links": [
@@ -175,6 +175,59 @@ JAZZMIN_SETTINGS = {
     "custom_js": None,
     "use_google_fonts_cdn": False,
     "show_ui_builder": False,
+    "topmenu_links": [
+        {"name": "", "url": "/", "permissions": ["auth.view_user"], "icon": "fas fa-home"},
+        {"name": "Nutzer", "model": "auth.User"},
+        {"name": "Projekte", "url": "admin:userinterface_project_changelist", "permissions": ["auth.view_user"]},
+        {"app": "userinterface"},
+    ],
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "order_with_respect_to": [
+        "userinterface.Company",
+        "userinterface.CustomerUser",
+        "userinterface.Project",
+        "userinterface.UserProjectAssignment",
+        "userinterface.Team",
+        "userinterface.TeamMember",
+        "auth",
+    ],
+    "custom_links": {
+        "Unternehmen": [
+            {"name": "Unternehmen", "url": "admin:userinterface_company_changelist", "icon": "fas fa-building"},
+            {"name": "Kundenbenutzer", "url": "admin:userinterface_customeruser_changelist", "icon": "fas fa-user-tie"},
+        ],
+        "Projekte": [
+            {"name": "Projekte", "url": "admin:userinterface_project_changelist", "icon": "fas fa-project-diagram"},
+            {"name": "Projektezuweisung", "url": "admin:userinterface_userprojectassignment_changelist", "icon": "fas fa-tasks"},
+        ],
+        "Teams": [
+            {"name": "Teams", "url": "admin:userinterface_team_changelist", "icon": "fas fa-users"},
+            {"name": "Teammitglieder", "url": "admin:userinterface_teammember_changelist", "icon": "fas fa-user-friends"},
+        ],
+    },
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "userinterface.Company": "fas fa-building",
+        "userinterface.CustomerUser": "fas fa-user-tie",
+        "userinterface.DownloadableFile": "fas fa-file-download",
+        "userinterface.Project": "fas fa-project-diagram",
+        "userinterface.Team": "fas fa-users",
+        "userinterface.TeamMember": "fas fa-user-friends",
+        "userinterface.UserProjectAssignment": "fas fa-tasks",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "related_modal_active": True,
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "auth.user": "collapsible",
+        "auth.group": "vertical_tabs"
+    },
 }
 
 
@@ -190,6 +243,7 @@ except ModuleNotFoundError:
     print("No local settings file")
 
 VERIFICATION_SECRET = ""
+SECRET_KEY
 # if VERIFICATION_KEY is not set set it to secret key
 try:
     VERIFICATION_SECRET

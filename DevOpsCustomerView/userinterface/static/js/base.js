@@ -1,5 +1,6 @@
 // Search projects
 function searchProjects() {
+    alert(1)
     input = document.getElementById("searchInput").value.toUpperCase();
     holder = document.getElementById("projectsHolder").getElementsByClassName("card-title");
     for (i = 0; i < holder.length; i++) {

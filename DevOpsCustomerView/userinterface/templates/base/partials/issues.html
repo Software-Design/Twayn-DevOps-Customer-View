@@ -38,7 +38,7 @@
                         <i class="far fa-folder"></i> {% trans 'Closed' %} {% trans 'on' %}
                         {{ issue.closed_at|date:settings.DATE_FORMAT }}
                     {% endif %}
-                    {% if issue.milestone and milestones != False and localProject.enableMilestones == True %}
+                    {% if issue.milestone and milestones != False and localProject.enable_milestones == True %}
                     {% if large %}<br>{% else %} - {% endif %}<i class="fa far fa-tasks"></i> {{ issue.milestone.title }}
                     {% endif %}
                 </div>

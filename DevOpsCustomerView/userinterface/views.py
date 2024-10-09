@@ -107,7 +107,7 @@ def reportOverview(request: WSGIRequest) -> HttpResponse:
     activeProjects = []
     for assignment in projectAssignments:
         repService = getRepositoryService(assignment.project)
-        glProject = repService.loadProject(assignment.project, assignment.accessToken)
+        glProject = repService.loadProject(assignment.project, assignment.access_token)
         if not glProject in activeProjects:
             activeProjects.append(glProject)
 
@@ -139,9 +139,9 @@ def projectList(request: WSGIRequest) -> HttpResponse:
     activeProjects = []
     inactiveProjects = []
     for assignment in projectAssignments:
-        # glProject = loadProject(assignment.project, assignment.accessToken)
+        # glProject = loadProject(assignment.project, assignment.access_token)
         repService = getRepositoryService(assignment.project)
-        glProject = repService.loadProject(assignment.project, assignment.accessToken)
+        glProject = repService.loadProject(assignment.project, assignment.access_token)
 
         localProject = glProject["localProject"]
         pk = (
@@ -176,7 +176,7 @@ def projectPublic(request: WSGIRequest, slug: str, id: int, hash: str) -> HttpRe
     assignment = (
         UserProjectAssignment.objects.filter(
             project__closed=False,
-            project__projectIdentifier=id,
+            project__project_identifier=id,
             project__privateUrlHash=hash,
         )
         .exclude(
@@ -186,7 +186,7 @@ def projectPublic(request: WSGIRequest, slug: str, id: int, hash: str) -> HttpRe
         .first()
     )
     repService = getRepositoryService(assignment.project)
-    glProject = repService.loadProject(assignment.project, assignment.accessToken)
+    glProject = repService.loadProject(assignment.project, assignment.access_token)
 
     if request.POST.get("password"):
         if request.POST["password"] == assignment.project.publicOverviewPassword:
@@ -389,7 +389,7 @@ def milestones(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     if isinstance(glProject, HttpResponse):
         return glProject
 
-    if not glProject["localProject"].enableDocumentation:
+    if not glProject["localProject"].enable_documentation:
         return redirect("/")
 
     return HttpResponse(template("milestone/list").render(glProject, request))
@@ -405,7 +405,7 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid: int) -> HttpRe
     if isinstance(glProject, HttpResponse):
         return glProject
 
-    if not glProject["localProject"].enableMilestones:
+    if not glProject["localProject"].enable_milestones:
         return redirect("/")
 
     repService = getRepositoryService(glProject["localProject"])
@@ -462,7 +462,7 @@ def fileList(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     if isinstance(glProject, HttpResponse):
         return glProject
 
-    if not glProject["localProject"].enableDocumentation:
+    if not glProject["localProject"].enable_documentation:
         return redirect("/")
 
     return HttpResponse(
@@ -479,7 +479,7 @@ def fileDownload(request: WSGIRequest, slug: str, id: int, file: str) -> HttpRes
 
     assignment = (
         UserProjectAssignment.objects.filter(
-            project__projectIdentifier=id, project__closed=False
+            project__project_identifier=id, project__closed=False
         )
         .exclude(
             project__publicOverviewPassword__isnull=True,
@@ -488,9 +488,9 @@ def fileDownload(request: WSGIRequest, slug: str, id: int, file: str) -> HttpRes
         .first()
     )
 
-    # glProject = loadProject(assignment.project, assignment.accessToken)
+    # glProject = loadProject(assignment.project, assignment.access_token)
     repService = getRepositoryService(assignment.project)
-    glProject = repService.loadProject(assignment.project, assignment.accessToken)
+    glProject = repService.loadProject(assignment.project, assignment.access_token)
 
     # Only bxpass the regular permission system if the project is public and the user has already authenticated himself with the public board password
     if (
@@ -523,7 +523,7 @@ def wiki(
     if isinstance(glProject, HttpResponse):
         return glProject
 
-    if not glProject["localProject"].enableDocumentation:
+    if not glProject["localProject"].enable_documentation:
         return redirect("/")
 
     return HttpResponse(template("wiki/overview").render(glProject, request))
@@ -545,7 +545,7 @@ def wikiPage(
     if isinstance(glProject, HttpResponse):
         return glProject
 
-    if not glProject["localProject"].enableDocumentation:
+    if not glProject["localProject"].enable_documentation:
         return redirect("/")
 
     repService = getRepositoryService(glProject)
@@ -570,13 +570,13 @@ def printWiki(
     if isinstance(glProject, HttpResponse):
         return glProject
 
-    projectIdentifier = glProject["localProject"].projectIdentifier
-    if not glProject["localProject"].enableDocumentation:
+    project_identifier = glProject["localProject"].project_identifier
+    if not glProject["localProject"].enable_documentation:
         return redirect("/")
 
     pdfkit.from_string(
         template("print/wiki").render(glProject, request),
-        "/tmp/" + projectIdentifier + ".pdf",
+        "/tmp/" + project_identifier + ".pdf",
         {
             "encoding": "UTF-8",
             "--footer-center": "[page] " + _("of") + " [topage]",
@@ -586,10 +586,10 @@ def printWiki(
         verbose=True,
     )
 
-    with open("/tmp/" + projectIdentifier + ".pdf", "rb") as f:
+    with open("/tmp/" + project_identifier + ".pdf", "rb") as f:
         file_data = f.read()
 
-    os.remove("/tmp/" + projectIdentifier + ".pdf")
+    os.remove("/tmp/" + project_identifier + ".pdf")
 
     response = HttpResponse(file_data, content_type="application/pdf")
     response["Content-Disposition"] = 'attachment; filename="documentation.pdf"'
@@ -610,7 +610,7 @@ def printOverview(request: WSGIRequest, slug: str, id: int):
     if isinstance(glProject, HttpResponse):
         return glProject
 
-    projectIdentifier = glProject["localProject"].projectIdentifier
+    project_identifier = glProject["localProject"].project_identifier
 
     repService = getRepositoryService(glProject["localProject"])
     issues = repService.loadIssues(
@@ -632,7 +632,7 @@ def printOverview(request: WSGIRequest, slug: str, id: int):
             },
             request,
         ),
-        "/tmp/" + projectIdentifier + ".pdf",
+        "/tmp/" + project_identifier + ".pdf",
         {
             "encoding": "UTF-8",
             "--footer-center": "[page] " + _("of") + " [topage]",
@@ -642,10 +642,10 @@ def printOverview(request: WSGIRequest, slug: str, id: int):
         verbose=True,
     )
 
-    with open("/tmp/" + projectIdentifier + ".pdf", "rb") as f:
+    with open("/tmp/" + project_identifier + ".pdf", "rb") as f:
         file_data = f.read()
 
-    os.remove("/tmp/" + projectIdentifier + ".pdf")
+    os.remove("/tmp/" + project_identifier + ".pdf")
 
     response = HttpResponse(file_data, content_type="application/pdf")
     response["Content-Disposition"] = 'attachment; filename="overview.pdf"'
@@ -687,7 +687,7 @@ def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
             # .first() will break the prefetch
             repService = getRepositoryService(project)
             repService.loadProject(
-                project, project.userprojectassignment_set.all()[0].accessToken
+                project, project.userprojectassignment_set.all()[0].access_token
             )
 
     redirectUrl = request.GET.get("redirect")
