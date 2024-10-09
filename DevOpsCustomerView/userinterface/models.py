@@ -16,6 +16,7 @@ class CustomerCompany(models.Model):
 
     name = models.CharField(max_length=200)
     address = models.CharField(max_length=500, blank=True)
+    image = models.ImageField(upload_to="customer_images/", blank=True)
     contact_email = models.EmailField()
     contact_phone = models.CharField(max_length=20, blank=True)
 
@@ -65,10 +66,10 @@ class TeamMember(models.Model):
         DEVELOPER = "DEV", _("Developer")
         ORGANISATION = "ORG", _("Organisation")
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, related_name="members", null=True
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="team_memberships"
     )
+    teams = models.ManyToManyField(Team, related_name="members")
     role = models.CharField(max_length=3, choices=RoleChoices.choices, blank=True)
 
     class Meta:
@@ -76,7 +77,7 @@ class TeamMember(models.Model):
         verbose_name_plural = "SD Teammitglieder"
 
     def __str__(self) -> str:
-        return f"{self.user.username} ({self.team.name})"
+        return f"{self.user.username} ({', '.join(team.name for team in self.teams.all())})"
 
 
 class Project(models.Model):
@@ -95,7 +96,7 @@ class Project(models.Model):
     repository_service = models.IntegerField(
         choices=RepositoryServiceTypes.choices, default=RepositoryServiceTypes.GITHUB
     )
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to="project_images/", blank=True)
     first_email_address = models.CharField(
         max_length=200,
         default=None,

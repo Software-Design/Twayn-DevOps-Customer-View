@@ -13,7 +13,7 @@
       <meta name="author" content="SD Software-Design GmbH" />
       <link rel="icon" href="/static/favicon.ico">
     {% endblock %}
-
+    <script src="/static/js/base.js"></script>
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -42,7 +42,6 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/overview/"><i class="fa fa-archive"></i> {% trans "All Projects" %}</a>
               </li>
-              {{remoteProject}}
               {% if remoteProject %}
               <li class="nav-item">
                 <a class="nav-link disabled" aria-current="page" href="/overview/">|</a>

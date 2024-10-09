@@ -1,72 +1,122 @@
 {% load i18n %}
 {% load dates %}
 {% load template %}
-
-<div class="white-box row mb-4">
-    <div class="col-2 text-center">
-        <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="nolink">
-            <img {% if p.localProject.inactive %}class="p-2 greyscale" style="max-height: 100px !important"{% else %}class="p-2"{% endif %} src="{% if p.localProject.image %}{{ p.localProject.image.url }}{% else %}{{ p.remoteProject.avatar_url }}{% endif %}">
-        </a>
-    </div>
-    <div class="col-5">
-        <h4 class="card-title text-bold"><a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="nolink"> {{ p.localProject.name }}</a></h4>
-        {% if not p.localProject.inactive %}
-        <div class="text-justify">
-            <small class="text-muted">{{ p.remoteProject.description }}{{ p.error }}</small><br><br>
-            {% if p.lastUpdate %}<small><em>{% trans "Letzte Aktivität:" %} {{ p.lastUpdate|date:settings.DATETIME_FORMAT }}</em></small>{% endif %}
-            <br><br>
-            {% for assignee in p.localProject.assignees.all %}
-                <img src="{{ assignee.avatar.url }}" width="50" class="rounded-circle assignee-avatar" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
-            {% endfor %}
-            {% for assignee in p.localProject.userprojectassignment_set.all %}
-                <img src="https://software-design.de/static/img/team/unknown.png" width="50" class="rounded-circle float-end" style="margin-left: -20px;" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if assignee.user.first_name and assignee.user.last_name %}{{ assignee.user.first_name }} {{ assignee.user.last_name }}{% else %}SD Mitarbeiter{% endif %}">
-            {% endfor %}
-            <br>
-            {% if p.localProject.downloadablefile_set.count > 0 %}
-                <br>
-                <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}/downloads/">
-                    <i class="fa far fa-fw fa-file"></i>
-                    {{ p.localProject.downloadablefile_set.count }} {% trans "Datei angehängt" %} &raquo;
-                </a>
-            {% endif %}
-            {% if p.projectReleases|length > 0 %}
-                <br>
-                <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}/downloads/">
-                    <i class="fa far fa-fw fa-laptop-code"></i>
-                    {{ p.projectReleases|length }} {% trans "Veröffentlichungen angehängt" %} &raquo;
-                </a>
-            {% endif %}
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <h4 class="card-title mb-0"><a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="nolink">{{ p.localProject }}</a></h4>
         </div>
-        {% endif %}
-    </div>
-    <div class="col-5" style="border-left: 1px solid orange">
-        <div class="badge bg-primary float-end">
-            {{ p.remoteProject.open_issues_count|default:"0" }} {% trans "offene Tickets" %}
-        </div>
-        <br><br>
-        {% if p.allMilestones and not p.localProject.inactive %}
-            <ul>
-            {% for milestone in p.allMilestones %}
-                {% if milestone.state == 'active' and milestone.start_date|parse_date <= now and milestone.due_date|parse_date >= now %}
-                    {% with t='partials/milestones'|template %}
-                        {% include t with remoteProject=p.remoteProject %}
-                    {% endwith %}
-                {% endif %}
-            {% endfor %}
-            </ul>
-        {% endif %}
-        {% if p.remoteProject.path %}
-        <br>
-        <div class="btn-group float-end" role="group">
+        <div class="btn-group" role="group">
             {% if request.user.is_superuser and p.localProject.publicOverviewPassword %}
-                <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}/{{ p.localProject.publicAccessHash }}" class="btn btn-outline-primary" target="_blank" data-bs-toggle="tooltip" title="Zur öffentlichen Projektseite"><i class="fa far fa-globe"></i></a>
+            <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}/{{ p.localProject.publicAccessHash }}" class="btn btn-outline-primary" target="_blank" data-bs-toggle="tooltip" title="Zur öffentlichen Projektseite"><i class="far fa-globe"></i></a>
             {% endif %}
             {% if request.user.is_superuser %}
-                <a href="/admin/userinterface/project/{{ p.localProject.pk }}/change/" class="btn btn-outline-primary" target="_blank" data-bs-toggle="tooltip" title="Zum Admin-Bereich"><i class="fa far fa-star"></i></a>
-                <a href="{{ p.remoteProject.web_url }}" class="btn btn-outline-primary" target="_blank" data-bs-toggle="tooltip" title="Zum Repository"><i class="fab fa-gitlab"></i></a>
+            <a href="/admin/userinterface/project/{{ p.localProject.pk }}/change/" class="btn btn-outline-primary" target="_blank" data-bs-toggle="tooltip" title="Zum Admin-Bereich"><i class="far fa-star"></i></a>
+            <a href="{{ p.remoteProject.web_url }}" class="btn btn-outline-primary" target="_blank" data-bs-toggle="tooltip" title="Zum Repository"><i class="fab fa-github"></i></a>
             {% endif %}
-            <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="btn primary-bg float-end">{% trans "Zum Projekt &raquo;" %}</a>
+            <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="btn btn-primary">{% trans "Zum Projekt &raquo;" %}</a>
         </div>
-        {% endif %}
     </div>
+    <div class="row g-0">
+        <div class="col-md-2 text-center">
+            {% if p.localProject.image %}
+                <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="nolink">
+                    <img
+                        class="img-fluid p-2 {% if p.localProject.inactive %}greyscale{% endif %}"
+                        src="{{ p.localProject.image.url }}"
+                        alt="{{ p.localProject.name }}"
+                    >
+                </a>
+            {% endif %}
+        </div>
+        <div class="col-md-10">
+            <div class="card-body">
+                {% if not p.localProject.inactive %}
+                <p class="card-text">{{ p.remoteProject.description }}{{ p.error }}</p>
+                {% if p.lastUpdate %}
+                <p class="card-text"><small class="text-muted">{% trans "Letzte Aktivität:" %} {{ p.lastUpdate|date:settings.DATETIME_FORMAT }}</small></p>
+                {% endif %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="accordion" id="teamAccordion">
+                            {% for team in p.localProject.teams.all %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ team.id }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ team.id }}" aria-expanded="false" aria-controls="collapse{{ team.id }}">
+                                        {{ team.name }}
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ team.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ team.id }}" data-bs-parent="#teamAccordion">
+                                    <div class="accordion-body">
+                                        <ul class="list-group">
+                                            {% for member in team.members.all %}
+                                            <li class="list-group-item d-flex align-items-center">
+                                                <img src="https://software-design.de/static/img/team/unknown.png" width="50" class="rounded-circle me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ member.user.get_full_name }}">
+                                                <span>{{ member.user.get_full_name }} <small>({{ member.get_role_display }})</small></span>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="accordion" id="customerAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingCustomer">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCustomer" aria-expanded="false" aria-controls="collapseCustomer">
+                                        {{ p.localProject.customer_company.name }}
+                                    </button>
+                                </h2>
+                                <div id="collapseCustomer" class="accordion-collapse collapse" aria-labelledby="headingCustomer" data-bs-parent="#customerAccordion">
+                                    <div class="accordion-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img src="{% if p.localProject.customer_company.image %}{{ p.localProject.customer_company.image.url }}{% else %}https://software-design.de/static/img/company/unknown.png{% endif %}" width="100" class="{% if not p.localProject.customer_company.image %}rounded-circle{% endif %} me-3" alt="{{ p.localProject.customer_company.name }}">
+                                            <div>
+                                                <strong>{{ p.localProject.customer_company.name }}</strong><br>
+                                                <small>{{ p.localProject.customer_company.address }}</small>
+                                            </div>
+                                        </div>
+                                        <ul class="list-group">
+                                            {% for customer_user in p.localProject.customer_company.customeruser_set.all %}
+                                            <li class="list-group-item d-flex align-items-center justify-content-between">
+                                                <div>
+                                                    <img src="https://software-design.de/static/img/team/unknown.png" width="50" class="rounded-circle me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ customer_user.user.get_full_name }}">
+                                                    <span>{{ customer_user.user.get_full_name }}</span>
+                                                </div>
+                                                <div>
+                                                    {% if not customer_user.user.can_handle_contracts %}
+                                                        <i class="far fa-file-invoice ms-3" data-bs-toggle="tooltip" data-bs-placement="top" title="Dieser Benutzer hat die Berechtigung, Verträge zu erstellen."></i>
+                                                    {% endif %}
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="mt-3">
+                    {% if p.localProject.downloadablefile_set.count > 0 %}
+                    <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}/downloads/" class="btn btn-outline-secondary mt-3">
+                        <i class="fa far fa-fw fa-file"></i>
+                        {{ p.localProject.downloadablefile_set.count }} {% trans "Datei angehängt" %} &raquo;
+                    </a>
+                    {% endif %}
+                    {% if p.projectReleases|length > 0 %}
+                    <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}/downloads/" class="btn btn-outline-secondary mt-3">
+                        <i class="fa far fa-fw fa-laptop-code"></i>
+                        {{ p.projectReleases|length }} {% trans "Veröffentlichungen angehängt" %} &raquo;
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer"></div>
 </div>

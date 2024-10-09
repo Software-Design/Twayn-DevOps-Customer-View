@@ -1,9 +1,9 @@
 // Search projects
 function searchProjects() {
-    alert(1)
-    input = document.getElementById("searchInput").value.toUpperCase();
-    holder = document.getElementById("projectsHolder").getElementsByClassName("card-title");
-    for (i = 0; i < holder.length; i++) {
+    const input = document.getElementById("searchInput").value.toUpperCase();
+    const holder = document.getElementById("projectsHolder").getElementsByClassName("card-title");
+
+    for (let i = 0; i < holder.length; i++) {
         if (holder[i].innerHTML.toUpperCase().indexOf(input) > -1) {
             holder[i].parentNode.parentNode.style.display = "";
         } else {
@@ -12,9 +12,19 @@ function searchProjects() {
     }
 }
 
-(function() {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-})();
+function initializeTooltips() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+}
+
+function delayedSearch() {
+    setTimeout(searchProjects, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    initializeTooltips();
+    document.getElementById("searchInput").addEventListener('input', delayedSearch);
+    document.getElementById("searchInput").addEventListener('change', searchProjects);
+});

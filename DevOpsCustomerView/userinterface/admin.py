@@ -12,7 +12,7 @@ from .models import (
 
 
 class PeopleAdmin(ImportExportModelAdmin):
-    list_display = ("get_name", "get_email", "role")
+    list_display = ("get_name", "get_teams", "get_email", "role")
 
     def get_name(self, obj: TeamMember) -> str:
         return obj.user.username
@@ -25,6 +25,11 @@ class PeopleAdmin(ImportExportModelAdmin):
 
     get_email.admin_order_field = "user__email"
     get_email.short_description = "Email"
+
+    def get_teams(self, obj: TeamMember) -> str:
+        return ", ".join(team.name for team in obj.teams.all())
+
+    get_teams.short_description = "Teams"
 
 
 class AssignmentAdmin(ImportExportModelAdmin):
