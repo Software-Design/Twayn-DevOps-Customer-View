@@ -98,6 +98,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# SevDesk API settings
+SEVDESK_API_URL = "https://my.sevdesk.de/api/v1/"
+SEVDESK_TOKEN = ""
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -176,9 +181,18 @@ JAZZMIN_SETTINGS = {
     "use_google_fonts_cdn": False,
     "show_ui_builder": False,
     "topmenu_links": [
-        {"name": "", "url": "/", "permissions": ["auth.view_user"], "icon": "fas fa-home"},
+        {
+            "name": "",
+            "url": "/",
+            "permissions": ["auth.view_user"],
+            "icon": "fas fa-home",
+        },
         {"name": "Nutzer", "model": "auth.User"},
-        {"name": "Projekte", "url": "admin:userinterface_project_changelist", "permissions": ["auth.view_user"]},
+        {
+            "name": "Projekte",
+            "url": "admin:userinterface_project_changelist",
+            "permissions": ["auth.view_user"],
+        },
         {"app": "userinterface"},
     ],
     "show_sidebar": True,
@@ -196,16 +210,40 @@ JAZZMIN_SETTINGS = {
     ],
     "custom_links": {
         "Unternehmen": [
-            {"name": "Unternehmen", "url": "admin:userinterface_company_changelist", "icon": "fas fa-building"},
-            {"name": "Kundenbenutzer", "url": "admin:userinterface_customeruser_changelist", "icon": "fas fa-user-tie"},
+            {
+                "name": "Unternehmen",
+                "url": "admin:userinterface_company_changelist",
+                "icon": "fas fa-building",
+            },
+            {
+                "name": "Kundenbenutzer",
+                "url": "admin:userinterface_customeruser_changelist",
+                "icon": "fas fa-user-tie",
+            },
         ],
         "Projekte": [
-            {"name": "Projekte", "url": "admin:userinterface_project_changelist", "icon": "fas fa-project-diagram"},
-            {"name": "Projektezuweisung", "url": "admin:userinterface_userprojectassignment_changelist", "icon": "fas fa-tasks"},
+            {
+                "name": "Projekte",
+                "url": "admin:userinterface_project_changelist",
+                "icon": "fas fa-project-diagram",
+            },
+            {
+                "name": "Projektezuweisung",
+                "url": "admin:userinterface_userprojectassignment_changelist",
+                "icon": "fas fa-tasks",
+            },
         ],
         "Teams": [
-            {"name": "Teams", "url": "admin:userinterface_team_changelist", "icon": "fas fa-users"},
-            {"name": "Teammitglieder", "url": "admin:userinterface_teammember_changelist", "icon": "fas fa-user-friends"},
+            {
+                "name": "Teams",
+                "url": "admin:userinterface_team_changelist",
+                "icon": "fas fa-users",
+            },
+            {
+                "name": "Teammitglieder",
+                "url": "admin:userinterface_teammember_changelist",
+                "icon": "fas fa-user-friends",
+            },
         ],
     },
     "icons": {
@@ -226,7 +264,7 @@ JAZZMIN_SETTINGS = {
     "changeform_format": "horizontal_tabs",
     "changeform_format_overrides": {
         "auth.user": "collapsible",
-        "auth.group": "vertical_tabs"
+        "auth.group": "vertical_tabs",
     },
 }
 
@@ -237,15 +275,17 @@ LOCAL.PY ALWAYS OVERWRITES THESE SETTINGS
 =========================================================
 """
 
+NO_SECRET_KEY = ""
+
 try:
     from .local import *
 except ModuleNotFoundError:
     print("No local settings file")
 
-VERIFICATION_SECRET = ""
-SECRET_KEY
+VERIFICATION_SECRET = NO_SECRET_KEY
+SECRET_KEY = NO_SECRET_KEY
 # if VERIFICATION_KEY is not set set it to secret key
 try:
-    VERIFICATION_SECRET
+    VERIFICATION_SECRET = ""
 except NameError:
     VERIFICATION_SECRET = SECRET_KEY

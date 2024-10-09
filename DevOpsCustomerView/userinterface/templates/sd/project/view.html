@@ -14,8 +14,7 @@
     <script src="{% static 'vendor/frappe-gantt/frappe-gantt.js' %}"></script>
     <script>
       var tasks = [
-      {% for milestone in allMilestones %} 
-        
+      {% for milestone in allMilestones %}
         {% if milestone.start_date and milestone.due_date %}
           {% with milestone.due_date|parse_date|dayssince as dayssince %}
             {% if milestone.expired == False or milestone.expired == True and dayssince < 365 %}
@@ -148,7 +147,7 @@
         </div>
       </div>
       {% if localProject.downloadablefile_set.count > 0 or projectReleases|length > 0  %}
-        <br>  
+        <br>
         <h4>{% trans "Documents & Downloads" %}</h4>
         {% blocktrans with amountFiles=localProject.downloadablefile_set.count amountRelease=projectReleases|length %}
         There are {{ amountFiles }} file(s) and {{ amountRelease }} release(s) attached to this project.
@@ -166,5 +165,4 @@
       {% endif %}
     </div>
   </div>
-  
 {% endblock %}

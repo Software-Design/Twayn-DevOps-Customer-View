@@ -13,22 +13,28 @@
         {% if not p.localProject.inactive %}
         <div class="text-justify">
             <small class="text-muted">{{ p.remoteProject.description }}{{ p.error }}</small><br><br>
-            <small><em>{% trans "Last activity:" %} {{ p.lastUpdate|date:settings.DATETIME_FORMAT }}</em></small>
+            {% if p.lastUpdate %}<small><em>{% trans "Letzte Aktivität:" %} {{ p.lastUpdate|date:settings.DATETIME_FORMAT }}</em></small>{% endif %}
             <br><br>
             {% for assignee in p.localProject.assignees.all %}
-                <img src="{{ assignee.avatar.url }}" width="50" class="rounded-circle" style="margin-right: -20px;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
+                <img src="{{ assignee.avatar.url }}" width="50" class="rounded-circle assignee-avatar" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.name }}">
             {% endfor %}
             {% for assignee in p.localProject.userprojectassignment_set.all %}
-                <img src="https://software-design.de/static/img/team/unknown.png" width="50" class="rounded-circle float-end" style="margin-left: -20px;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ assignee.user.first_name }} {{ assignee.user.last_name }}">
+                <img src="https://software-design.de/static/img/team/unknown.png" width="50" class="rounded-circle float-end" style="margin-left: -20px;" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if assignee.user.first_name and assignee.user.last_name %}{{ assignee.user.first_name }} {{ assignee.user.last_name }}{% else %}SD Mitarbeiter{% endif %}">
             {% endfor %}
             <br>
             {% if p.localProject.downloadablefile_set.count > 0 %}
                 <br>
-                <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}/downloads/"><i class="fa far fa-fw fa-file"></i> {{ p.localProject.downloadablefile_set.count }} {% trans "file attached" %} &raquo;</a>
+                <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}/downloads/">
+                    <i class="fa far fa-fw fa-file"></i>
+                    {{ p.localProject.downloadablefile_set.count }} {% trans "Datei angehängt" %} &raquo;
+                </a>
             {% endif %}
             {% if p.projectReleases|length > 0 %}
                 <br>
-                <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}/downloads/"><i class="fa far fa-fw fa-laptop-code"></i> {{ p.projectReleases|length }} {% trans "releases attached" %} &raquo;</a>
+                <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}/downloads/">
+                    <i class="fa far fa-fw fa-laptop-code"></i>
+                    {{ p.projectReleases|length }} {% trans "Veröffentlichungen angehängt" %} &raquo;
+                </a>
             {% endif %}
         </div>
         {% endif %}
@@ -57,9 +63,9 @@
             {% endif %}
             {% if request.user.is_superuser %}
                 <a href="/admin/userinterface/project/{{ p.localProject.pk }}/change/" class="btn btn-outline-primary" target="_blank" data-bs-toggle="tooltip" title="Zum Admin-Bereich"><i class="fa far fa-star"></i></a>
-                <a href="{{ p.remoteProject.web_url }}" class="btn btn-outline-primary" target="_blank" data-bs-toggle="tooltip" title="Zum GitLab"><i class="fab fa-gitlab"></i></a>
+                <a href="{{ p.remoteProject.web_url }}" class="btn btn-outline-primary" target="_blank" data-bs-toggle="tooltip" title="Zum Repository"><i class="fab fa-gitlab"></i></a>
             {% endif %}
-            <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="btn primary-bg float-end">{% trans "Go to project &raquo;" %}</a>
+            <a href="/project/{{ p.remoteProject.path }}/{{ p.remoteProject.id }}" class="btn primary-bg float-end">{% trans "Zum Projekt &raquo;" %}</a>
         </div>
         {% endif %}
     </div>

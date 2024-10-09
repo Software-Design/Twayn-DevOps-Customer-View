@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.core.management import BaseCommand, CommandError
 from userinterface.models import Project, UserProjectAssignment
-from userinterface.tools.viewsHelper import getProject, getRepositoryService
+from userinterface.tools.viewsHelper import getRepositoryService
 
 class Command(BaseCommand):
     help = 'Send notification mails to users (should run as cron job once a day). Default notify about changes since last run, or at max the last <maxdays> days. python manage.py sendnotifications --maxdays 3'

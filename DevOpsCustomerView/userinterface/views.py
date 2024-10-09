@@ -24,7 +24,7 @@ from django.utils.encoding import iri_to_uri
 from .models import *
 from .templatetags.dates import parse_date, parse_iso
 from .tools.templateHelper import template
-from .tools.viewsHelper import getProject, getRepositoryService
+from .tools.viewsHelper import get_project, getRepositoryService
 from .tools.sendMail import sendingEmail
 
 
@@ -70,7 +70,7 @@ def loggingout(request: WSGIRequest) -> HttpResponseRedirect:
 
 @login_required
 def userSettings(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     projectAssignment = UserProjectAssignment.objects.filter(
         project=glProject["localProject"], user=request.user
     ).first()
@@ -118,50 +118,50 @@ def reportOverview(request: WSGIRequest) -> HttpResponse:
     )
 
 
+from typing import List
+
+
 @login_required
 def projectList(request: WSGIRequest) -> HttpResponse:
     """
     Handles the requests for /overview
     Gets all projects to show on the page
     """
-    if request.user.is_staff:
-        projectAssignments = (
-            UserProjectAssignment.objects.filter(project__closed=False)
-            .order_by("project__name")
-            .all()
-        )
-    else:
-        projectAssignments = UserProjectAssignment.objects.filter(
-            project__closed=False, user=request.user
-        )
+    project_assignments: List[Project] = Project.objects.filter(closed=False).order_by(
+        "name"
+    )
 
-    seenProjects = []
-    activeProjects = []
-    inactiveProjects = []
-    for assignment in projectAssignments:
-        # glProject = loadProject(assignment.project, assignment.access_token)
-        repService = getRepositoryService(assignment.project)
-        glProject = repService.loadProject(assignment.project, assignment.access_token)
+    if not request.user.is_staff:
+        team_memberships = TeamMember.objects.filter(user=request.user).values_list(
+            "team", flat=True
+        )
+        project_assignments = project_assignments.filter(teams__in=team_memberships)
 
-        localProject = glProject["localProject"]
+    seen_projects = set()
+    active_projects = []
+    inactive_projects = []
+
+    for project in project_assignments:
+        rep_service = getRepositoryService(project)
+        gl_project = rep_service.loadProject(project, project.access_token)
+
+        local_project = gl_project["localProject"]
         pk = (
-            localProject.get("pk")
-            if isinstance(localProject, dict)
-            else getattr(localProject, "pk", None)
+            local_project.get("pk")
+            if isinstance(local_project, dict)
+            else getattr(local_project, "pk", None)
         )
-        if pk not in seenProjects:
-            seenProjects.append(pk)
-            try:
-                if localProject.inactive:
-                    inactiveProjects.append(glProject)
-                else:
-                    activeProjects.append(glProject)
-            except:
-                activeProjects.append(glProject)
+
+        if pk not in seen_projects:
+            seen_projects.add(pk)
+            if project.inactive:
+                inactive_projects.append(gl_project)
+            else:
+                active_projects.append(gl_project)
 
     return HttpResponse(
         template("project/list").render(
-            {"inactiveProjects": inactiveProjects, "activeProjects": activeProjects},
+            {"inactiveProjects": inactive_projects, "activeProjects": active_projects},
             request,
         )
     )
@@ -233,7 +233,7 @@ def projectPublic(request: WSGIRequest, slug: str, id: int, hash: str) -> HttpRe
 @login_required
 def projectView(request, slug: str, id: int) -> HttpResponse:
 
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -270,7 +270,7 @@ def issueList(request, slug, id):
     Shows a paginated list of issues in this project
     """
 
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -295,7 +295,7 @@ def issueCreate(
     Creates a new issue for the project specified with the id
     """
 
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -341,7 +341,7 @@ def issue(request: WSGIRequest, slug: str, id: int, issue: int) -> HttpResponse:
     Get the information needed to display a single issue specified with the id and the issue (issue id)
     """
 
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -385,7 +385,7 @@ def milestones(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     Get the information needed to display the milestones of the project specified with the id
     """
 
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -401,7 +401,7 @@ def milestoneBoard(request: WSGIRequest, slug: str, id: int, mid: int) -> HttpRe
     Handles the requests for /project/<slug:slug>/<int:id>/milestone/<int:mid>
     Get the information needed to display a board of issues in this milestone
     """
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -458,7 +458,7 @@ def fileList(request: WSGIRequest, slug: str, id: int) -> HttpResponse:
     Get the information needed to display the files of the project specified with the id
     """
 
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -498,7 +498,7 @@ def fileDownload(request: WSGIRequest, slug: str, id: int, file: str) -> HttpRes
         or not assignment.project.publicOverviewPassword
         or request.session.get("password") != assignment.project.publicOverviewPassword
     ):
-        glProject = getProject(request, id)
+        glProject = get_project(request, id)
         if isinstance(glProject, HttpResponse):
             return glProject
 
@@ -519,7 +519,7 @@ def wiki(
     """
     ### ToDo
 
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -541,7 +541,7 @@ def wikiPage(
 
     ### ToDo
 
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -566,7 +566,7 @@ def printWiki(
     Redirect to / if the documentation is disabled for the project
     """
 
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -606,7 +606,7 @@ def printOverview(request: WSGIRequest, slug: str, id: int):
 
     ### ToDo
 
-    glProject = getProject(request, id)
+    glProject = get_project(request, id)
     if isinstance(glProject, HttpResponse):
         return glProject
 
@@ -694,3 +694,22 @@ def warmupCache(request: WSGIRequest) -> HttpResponseRedirect:
     if url_has_allowed_host_and_scheme(redirectUrl, None):
         return redirect(iri_to_uri(redirectUrl))
     return redirect("/")
+
+
+from main.githubService import GitHubService
+from django.shortcuts import render
+
+
+@login_required
+def github_repos(request):
+    github_service = GitHubService(token="your_github_token")
+    repos = github_service.get_user_repos(username="your_github_username")
+    return render(request, "github_repos.html", {"repos": repos})
+
+
+@login_required
+def github_issues(request, repo):
+    github_service = GitHubService(token="your_github_token")
+    repo = "SD-Twayn"
+    issues = github_service.get_repo_issues(repo=repo)
+    return render(request, "github_issues.html", {"issues": issues})
