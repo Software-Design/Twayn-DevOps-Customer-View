@@ -121,7 +121,7 @@ class Command(BaseCommand):
         )
 
         if created:
-            project.teams.set([team])
+            project.teams.set([team.id])
 
         return project
 

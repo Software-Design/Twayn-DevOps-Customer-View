@@ -1,15 +1,16 @@
 // Search projects
 function searchProjects() {
     const input = document.getElementById("searchInput").value.toUpperCase();
-    const holder = document.getElementById("projectsHolder").getElementsByClassName("card-title");
+    const projectCards = document.querySelectorAll("#projectsHolder .card");
 
-    for (let i = 0; i < holder.length; i++) {
-        if (holder[i].innerHTML.toUpperCase().indexOf(input) > -1) {
-            holder[i].parentNode.parentNode.style.display = "";
+    projectCards.forEach(card => {
+        const cardTitle = card.querySelector(".card-title").innerText || card.querySelector(".card-title").textContent;
+        if (cardTitle.toUpperCase().includes(input)) {
+            card.style.display = "";
         } else {
-            holder[i].parentNode.parentNode.style.display = "none";
+            card.style.display = "none";
         }
-    }
+    });
 }
 
 function initializeTooltips() {
@@ -19,12 +20,8 @@ function initializeTooltips() {
     });
 }
 
-function delayedSearch() {
-    setTimeout(searchProjects, 1000);
-}
 
 document.addEventListener('DOMContentLoaded', function () {
     initializeTooltips();
-    document.getElementById("searchInput").addEventListener('input', delayedSearch);
-    document.getElementById("searchInput").addEventListener('change', searchProjects);
+    document.getElementById("searchInput")?.addEventListener('input', searchProjects);
 });

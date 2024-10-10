@@ -20,3 +20,9 @@
     text-align: center;
     padding: 10px 0;
 }
+
+.btn--custom-border {
+    border-color: #ff8128 !important;
+
+}
+

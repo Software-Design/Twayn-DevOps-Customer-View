@@ -61,13 +61,13 @@
 
 <div class="btn-group float-end" role="group">
   {% if localProject.enableTicketCreation %}
-  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Create Ticket" %}</a>
+  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/create" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Ticket erstellen" %}</a>
   {% endif %}
   {% if localProject.enable_milestones %}
-  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/" class="btn btn-outline-primary"><i class="fa far fa-tasks"></i> {% trans "Milestones" %}</a>
+  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/milestones/" class="btn btn-outline-primary"><i class="fa far fa-tasks"></i> {% trans "Meilensteine" %}</a>
   {% endif %}
   {% if wikiPages and localProject.enable_documentation  %}
-  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/" class="btn btn-outline-primary"><i class="fa far fa-book"></i> {% trans "Documentation" %}</a>
+  <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/documentation/" class="btn btn-outline-primary"><i class="fa far fa-book"></i> {% trans "Dokumentation" %}</a>
   {% endif %}
   {% if request.user.is_superuser %}
   <a href="{{ remoteProject.web_url }}" class="btn btn-outline-primary" target="_blank"><i class="fab fa-github"></i></a>
@@ -92,7 +92,7 @@
     </div>
     <div class="col-8">
       <br>
-      <h4>{% trans "Last updated issues" %}</h4><br>
+      <h4>{% trans "Zuletzt aktualisierte Tickets" %}</h4><br>
       <ul class="list-group">
         {% with t='partials/issues'|template %}
           {% include t with issues=mostRecentIssues large=True %}
@@ -100,7 +100,7 @@
       </ul>
       <br>
       <div class="btn-group float-end" role="group">
-        <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "All issues" %} &raquo;</a>
+        <a href="/project/{{ remoteProject.path }}/{{ remoteProject.id }}/issues/" class="btn btn-outline-primary"><i class="fa far fa-plus"></i> {% trans "Alle Tickets" %} &raquo;</a>
       </div>
       <br>
     </div>
@@ -108,13 +108,11 @@
       <br>
       <h4>Ihre Ansprechpartner</h4><h5>(Projekt & Entwicklung)</h5><br>
       <div class="row">
-        {% for assignee in localProject.assignees.all %}
-          <div class="col-md-12 pb-3">
-            {% with t='partials/employee'|template %}
-              {% include t with employee=assignee %}
-            {% endwith %}
-          </div>
-        {% endfor %}
+            <div class="col-md-12 pb-3">
+              {% with t='partials/employee'|template %}
+                  {% include t with localProject=localProject %}
+              {% endwith %}
+            </div>
       </div><br>
       <h4>Ihre Ansprechpartnerinnen</h4><h5>(Organisation & Abrechnung)</h5><br>
       <div class="row">
