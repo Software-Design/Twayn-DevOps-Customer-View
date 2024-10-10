@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.core.management import BaseCommand, CommandError
 from userinterface.models import Project, UserProjectAssignment
-from userinterface.tools.viewsHelper import getProject, getRepositoryService
+from userinterface.tools.viewsHelper import getRepositoryService
 
 class Command(BaseCommand):
     help = 'Send notification mails to users (should run as cron job once a day). Default notify about changes since last run, or at max the last <maxdays> days. python manage.py sendnotifications --maxdays 3'
@@ -41,8 +41,8 @@ class Command(BaseCommand):
             allProjectAssignments = UserProjectAssignment.objects.filter(project=project)
             for projectAssignment in allProjectAssignments:
                 repService = getRepositoryService(projectAssignment.project)
-                lastUpdate = repService.lastUpdate(projectAssignment.project, projectAssignment.accessToken)
-                projectObject = repService.loadProject(projectAssignment.project, projectAssignment.accessToken)
+                lastUpdate = repService.lastUpdate(projectAssignment.project, projectAssignment.access_token)
+                projectObject = repService.loadProject(projectAssignment.project, projectAssignment.access_token)
                 if (lastUpdate > sinceDate):
                     projectWithChanges.append(projectObject)
                     break
@@ -83,7 +83,7 @@ class Command(BaseCommand):
     #         allProjectAssignments = UserProjectAssignment.objects.filter(project=project)
     #         for projectAssignment in allProjectAssignments:
     #             repService = getRepositoryService(projectAssignment.project)
-    #             glProject = repService.loadProject(projectAssignment.project, projectAssignment.accessToken)
+    #             glProject = repService.loadProject(projectAssignment.project, projectAssignment.access_token)
     #             # ToDo add filter since maxdays
     #             sinceDateMax = datetime.datetime.now() - datetime.timedelta(days=maxDays)
     #             sinceLastRun = datetime.datetime.now(timezone.utc) - project.notificationLastRun

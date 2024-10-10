@@ -12,14 +12,24 @@ from userinterface.models import Project
 from .timetrackingHelper import calculateTime
 from .wikiParser import parseStructure
 
-from userinterface.tools.repositoryServiceInterface import RepositoryServiceInterface, remoteStdProject, remoteStdMilestone, remoteStdIssue, remoteStdUser, remoteStdMergeRequest, remoteStdNote
+from userinterface.tools.repositoryServiceInterface import (
+    RepositoryServiceInterface,
+    remoteStdProject,
+    remoteStdMilestone,
+    remoteStdIssue,
+    remoteStdUser,
+    remoteStdMergeRequest,
+    remoteStdNote,
+)
 
 """
     To get ID of repository from GitHub:
         HTML Source: <meta name="octolytics-dimension-repository_id" content="{ID}}">
 """
+
+
 class githubServiceCache(RepositoryServiceInterface):
-    def loadProject(self, projectObject: Project, accessToken: str) -> dict:
+    def loadProject(self, projectObject: Project, access_token: str) -> dict:
         """
         Loads the project from github and all its information and returns them
 
@@ -28,40 +38,46 @@ class githubServiceCache(RepositoryServiceInterface):
                 Either { 'remoteProject': GitHubProjectObject, 'localProject': Project, 'allMilestones': list or False, 'mostRecentIssues': list[:5], 'wikiPages': list or False, 'projectLabels':  }
                 or { 'localProject': { 'name': 'projectName' }, 'error': 'An error occured: SomeException' }
         """
-        
-        id = f'glh_{projectObject.projectIdentifier}'
+
+        id = f"glh_{projectObject.project_identifier}"
 
         project = cache.get(id)
         if not project:
             try:
                 # Only for self hosted github
-                # gh = Github(base_url=settings.GITHUB_URL, login_or_token=accessToken)
-                gh = github.Github(accessToken)
+                # gh = Github(base_url=settings.GITHUB_URL, login_or_token=access_token)
+                gh = github.Github(access_token)
                 # full_name_or_id, (str, int)
-                ghProject = gh.get_repo(int(projectObject.projectIdentifier))
-                ghProject.path = 'GitHub'
+                ghProject = gh.get_repo(int(projectObject.project_identifier))
+                ghProject.path = "GitHub"
             except Exception as e:
                 return {
-                    'localProject': {'name': projectObject.name},
-                    'error': _('An error occurred 123') + ': ' + str(e)
+                    "localProject": {"name": projectObject.name},
+                    "error": _("An error occurred 123") + ": " + str(e),
                 }
 
             project = {
-                'remoteProject': self.loadRemoteProject(projectObject, ghProject),
-                'remoteInstance': ghProject,
-                'localProject': projectObject,
-                'allMilestones': self.loadMilestones(projectObject, ghProject),
-                'mostRecentIssues': self.loadIssues(projectObject, ghProject)[:5],
-                'wikiPages': [], #parseStructure(loadWikiPage(projectObject, ghProject)),
-                'projectLabels': self.loadLabels(projectObject, ghProject),
-                'projectReleases': self.loadReleases(projectObject, ghProject),
-                'lastUpdated': self.lastUpdate(projectObject, ghProject)
+                "remoteProject": self.loadRemoteProject(projectObject, ghProject),
+                "remoteInstance": ghProject,
+                "localProject": projectObject,
+                "allMilestones": self.loadMilestones(projectObject, ghProject),
+                "mostRecentIssues": self.loadIssues(projectObject, ghProject)[:5],
+                "wikiPages": [],  # parseStructure(loadWikiPage(projectObject, ghProject)),
+                "projectLabels": self.loadLabels(projectObject, ghProject),
+                "projectReleases": self.loadReleases(projectObject, ghProject),
+                "lastUpdated": self.lastUpdate(projectObject, ghProject),
             }
             now = datetime.now()
-            project['activeMilestones'] = [m for m in list(project['allMilestones']) if
-                                          not m.expired and m.state == 'active' and
-                                           m.start_date != '?' and m.start_date < now and
-                                           m.due_date != '?' and m.due_date >= now]
+            project["activeMilestones"] = [
+                m
+                for m in list(project["allMilestones"])
+                if not m.expired
+                and m.state == "active"
+                and m.start_date != "?"
+                and m.start_date < now
+                and m.due_date != "?"
+                and m.due_date >= now
+            ]
             cache.set(id, project, settings.CACHE_PROJECTS)
 
         return project
@@ -75,7 +91,7 @@ class githubServiceCache(RepositoryServiceInterface):
         remoteProject.path = "GitHub"
         remoteProject.avatar_url = ""
         remoteProject.description = project.description
-        remoteProject.web_url = project.url
+        remoteProject.web_url = project.html_url
 
         return remoteProject
 
@@ -94,14 +110,16 @@ class githubServiceCache(RepositoryServiceInterface):
         """
 
         project = self.getInstance(projectObject, tokenOrInstance)
-        id = f'glh_{projectObject.projectIdentifier}_labels'
+        id = f"glh_{projectObject.project_identifier}_labels"
 
         labels = cache.get(id)
         if not labels:
             labels = []
             ghLabels = project.get_labels()
             for label in ghLabels:
-                if not projectObject.labelPrefix or label.name.startswith(projectObject.labelPrefix):
+                if not projectObject.label_prefix or label.name.startswith(
+                    projectObject.label_prefix
+                ):
                     labels.append(label)
 
             cache.set(id, labels, settings.CACHE_PROJECTS)
@@ -126,7 +144,7 @@ class githubServiceCache(RepositoryServiceInterface):
         return []
 
         project = self.getInstance(projectObject, tokenOrInstance)
-        id = f'glh_{projectObject.projectIdentifier}_releases'
+        id = f"glh_{projectObject.project_identifier}_releases"
 
         ghReleases = []
         labels = cache.get(id)
@@ -137,7 +155,9 @@ class githubServiceCache(RepositoryServiceInterface):
 
         return ghReleases
 
-    def loadMilestones(self, projectObject: Project, tokenOrInstance, iid: int = None) -> Union[list, dict]:
+    def loadMilestones(
+        self, projectObject: Project, tokenOrInstance, iid: int = None
+    ) -> Union[list, dict]:
         """
         Loads the milestones from gitlab for the given project object
 
@@ -150,13 +170,13 @@ class githubServiceCache(RepositoryServiceInterface):
             [ gitlab.v4.objects.milestones.ProjectMilestone, ... ]
         """
 
-        if not projectObject.enableMilestones:
+        if not projectObject.enable_milestones:
             return []
 
         project = self.getInstance(projectObject, tokenOrInstance)
-        id = 'glh_' + projectObject.projectIdentifier + '_milestones'
+        id = "glh_" + projectObject.project_identifier + "_milestones"
         if iid:
-            id = f'{id}_{str(iid)}'
+            id = f"{id}_{str(iid)}"
 
         milestones = cache.get(id)
         if not milestones:
@@ -168,13 +188,29 @@ class githubServiceCache(RepositoryServiceInterface):
             else:
                 remoteMilestones = project.get_milestones()
                 # as there is no start date in github, use due date from last milestone
-                remoteMilestones = sorted(remoteMilestones, key=lambda m: m.due_on if m.due_on != '?' and m.due_on else datetime(2020, 1, 1, 0, 0), reverse=False)
+                remoteMilestones = sorted(
+                    remoteMilestones,
+                    key=lambda m: (
+                        m.due_on
+                        if m.due_on != "?" and m.due_on
+                        else datetime(2020, 1, 1, 0, 0)
+                    ),
+                    reverse=False,
+                )
                 lastStartDate = datetime(2020, 1, 1, 0, 0)
                 for remoteMilestone in remoteMilestones:
                     newMilestone = self.convertMilestone(remoteMilestone, lastStartDate)
                     milestones.append(newMilestone)
                     lastStartDate = newMilestone.due_date
-                milestones = sorted(milestones, key=lambda m: m.due_date if m.due_date != '?' and m.due_date else datetime(2020, 1, 1, 0, 0), reverse=True)
+                milestones = sorted(
+                    milestones,
+                    key=lambda m: (
+                        m.due_date
+                        if m.due_date != "?" and m.due_date
+                        else datetime(2020, 1, 1, 0, 0)
+                    ),
+                    reverse=True,
+                )
 
             cache.set(id, milestones, settings.CACHE_MILESTONES)
 
@@ -187,8 +223,12 @@ class githubServiceCache(RepositoryServiceInterface):
         newMilestone.title = remoteMilestone.title
         newMilestone.description = remoteMilestone.description
         newMilestone.state = remoteMilestone.state
-        newMilestone.isActive = newMilestone.state == 'open'
-        newMilestone.expired = (datetime.now() - remoteMilestone.due_on).days > 0 if remoteMilestone.due_on else False
+        newMilestone.isActive = newMilestone.state == "open"
+        newMilestone.expired = (
+            (datetime.now() - remoteMilestone.due_on).days > 0
+            if remoteMilestone.due_on
+            else False
+        )
         newMilestone.start_date = startDate
         newMilestone.due_date = remoteMilestone.due_on
         newMilestone.web_url = remoteMilestone.url
@@ -206,8 +246,16 @@ class githubServiceCache(RepositoryServiceInterface):
     #
     #     return afterMilestones
 
-    def loadIssues(self, projectObject: Project, tokenOrInstance, iid: int = None, page: int = 1, milestone: int = None,
-                   label: str = None, status: str = None) -> Union[list, dict, None]:
+    def loadIssues(
+        self,
+        projectObject: Project,
+        tokenOrInstance,
+        iid: int = None,
+        page: int = 1,
+        milestone: int = None,
+        label: str = None,
+        status: str = None,
+    ) -> Union[list, dict, None]:
         """
         Loads an issue or the issues from gitlab for the given project object
 
@@ -220,29 +268,28 @@ class githubServiceCache(RepositoryServiceInterface):
             [ gitlab.v4.objects.issues.ProjectIssue ... ] or { 'data': gitlab.v4.objects.issues.ProjectIssue, 'notes': [] } or None
         """
         # make some transformations
-        if status == 'opened':
-            status = 'open'
-        elif status == 'closed':
-            status = 'closed'
+        if status == "opened":
+            status = "open"
+        elif status == "closed":
+            status = "closed"
 
         if type(label) == str:
             label = [label]
 
-
         project = self.getInstance(projectObject, tokenOrInstance)
 
-        id = f'glh_{projectObject.projectIdentifier}_issues'
+        id = f"glh_{projectObject.project_identifier}_issues"
         if iid:
-            id = f'{id}_{str(iid)}'
+            id = f"{id}_{str(iid)}"
         elif milestone:
-            id = f'{id}_m{str(milestone)}'
+            id = f"{id}_m{str(milestone)}"
         elif label and status:
-            id = f'{id}_ls{str(status)}_{str(label)}'
+            id = f"{id}_ls{str(status)}_{str(label)}"
         elif label:
-            id = f'{id}_l{str(label)}'
+            id = f"{id}_l{str(label)}"
         elif status:
-            id = f'{id}_s{str(status)}'
-        id = f'{id}_p{str(page)}'
+            id = f"{id}_s{str(status)}"
+        id = f"{id}_p{str(page)}"
 
         issues = cache.get(id)
         if not issues:
@@ -267,21 +314,31 @@ class githubServiceCache(RepositoryServiceInterface):
                 newIssue.notes = notes
                 # ToDo: There is no confidential in github, any alternative?
                 issues = {
-                    'data': newIssue,
-                    'notes': notes,
-                    'mergeRequests': mergeRequests
+                    "data": newIssue,
+                    "notes": notes,
+                    "mergeRequests": mergeRequests,
                 }
             elif milestone:
                 milestone = project.get_milestone(number=int(milestone))
-                remoteIssues = project.get_issues(milestone=milestone, state='all', sort='updated', direction='desc')
+                remoteIssues = project.get_issues(
+                    milestone=milestone, state="all", sort="updated", direction="desc"
+                )
             elif label and status:
-                remoteIssues = project.get_issues(labels=label, state=status, sort='updated', direction='desc')
+                remoteIssues = project.get_issues(
+                    labels=label, state=status, sort="updated", direction="desc"
+                )
             elif label:
-                remoteIssues = project.get_issues(labels=label, state='all', sort='updated', direction='desc')
+                remoteIssues = project.get_issues(
+                    labels=label, state="all", sort="updated", direction="desc"
+                )
             elif status:
-                remoteIssues = project.get_issues(state=status, sort='updated', direction='desc')
+                remoteIssues = project.get_issues(
+                    state=status, sort="updated", direction="desc"
+                )
             else:
-                remoteIssues = project.get_issues(state='all', sort='updated', direction='desc')
+                remoteIssues = project.get_issues(
+                    state="all", sort="updated", direction="desc"
+                )
 
             for remoteIssue in remoteIssues:
                 newIssue = self.convertIssue(remoteIssue)
@@ -306,7 +363,7 @@ class githubServiceCache(RepositoryServiceInterface):
         newIssue.remoteIdentifier = remoteIssue.number
         newIssue.confidential = False
         newIssue.state = remoteIssue.state
-        newIssue.isOpen = newIssue.state == 'open'
+        newIssue.isOpen = newIssue.state == "open"
         newIssue.title = remoteIssue.title
         newIssue.description = remoteIssue.body
         newIssue.created_at = remoteIssue.created_at
@@ -330,8 +387,15 @@ class githubServiceCache(RepositoryServiceInterface):
             newIssue.labels = []
             for label in remoteIssue.labels:
                 newIssue.labels.append(label.name)
-            
-            if 'confidential' in newIssue.labels or 'Confidential' in newIssue.labels or 'hidden' in newIssue.labels or 'Hidden' in newIssue.labels or 'internal' in newIssue.labels or 'Internal' in newIssue.labels:
+
+            if (
+                "confidential" in newIssue.labels
+                or "Confidential" in newIssue.labels
+                or "hidden" in newIssue.labels
+                or "Hidden" in newIssue.labels
+                or "internal" in newIssue.labels
+                or "Internal" in newIssue.labels
+            ):
                 newIssue.confidential = True
 
         # if remoteIssue.time_stats():
@@ -359,7 +423,7 @@ class githubServiceCache(RepositoryServiceInterface):
         newMergeRequest.remoteIdentifier = remoteMergeRequest.number
         newMergeRequest.title = remoteMergeRequest.title
         newMergeRequest.description = remoteMergeRequest.body
-        newMergeRequest.state = remoteMergeRequest['state']
+        newMergeRequest.state = remoteMergeRequest["state"]
         newMergeRequest.created_at = remoteMergeRequest.created_at
         newMergeRequest.updated_at = remoteMergeRequest.updated_at
         newMergeRequest.user_notes_count = remoteMergeRequest.comments
@@ -383,8 +447,9 @@ class githubServiceCache(RepositoryServiceInterface):
 
         return newNote
 
-
-    def loadWikiPage(self, projectObject: Project, tokenOrInstance, slug: str = None) -> Union[ProjectWiki, list]:
+    def loadWikiPage(
+        self, projectObject: Project, tokenOrInstance, slug: str = None
+    ) -> Union[ProjectWiki, list]:
         """
         Loads a project wiki page or all wiki pages object from gitlab using the project identifier and slug
 
@@ -399,19 +464,21 @@ class githubServiceCache(RepositoryServiceInterface):
         # ToDo: No wikis!!!
         return False
 
-        if not projectObject.enableDocumentation:
+        if not projectObject.enable_documentation:
             return False
 
         project = self.getInstance(projectObject, tokenOrInstance)
         if slug:
-            id = 'glh_' + projectObject.projectIdentifier + '_' + slug
+            id = "glh_" + projectObject.project_identifier + "_" + slug
         else:
-            id = 'glh_' + projectObject.projectIdentifier
+            id = "glh_" + projectObject.project_identifier
 
         page = cache.get(id)
         if not page:
             if slug:
-                if not projectObject.wikiPrefix or slug.startswith(projectObject.wikiPrefix):
+                if not projectObject.wikiPrefix or slug.startswith(
+                    projectObject.wikiPrefix
+                ):
                     page = project.wikis.get(slug)
             else:
                 page = project.wikis.list()
@@ -419,48 +486,69 @@ class githubServiceCache(RepositoryServiceInterface):
 
         return page
 
-    def createIssue(self, projectObject: Project, tokenOrInstance, title: str, description='', milestoneIdentifier='',
-                    labels=''):
+    def createIssue(
+        self,
+        projectObject: Project,
+        tokenOrInstance,
+        title: str,
+        description="",
+        milestoneIdentifier="",
+        labels="",
+    ):
         project = self.getInstance(projectObject, tokenOrInstance)
 
         newIssue = {"title": title, "body": description}
 
-        if labels != '' and type(labels) == str:
+        if labels != "" and type(labels) == str:
             labels = [labels]
-            newIssue['labels'] = labels
+            newIssue["labels"] = labels
 
-        if milestoneIdentifier != '':
+        if milestoneIdentifier != "":
             milestone = project.get_milestone(number=int(milestoneIdentifier))
-            newIssue['milestone'] = milestone
+            newIssue["milestone"] = milestone
 
         issue = project.create_issue(**newIssue)
 
-        cache.delete('glh_' + projectObject.projectIdentifier + 'issues_' + str(issue.number))
+        cache.delete(
+            "glh_" + projectObject.project_identifier + "issues_" + str(issue.number)
+        )
 
         return True
 
-    def createIssueComment(self, projectObject: Project, tokenOrInstance, issue: int, body: str):
+    def createIssueComment(
+        self, projectObject: Project, tokenOrInstance, issue: int, body: str
+    ):
         project = self.getInstance(projectObject, tokenOrInstance)
 
         issue = project.get_issue(issue).create_comment(body)
 
-        id = 'glp_' + projectObject.projectIdentifier + '_issues_' + str(issue)
+        id = "glp_" + projectObject.project_identifier + "_issues_" + str(issue)
         cache.delete(id)
 
         return True
 
     def lastUpdate(self, projectObject: Project, tokenOrInstance):
+        def get_naive_datetime(dt: datetime) -> datetime:
+            """Ensure the datetime is naive."""
+            if dt.tzinfo is not None:
+                return dt.replace(tzinfo=None)
+            return dt
+
         project = self.getInstance(projectObject, tokenOrInstance)
         lastUpdate = project.updated_at
-        if (lastUpdate < project.pushed_at):
+        if lastUpdate < project.pushed_at:
             lastUpdate = project.pushed_at
 
-        remoteIssues = project.get_issues(state='all', sort='updated', direction='desc', since=lastUpdate)
-        if (remoteIssues.totalCount > 0):
+        remoteIssues = project.get_issues(
+            state="all", sort="updated", direction="desc", since=lastUpdate
+        )
+        if remoteIssues.totalCount > 0:
             lastUpdate = remoteIssues[0].updated_at
 
+        naive_last_update = get_naive_datetime(lastUpdate)
         import django
-        return django.utils.timezone.make_aware(lastUpdate, timezone.utc)
+
+        return django.utils.timezone.make_aware(naive_last_update, timezone.utc)
 
     def getInstance(self, projectObject: Project, tokenOrInstance):
         """
@@ -479,11 +567,11 @@ class githubServiceCache(RepositoryServiceInterface):
             # gh = Github(base_url=settings.GITHUB_URL, login_or_token=tokenOrInstance)
             # ToDo: not working or used ???
             ### gh = Github(login_or_token=tokenOrInstance)
-            ### project = gh.projects.get(projectObject.projectIdentifier)
+            ### project = gh.projects.get(projectObject.project_identifier)
             # full_name_or_id, (str, int)
             gh = github.Github(tokenOrInstance)
-            ghProject = gh.get_repo(int(projectObject.projectIdentifier))
-            ghProject.path = 'GitHub'
+            ghProject = gh.get_repo(int(projectObject.project_identifier))
+            ghProject.path = "GitHub"
             project = ghProject
         else:
             project = tokenOrInstance

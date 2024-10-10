@@ -1,19 +1,27 @@
 // Search projects
 function searchProjects() {
-    input = document.getElementById("searchInput").value.toUpperCase();
-    holder = document.getElementById("projectsHolder").getElementsByClassName("card-title");
-    for (i = 0; i < holder.length; i++) {
-        if (holder[i].innerHTML.toUpperCase().indexOf(input) > -1) {
-            holder[i].parentNode.parentNode.style.display = "";
+    const input = document.getElementById("searchInput").value.toUpperCase();
+    const projectCards = document.querySelectorAll("#projectsHolder .card");
+
+    projectCards.forEach(card => {
+        const cardTitle = card.querySelector(".card-title").innerText || card.querySelector(".card-title").textContent;
+        if (cardTitle.toUpperCase().includes(input)) {
+            card.style.display = "";
         } else {
-            holder[i].parentNode.parentNode.style.display = "none";
+            card.style.display = "none";
         }
-    }
+    });
 }
 
-(function() {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-})();
+function initializeTooltips() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    initializeTooltips();
+    document.getElementById("searchInput")?.addEventListener('input', searchProjects);
+});

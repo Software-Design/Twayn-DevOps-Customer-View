@@ -13,7 +13,7 @@
       <meta name="author" content="SD Software-Design GmbH" />
       <link rel="icon" href="/static/favicon.ico">
     {% endblock %}
-
+    <script src="/static/js/base.js"></script>
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -53,7 +53,7 @@
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}">{% trans "Overview" %}</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  {% if localProject.enableMilestones %}
+                  {% if localProject.enable_milestones %}
                   <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/milestones/">{% trans "Milestones / Kanban Board" %}</a></li>
                   {% endif %}
                   <li><a class="dropdown-item" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/issues/">{% trans "Browse all Issues" %}</a></li>
@@ -69,7 +69,7 @@
               </li>
               {% endif %}
 
-              {% if wikiPages and localProject.enableDocumentation  %}
+              {% if wikiPages and localProject.enable_documentation  %}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/" id="navbarWikiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-book"></i> {% trans "Documentation" %}
@@ -84,6 +84,7 @@
               </li>
               {% endif %}
             </ul>
+            <li><a href="{% url 'github_issues' localProject.name %}">{{ localProject.name }}</a></li>
             <ul class="navbar-nav float-end mb-2 mb-lg-0">
               {% if request.user.is_staff and localProject %}
               <li class="nav-item">
@@ -121,16 +122,16 @@
         {% block content %}
         {% endblock %}
           <br>
-          <hr>  
+          <hr>
           &copy; {% now "Y" %}
           <p class="float-end">powered by <a href="https://gitlab.com/software-design-public/twayn-devops-customer-view" class="text-muted" target="_blank"><strong>Twayn</strong> - DevOps Customer View</a></p>
           <br><br>
         </div>
     {% endblock %}
-    
+
     {% block footer %}
     {% endblock %}
-      
+
     {% block modals %}
     <form method="GET" action="/project/{{ remoteProject.path }}/{{ remoteProject.remoteIdentifier }}/print/">
         <div class="modal" id="exportModal" tabindex="-1" role="dialog">
